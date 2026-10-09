@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import InteractiveFurnitureViewer from '@/components/three-d/InteractiveFurnitureViewer';
+import LuxuryProductCard from '@/components/furniture/LuxuryProductCard';
 import { 
   Sparkles, 
   Camera, 
@@ -405,26 +406,13 @@ export default function ProductDetailClient({
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {relatedProducts.map((rel) => {
-              const relImg = rel.images[0]?.url || 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=800&q=80';
-              return (
-                <div key={rel.id} className="bg-white rounded-2xl overflow-hidden border border-ivory-300 shadow-sm p-4 space-y-3 group">
-                  <div className="aspect-[4/3] rounded-xl overflow-hidden bg-ivory-100">
-                    <img src={relImg} alt={rel.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
-                  </div>
-                  <div>
-                    <span className="text-[10px] uppercase font-bold text-gold">{rel.category?.name}</span>
-                    <h4 className="font-serif text-base font-medium text-charcoal truncate">{rel.name}</h4>
-                  </div>
-                  <Link
-                    href={`/products/${rel.slug}`}
-                    className="w-full block py-2 text-center rounded-lg bg-ivory-100 hover:bg-ivory-200 text-charcoal text-xs font-semibold transition-colors"
-                  >
-                    View Details
-                  </Link>
-                </div>
-              );
-            })}
+            {relatedProducts.map((rel) => (
+              <LuxuryProductCard
+                key={rel.id}
+                product={rel}
+                showQuickActions={false}
+              />
+            ))}
           </div>
         </div>
       )}

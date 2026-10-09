@@ -18,6 +18,7 @@ import {
   ChevronDown
 } from 'lucide-react';
 import { ProductItem, CategoryItem, CollectionItem } from '@/lib/types';
+import LuxuryProductCard from '@/components/furniture/LuxuryProductCard';
 
 interface CatalogueProps {
   products: any[];
@@ -291,122 +292,17 @@ export default function ProductCatalogueClient({
       ) : viewMode === 'grid' ? (
         /* GRID VIEW */
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {filteredProducts.map((prod) => {
-            const primaryImg =
-              prod.images.find((i: any) => i.isPrimary)?.url ||
-              prod.images[0]?.url ||
-              'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=800&q=80';
-            const isCompared = compareList.includes(prod.id);
-            const isShortlisted = shortlist.includes(prod.id);
-
-            return (
-              <div
-                key={prod.id}
-                className="bg-white rounded-2xl overflow-hidden border border-ivory-300 shadow-sm hover:shadow-luxury-hover transition-all flex flex-col justify-between group"
-              >
-                <div>
-                  {/* Image Stage */}
-                  <div className="relative aspect-[4/3] bg-ivory-100 overflow-hidden">
-                    <img
-                      src={primaryImg}
-                      alt={prod.name}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-
-                    {/* Top Floating Controls */}
-                    <div className="absolute top-3 inset-x-3 flex items-center justify-between">
-                      <span className="px-2 py-0.5 bg-white/90 backdrop-blur text-charcoal text-[10px] font-mono font-semibold rounded-full border border-ivory-300">
-                        {prod.sku}
-                      </span>
-
-                      <div className="flex items-center space-x-1.5">
-                        <button
-                          onClick={() => toggleShortlist(prod.id)}
-                          className={`p-1.5 rounded-full backdrop-blur transition-colors ${
-                            isShortlisted ? 'bg-red-50 text-red-600' : 'bg-white/80 text-charcoal/70 hover:bg-white'
-                          }`}
-                          title="Save to Shortlist"
-                        >
-                          <Heart className={`w-3.5 h-3.5 ${isShortlisted ? 'fill-red-600' : ''}`} />
-                        </button>
-
-                        <button
-                          onClick={() => toggleCompare(prod.id)}
-                          className={`p-1.5 rounded-full backdrop-blur transition-colors ${
-                            isCompared ? 'bg-charcoal text-gold' : 'bg-white/80 text-charcoal/70 hover:bg-white'
-                          }`}
-                          title="Compare Design"
-                        >
-                          <Scale className="w-3.5 h-3.5" />
-                        </button>
-                      </div>
-                    </div>
-
-                    {/* Bottom 3D Badge */}
-                    {prod.threeDAsset && (
-                      <div className="absolute bottom-3 right-3">
-                        <span className="px-2.5 py-1 bg-charcoal text-gold text-[10px] font-semibold rounded-full flex items-center space-x-1 shadow-sm">
-                          <Sparkles className="w-3 h-3" />
-                          <span>3D Model</span>
-                        </span>
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Body Content */}
-                  <div className="p-5 space-y-2">
-                    <span className="text-[10px] uppercase font-bold tracking-wider text-gold block">
-                      {prod.category?.name}
-                    </span>
-
-                    <h3 className="font-serif text-lg font-medium text-charcoal group-hover:text-gold transition-colors line-clamp-1">
-                      {prod.name}
-                    </h3>
-
-                    <p className="text-xs text-charcoal/70 line-clamp-2 leading-relaxed">
-                      {prod.description}
-                    </p>
-
-                    <div className="pt-3 border-t border-ivory-200 space-y-1 text-xs text-charcoal/80">
-                      <div className="flex justify-between">
-                        <span className="text-walnut font-medium">Capacity:</span>
-                        <span>{prod.seatingCapacity || 'Custom Seater'}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-walnut font-medium">Dimensions:</span>
-                        <span className="truncate max-w-[130px]">{prod.dimensionsSummary || 'Custom CAD'}</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Footer Action Buttons (STRICTLY NO CART / BUY NOW) */}
-                <div className="p-5 pt-0 space-y-2">
-                  <div className="grid grid-cols-2 gap-2">
-                    <Link
-                      href={`/products/${prod.slug}`}
-                      className="px-3 py-2 text-center rounded-xl bg-ivory-100 hover:bg-ivory-200 text-charcoal text-xs font-semibold transition-colors"
-                    >
-                      Details
-                    </Link>
-                    <Link
-                      href={`/studio?baseProduct=${prod.id}`}
-                      className="px-3 py-2 text-center rounded-xl bg-gold/15 hover:bg-gold/25 text-walnut text-xs font-semibold transition-colors"
-                    >
-                      Customize
-                    </Link>
-                  </div>
-
-                  <Link
-                    href={`/custom-design?product=${prod.id}`}
-                    className="w-full block py-2.5 text-center rounded-xl bg-charcoal hover:bg-charcoal-light text-ivory-100 text-xs font-semibold uppercase tracking-wider transition-colors"
-                  >
-                    Request Quote
-                  </Link>
-                </div>
-              </div>
-            );
-          })}
+          {filteredProducts.map((prod) => (
+            <LuxuryProductCard
+              key={prod.id}
+              product={prod}
+              isShortlisted={shortlist.includes(prod.id)}
+              isCompared={compareList.includes(prod.id)}
+              onToggleShortlist={toggleShortlist}
+              onToggleCompare={toggleCompare}
+              showQuickActions={true}
+            />
+          ))}
         </div>
       ) : (
         /* LIST VIEW */
@@ -423,12 +319,12 @@ export default function ProductCatalogueClient({
                 key={prod.id}
                 className="bg-white rounded-2xl p-5 border border-ivory-300 shadow-sm hover:shadow-luxury transition-all flex flex-col md:flex-row items-center gap-6"
               >
-                <div className="w-full md:w-56 aspect-[4/3] rounded-xl overflow-hidden bg-ivory-100 shrink-0 relative">
+                <div className="w-full md:w-56 aspect-[4/3] rounded-xl overflow-hidden bg-ivory-100 shrink-0 relative sheen-overlay">
                   <img src={primaryImg} alt={prod.name} className="w-full h-full object-cover" />
                   {prod.threeDAsset && (
-                    <span className="absolute bottom-2 right-2 px-2 py-0.5 bg-charcoal text-gold text-[10px] font-semibold rounded-full flex items-center space-x-1">
-                      <Sparkles className="w-3 h-3" />
-                      <span>3D</span>
+                    <span className="absolute bottom-2 right-2 px-2.5 py-1 bg-charcoal text-gold text-[10px] font-semibold rounded-full flex items-center space-x-1 shadow-md border border-gold/30">
+                      <span className="w-1.5 h-1.5 rounded-full bg-gold animate-ping" />
+                      <span>Exact 3D Model</span>
                     </span>
                   )}
                 </div>
@@ -441,6 +337,11 @@ export default function ProductCatalogueClient({
                     <span className="text-xs font-bold uppercase tracking-wider text-gold">
                       {prod.category?.name}
                     </span>
+                    {prod.threeDAsset && (
+                      <span className="text-[10px] bg-emerald-50 text-emerald-800 border border-emerald-200 px-2 py-0.5 rounded-full font-medium">
+                        ✓ 1:1 Photo &amp; 3D Match
+                      </span>
+                    )}
                   </div>
 
                   <h3 className="font-serif text-xl font-medium text-charcoal">{prod.name}</h3>

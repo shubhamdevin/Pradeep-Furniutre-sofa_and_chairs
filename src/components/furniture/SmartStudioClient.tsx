@@ -188,14 +188,20 @@ export default function SmartStudioClient({
         {/* Left Column: 3D Geometry Stage & Live Calculated Specs */}
         <div className="lg:col-span-7 space-y-6">
           <div className="bg-white rounded-3xl p-6 border border-ivory-300 shadow-luxury space-y-4">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between flex-wrap gap-2">
               <div>
                 <span className="text-[10px] uppercase font-bold tracking-widest text-gold">3D Digital Mockup</span>
                 <h3 className="font-serif text-xl font-medium text-charcoal">{currentProduct.name}</h3>
               </div>
-              <span className="text-xs font-mono bg-ivory-100 px-2.5 py-1 rounded-full text-charcoal">
-                {currentProduct.sku}
-              </span>
+              <div className="flex items-center space-x-2">
+                <span className="text-[10px] bg-emerald-50 text-emerald-800 border border-emerald-200 px-2.5 py-1 rounded-full font-semibold flex items-center space-x-1 shadow-sm">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                  <span>1:1 Photo &amp; 3D Match</span>
+                </span>
+                <span className="text-xs font-mono bg-ivory-100 px-2.5 py-1 rounded-full text-charcoal border border-ivory-200">
+                  {currentProduct.sku}
+                </span>
+              </div>
             </div>
 
             {/* Interactive 3D Model Viewport */}

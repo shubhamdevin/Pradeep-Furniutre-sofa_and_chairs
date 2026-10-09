@@ -170,20 +170,30 @@ export default function InteractiveFurnitureViewer({
         modelRef.current = model;
 
         // Auto-center and normalize scale
-        const box = new THREE.Box3().setFromObject(model);
-        const center = box.getCenter(new THREE.Vector3());
-        const size = box.getSize(new THREE.Vector3());
+        const initialBox = new THREE.Box3().setFromObject(model);
+        const initialSize = initialBox.getSize(new THREE.Vector3());
 
-        // Place on floor
-        model.position.x -= center.x;
-        model.position.y -= box.min.y;
-        model.position.z -= center.z;
-
-        // Adjust scale if too gigantic or too small
-        const maxDim = Math.max(size.x, size.y, size.z);
-        if (maxDim > 3.0) {
-          const scale = 2.0 / maxDim;
+        // Adjust scale so model comfortably fits the camera frame
+        const maxDim = Math.max(initialSize.x, initialSize.y, initialSize.z);
+        if (maxDim > 2.8) {
+          const scale = 2.2 / maxDim;
           model.scale.set(scale, scale, scale);
+        } else if (maxDim < 0.8) {
+          const scale = 1.6 / maxDim;
+          model.scale.set(scale, scale, scale);
+        }
+
+        // Recompute bounding box after scaling and center on ground
+        const scaledBox = new THREE.Box3().setFromObject(model);
+        const scaledCenter = scaledBox.getCenter(new THREE.Vector3());
+        model.position.x = -scaledCenter.x;
+        model.position.y = -scaledBox.min.y;
+        model.position.z = -scaledCenter.z;
+
+        // Set orbit control target to model center
+        if (controlsRef.current) {
+          controlsRef.current.target.set(0, (scaledBox.max.y - scaledBox.min.y) * 0.45, 0);
+          controlsRef.current.update();
         }
 
         // Enable shadows and enhance materials

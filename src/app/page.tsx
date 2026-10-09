@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma';
 import InteractiveFurnitureViewer from '@/components/three-d/InteractiveFurnitureViewer';
 import AssetLicenceRegistry from '@/components/three-d/AssetLicenceRegistry';
 import Home3DShowcase from '@/components/furniture/Home3DShowcase';
+import LuxuryProductCard from '@/components/furniture/LuxuryProductCard';
 import { 
   Sparkles, 
   ArrowRight, 
@@ -267,99 +268,15 @@ export default async function HomePage() {
           </Link>
         </div>
 
-        {/* Product Cards Grid */}
+        {/* Product Cards Grid with 1:1 Matching 3D Model Inspection */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {featuredProducts.map((prod) => {
-            const primaryImg = prod.images.find((i) => i.isPrimary)?.url || prod.images[0]?.url || 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=800&q=80';
-            return (
-              <div
-                key={prod.id}
-                className="bg-white rounded-2xl overflow-hidden border border-ivory-300 shadow-sm hover:shadow-luxury-hover transition-all flex flex-col justify-between group"
-              >
-                <div>
-                  {/* Image Container with Badges */}
-                  <div className="relative aspect-[4/3] bg-ivory-100 overflow-hidden">
-                    <img
-                      src={primaryImg}
-                      alt={prod.name}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-
-                    {/* Top Badges */}
-                    <div className="absolute top-3 inset-x-3 flex items-center justify-between">
-                      <span className="px-2.5 py-1 bg-white/90 backdrop-blur text-charcoal text-[10px] font-mono font-semibold rounded-full border border-ivory-300">
-                        {prod.sku}
-                      </span>
-                      {prod.threeDAsset && (
-                        <span className="px-2.5 py-1 bg-charcoal text-gold text-[10px] font-semibold rounded-full flex items-center space-x-1 shadow-sm">
-                          <Sparkles className="w-3 h-3" />
-                          <span>3D Model</span>
-                        </span>
-                      )}
-                    </div>
-
-                    {/* Customizable Tag */}
-                    <div className="absolute bottom-3 left-3">
-                      <span className="px-2 py-0.5 bg-cream/95 text-walnut text-[10px] font-semibold rounded-full border border-gold/30">
-                        100% Customizable
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Body Content */}
-                  <div className="p-5 space-y-2">
-                    <div className="text-[11px] uppercase tracking-wider text-gold font-bold">
-                      {prod.category?.name || 'Bespoke Seating'}
-                    </div>
-
-                    <h3 className="font-serif text-lg font-medium text-charcoal group-hover:text-gold transition-colors line-clamp-1">
-                      {prod.name}
-                    </h3>
-
-                    <p className="text-xs text-charcoal/70 line-clamp-2 leading-relaxed">
-                      {prod.description}
-                    </p>
-
-                    <div className="pt-3 border-t border-ivory-200 space-y-1 text-xs text-charcoal/80">
-                      <div className="flex justify-between">
-                        <span className="text-walnut font-medium">Capacity:</span>
-                        <span>{prod.seatingCapacity || 'Custom Seater'}</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span className="text-walnut font-medium">Dimensions:</span>
-                        <span className="truncate max-w-[140px] text-right">{prod.dimensionsSummary || 'Custom CAD'}</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Footer Action Buttons (STRICTLY NO CART / BUY NOW) */}
-                <div className="p-5 pt-0 space-y-2">
-                  <div className="grid grid-cols-2 gap-2">
-                    <Link
-                      href={`/products/${prod.slug}`}
-                      className="px-3 py-2 text-center rounded-xl bg-ivory-100 hover:bg-ivory-200 text-charcoal text-xs font-semibold transition-colors"
-                    >
-                      View Details
-                    </Link>
-                    <Link
-                      href={`/studio?baseProduct=${prod.id}`}
-                      className="px-3 py-2 text-center rounded-xl bg-gold/15 hover:bg-gold/25 text-walnut text-xs font-semibold transition-colors"
-                    >
-                      Customize
-                    </Link>
-                  </div>
-
-                  <Link
-                    href={`/custom-design?product=${prod.id}`}
-                    className="w-full block py-2.5 text-center rounded-xl bg-charcoal hover:bg-charcoal-light text-ivory-100 text-xs font-semibold uppercase tracking-wider transition-colors"
-                  >
-                    Request Quote
-                  </Link>
-                </div>
-              </div>
-            );
-          })}
+          {featuredProducts.map((prod) => (
+            <LuxuryProductCard
+              key={prod.id}
+              product={prod}
+              showQuickActions={false}
+            />
+          ))}
         </div>
       </section>
 

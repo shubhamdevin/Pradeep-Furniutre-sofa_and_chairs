@@ -22,7 +22,7 @@
   }
 }
 
-/* Custom Scrollbar */
+/* Custom Luxury Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -38,10 +38,102 @@
   background: #9E804F;
 }
 
-/* Luxury Card Transitions */
+/* Luxury Card Transitions & Keyframes */
+@keyframes goldPulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(185, 154, 104, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(185, 154, 104, 0);
+  }
+}
+
+@keyframes floatSoft {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes sheen {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(200%);
+  }
+}
+
+@keyframes ambientGlow {
+  0%, 100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 0.9;
+  }
+}
+
+.animate-gold-pulse {
+  animation: goldPulse 2.8s infinite;
+}
+
+.animate-float-soft {
+  animation: floatSoft 4s ease-in-out infinite;
+}
+
+.animate-ambient-glow {
+  animation: ambientGlow 5s ease-in-out infinite;
+}
+
+/* Luxury Sheen Effect */
+.sheen-overlay {
+  position: relative;
+  overflow: hidden;
+}
+.sheen-overlay::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.25) 50%,
+    transparent 100%
+  );
+  transform: translateX(-150%) skewX(-20deg);
+  pointer-events: none;
+  transition: transform 0.75s ease;
+}
+.sheen-overlay:hover::after {
+  transform: translateX(300%) skewX(-20deg);
+}
+
 .luxury-card {
   transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid #DFD4C2;
 }
 .luxury-card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-6px);
+  border-color: rgba(185, 154, 104, 0.55);
+  box-shadow: 0 24px 48px -12px rgba(36, 36, 36, 0.12), 0 0 0 1px rgba(185, 154, 104, 0.25);
+}
+
+/* Glassmorphism Accents */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(223, 212, 194, 0.6);
+}
+
+.glass-panel-dark {
+  background: rgba(36, 36, 36, 0.88);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(185, 154, 104, 0.3);
 }

@@ -68,6 +68,26 @@ export default function Home3DShowcase({ assets }: ShowcaseProps) {
               </h4>
             </div>
 
+            {activeAsset?.posterImageUrl && (
+              <div className="bg-white p-3 rounded-xl border border-ivory-200 flex items-center space-x-3 shadow-sm">
+                <div className="w-16 h-12 rounded-lg overflow-hidden bg-ivory-100 shrink-0 border border-ivory-200">
+                  <img
+                    src={activeAsset.posterImageUrl}
+                    alt={activeAsset.name}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div>
+                  <span className="text-[10px] text-emerald-800 font-bold flex items-center space-x-1">
+                    <span>✓ 100% Matching Card Photo</span>
+                  </span>
+                  <span className="text-[11px] text-charcoal/70 block leading-tight mt-0.5">
+                    Identical geometry &amp; upholstery preview
+                  </span>
+                </div>
+              </div>
+            )}
+
             <div className="space-y-2 text-xs text-charcoal/80">
               <div className="flex justify-between border-b border-ivory-200 pb-1.5">
                 <span className="text-walnut font-medium">Provider:</span>
