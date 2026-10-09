@@ -20,12 +20,12 @@ export default async function AdminInventoryPage() {
   ]);
 
   return (
-    <div className="space-y-6">
-      <div className="border-b border-ivory-300 pb-5">
-        <span className="text-xs uppercase font-bold tracking-widest text-gold">Section 14 Factory Inventory</span>
-        <h1 className="font-serif text-3xl font-semibold text-charcoal mt-0.5">Raw Materials &amp; Supplier Management</h1>
-        <p className="text-xs text-charcoal/70 mt-1">
-          Monitor fabric rolls, foam sheets, seasoned teak planks, and hardware stock levels with traceable movements.
+    <div className="space-y-6 font-sans">
+      <div className="border-b border-platinum-border pb-5">
+        <span className="text-xs uppercase font-bold tracking-widest text-slate-muted">Factory Inventory Control</span>
+        <h1 className="font-serif text-3xl font-medium text-graphite mt-0.5">Raw Materials &amp; Supplier Management</h1>
+        <p className="text-xs text-slate-dark mt-1">
+          Monitor fabric bolts, high-resilience foam blocks, seasoned CP teak planks, and hardware stock levels with traceable movements.
         </p>
       </div>
 
@@ -36,35 +36,35 @@ export default async function AdminInventoryPage() {
           return (
             <div
               key={item.id}
-              className="bg-white rounded-2xl p-6 border border-ivory-300 shadow-sm space-y-4"
+              className="bg-white rounded-md p-6 border border-platinum-border shadow-sm space-y-4"
             >
               <div className="flex items-center justify-between">
-                <span className="font-mono text-xs font-bold text-charcoal">{item.itemCode}</span>
-                <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${
-                  isLow ? 'bg-red-100 text-red-800' : 'bg-emerald-100 text-emerald-800'
+                <span className="font-mono text-xs font-medium text-graphite">{item.itemCode}</span>
+                <span className={`px-2 py-0.5 rounded text-[10px] font-medium uppercase ${
+                  isLow ? 'bg-status-error/10 text-status-error' : 'bg-status-success/10 text-status-success'
                 }`}>
                   {isLow ? 'Low Stock' : 'Optimal'}
                 </span>
               </div>
 
               <div>
-                <h4 className="font-serif text-lg font-medium text-charcoal">{item.name}</h4>
-                <p className="text-xs text-charcoal/60 mt-0.5">Category: {item.category} • Location: {item.locationBin || 'Bodla Warehouse'}</p>
+                <h4 className="font-serif text-lg font-medium text-graphite">{item.name}</h4>
+                <p className="text-xs text-slate-dark mt-0.5">Category: {item.category} • Location: {item.locationBin || 'Bodla Warehouse'}</p>
               </div>
 
-              <div className="grid grid-cols-2 gap-3 bg-ivory-50 p-3 rounded-xl border border-ivory-200 text-xs">
+              <div className="grid grid-cols-2 gap-3 bg-platinum-soft/50 p-3 rounded-md border border-platinum-border text-xs">
                 <div>
-                  <span className="text-walnut block">Current Stock:</span>
-                  <span className="font-bold text-base text-charcoal">{item.currentStock} {item.unit}</span>
+                  <span className="text-slate-dark block">Current Stock:</span>
+                  <span className="font-semibold text-base text-graphite">{item.currentStock} {item.unit}</span>
                 </div>
                 <div>
-                  <span className="text-walnut block">Reserved for Jobs:</span>
-                  <span className="font-bold text-base text-gold">{item.reservedStock} {item.unit}</span>
+                  <span className="text-slate-dark block">Reserved for Jobs:</span>
+                  <span className="font-semibold text-base text-slate-muted">{item.reservedStock} {item.unit}</span>
                 </div>
               </div>
 
               {item.supplier && (
-                <div className="text-[11px] text-charcoal/70 pt-1 border-t border-ivory-200 flex justify-between">
+                <div className="text-[11px] text-slate-dark pt-1 border-t border-platinum-border flex justify-between">
                   <span>Supplier: {item.supplier.name}</span>
                   <span>Lead: {item.supplier.leadTimeDays}d</span>
                 </div>
@@ -75,11 +75,11 @@ export default async function AdminInventoryPage() {
       </div>
 
       {/* Suppliers Table */}
-      <div className="bg-white rounded-2xl p-6 border border-ivory-300 shadow-sm space-y-4">
-        <h3 className="font-serif text-xl font-semibold text-charcoal">Verified Material Suppliers</h3>
-        <div className="border border-ivory-300 rounded-xl overflow-hidden text-xs">
+      <div className="bg-white rounded-md p-6 border border-platinum-border shadow-sm space-y-4">
+        <h3 className="font-serif text-xl font-medium text-graphite">Verified Material Suppliers</h3>
+        <div className="border border-platinum-border rounded-md overflow-hidden text-xs">
           <table className="w-full text-left">
-            <thead className="bg-ivory-50 border-b border-ivory-200 text-walnut font-semibold">
+            <thead className="bg-platinum-soft border-b border-platinum-border text-slate-dark font-medium">
               <tr>
                 <th className="p-3">Supplier Name</th>
                 <th className="p-3">Category</th>
@@ -88,14 +88,14 @@ export default async function AdminInventoryPage() {
                 <th className="p-3">Lead Time</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-ivory-200">
+            <tbody className="divide-y divide-platinum-border">
               {suppliers.map((s) => (
-                <tr key={s.id}>
-                  <td className="p-3 font-semibold">{s.name}</td>
-                  <td className="p-3">{s.category.replace('_', ' ')}</td>
-                  <td className="p-3">{s.city || 'Domestic'}</td>
-                  <td className="p-3 font-mono">{s.phone}</td>
-                  <td className="p-3">{s.leadTimeDays} Days</td>
+                <tr key={s.id} className="hover:bg-platinum-soft/30">
+                  <td className="p-3 font-medium text-graphite">{s.name}</td>
+                  <td className="p-3 text-slate-dark">{s.category.replace('_', ' ')}</td>
+                  <td className="p-3 text-slate-dark">{s.city || 'Domestic'}</td>
+                  <td className="p-3 font-mono text-graphite">{s.phone}</td>
+                  <td className="p-3 text-slate-dark">{s.leadTimeDays} Days</td>
                 </tr>
               ))}
             </tbody>

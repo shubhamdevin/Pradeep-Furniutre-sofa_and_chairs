@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { MessageCircle, Calendar, X, PhoneCall, Sparkles } from 'lucide-react';
+import { MessageCircle, Calendar, X, PhoneCall } from 'lucide-react';
 
 export default function FloatingContact() {
   const [isOpen, setIsOpen] = useState(false);
@@ -15,22 +15,24 @@ export default function FloatingContact() {
     <div className="fixed bottom-6 right-6 z-40 flex flex-col items-end space-y-3">
       {/* Quick Menu Popover */}
       {isOpen && (
-        <div className="bg-white rounded-2xl shadow-luxury-hover border border-ivory-300 p-4 w-72 mb-2 animate-in fade-in slide-in-from-bottom-2 duration-150">
-          <div className="flex items-center justify-between pb-3 border-b border-ivory-200">
+        <div className="bg-white rounded-lg shadow-elevated border border-platinum-border p-4 w-72 mb-2 animate-in fade-in slide-in-from-bottom-2 duration-150">
+          <div className="flex items-center justify-between pb-3 border-b border-platinum-border">
             <div className="flex items-center space-x-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="font-serif text-sm font-semibold text-charcoal">Atelier Concierge</span>
+              <span className="w-2 h-2 rounded-full bg-graphite" />
+              <span className="font-sans text-xs font-semibold uppercase tracking-wider text-graphite">
+                Atelier Concierge
+              </span>
             </div>
             <button
               onClick={() => setIsOpen(false)}
-              className="text-charcoal/50 hover:text-charcoal p-1"
+              className="text-slate-dark hover:text-graphite p-1"
             >
               <X className="w-4 h-4" />
             </button>
           </div>
 
-          <p className="text-xs text-charcoal/70 my-3 leading-relaxed">
-            Need advice on living room dimensions, custom fabric swatches, or visiting our Agra workshop?
+          <p className="text-xs text-slate-dark my-3 leading-relaxed">
+            Direct consultation for custom dimensions, CAD blueprints, and visiting our Bodla workshop or Civil Lines gallery.
           </p>
 
           <div className="space-y-2">
@@ -38,43 +40,40 @@ export default function FloatingContact() {
               href={`https://wa.me/919897023456?text=${whatsappMessage}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full flex items-center space-x-2.5 px-3 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold transition-colors"
+              className="w-full flex items-center space-x-2.5 px-3 py-2 rounded-md bg-graphite hover:bg-graphite-hover text-white text-xs font-semibold transition-colors"
             >
               <MessageCircle className="w-4 h-4" />
-              <span>Chat on WhatsApp</span>
+              <span>Inquire via WhatsApp</span>
             </a>
 
             <Link
               href="/consultation"
               onClick={() => setIsOpen(false)}
-              className="w-full flex items-center space-x-2.5 px-3 py-2.5 rounded-xl bg-charcoal hover:bg-charcoal-light text-ivory-100 text-xs font-semibold transition-colors"
+              className="w-full flex items-center space-x-2.5 px-3 py-2 rounded-md bg-platinum-soft hover:bg-platinum-hover text-graphite text-xs font-semibold transition-colors border border-platinum-border"
             >
-              <Calendar className="w-4 h-4 text-gold" />
-              <span>Book Showroom/Factory Visit</span>
+              <Calendar className="w-4 h-4 text-slate-dark" />
+              <span>Book Private Visit</span>
             </Link>
 
             <a
               href="tel:+919897023456"
-              className="w-full flex items-center space-x-2.5 px-3 py-2 rounded-xl bg-ivory-100 hover:bg-ivory-200 text-charcoal text-xs font-medium transition-colors justify-center"
+              className="w-full flex items-center space-x-2.5 px-3 py-2 rounded-md bg-white hover:bg-platinum-soft text-slate-dark text-xs font-medium transition-colors justify-center border border-platinum-border"
             >
-              <PhoneCall className="w-3.5 h-3.5 text-walnut" />
-              <span>Call: +91 98970 23456</span>
+              <PhoneCall className="w-3.5 h-3.5 text-slate-dark" />
+              <span>+91 98970 23456</span>
             </a>
           </div>
         </div>
       )}
 
-      {/* Main Floating Trigger Button */}
+      {/* Floating Action Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="group flex items-center space-x-2 px-4 py-3 rounded-full bg-charcoal text-white hover:bg-charcoal-light border border-gold/40 shadow-luxury-hover hover:scale-105 transition-all"
-        title="Connect with Atelier Designer"
+        className="px-4 py-2.5 rounded-md bg-graphite text-white hover:bg-graphite-hover shadow-elevated border border-graphite-border flex items-center space-x-2 text-xs font-semibold uppercase tracking-wider transition-all"
+        aria-label="Contact Atelier"
       >
-        <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 group-hover:scale-110 transition-transform" />
-        <MessageCircle className="w-5 h-5 text-gold" />
-        <span className="text-xs font-semibold tracking-wider uppercase pr-1 hidden sm:inline">
-          Consult Atelier
-        </span>
+        <span className="w-2 h-2 rounded-full bg-olive-muted" />
+        <span>Atelier Contact</span>
       </button>
     </div>
   );

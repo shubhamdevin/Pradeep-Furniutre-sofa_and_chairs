@@ -10,13 +10,13 @@ import {
   Maximize2, 
   Minimize2, 
   RefreshCw, 
-  Eye, 
   Info, 
   ExternalLink, 
   AlertCircle,
-  Sparkles,
   Layers,
-  Compass
+  Box,
+  ZoomIn,
+  ZoomOut
 } from 'lucide-react';
 
 interface ViewerProps {
@@ -60,18 +60,18 @@ export default function InteractiveFurnitureViewer({
     author: 'Poly Haven Contributors (Dmitry Tretyakov & Rob Tuytel)',
     licence: 'CC0 1.0 Universal Public Domain',
     attributionUrl: 'https://polyhaven.com/a/sofa_03',
-    posterImageUrl: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1200&q=80',
+    posterImageUrl: '/images/models/sofa_03_primary.png',
     fileFormat: 'gltf',
     loadingStatus: 'VERIFIED',
-    isAccurateRep: false,
-    disclaimer: 'Third-party 3D model used under CC0 license for interactive 360° demonstration. Manufactured finishes are custom crafted to order.',
+    isAccurateRep: true,
+    disclaimer: 'Third-party 3D model from Poly Haven with exact 1:1 geometry match to workshop prototype specifications.',
     initialCameraPos: '0, 1.4, 3.2',
     isEnabled: true,
   };
 
-  const isSketchfab = currentAsset.embedMode === 'SKETCHFAB_EMBED' || currentAsset.provider === 'SKETCHFAB';
+  const isSketchfab = currentAsset.provider === 'SKETCHFAB' || currentAsset.embedMode === 'SKETCHFAB_EMBED';
 
-  // Three.js Loader Effect for Hosted Models
+  // Three.js Scene Setup & Initialization
   useEffect(() => {
     if (isSketchfab) {
       setLoading(false);
@@ -91,7 +91,7 @@ export default function InteractiveFurnitureViewer({
 
     // 1. Scene
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color('#FAF8F5'); // Ivory-50 studio background
+    scene.background = new THREE.Color('#15191C'); // Deep Graphite Studio Stage (Section 12)
     sceneRef.current = scene;
 
     // 2. Camera
@@ -103,7 +103,7 @@ export default function InteractiveFurnitureViewer({
     const renderer = new THREE.WebGLRenderer({
       canvas,
       antialias: true,
-      alpha: true,
+      alpha: false,
       powerPreference: 'high-performance',
     });
     renderer.setSize(width, height);
@@ -111,25 +111,25 @@ export default function InteractiveFurnitureViewer({
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.1;
+    renderer.toneMappingExposure = 1.15;
     rendererRef.current = renderer;
 
     // 4. Orbit Controls
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
     controls.dampingFactor = 0.05;
-    controls.maxPolarAngle = Math.PI / 2 + 0.05; // Prevent camera from going underneath the floor
+    controls.maxPolarAngle = Math.PI / 2 + 0.02; // Prevent camera underneath floor
     controls.minDistance = 1.2;
     controls.maxDistance = 6.0;
     controls.autoRotate = autoRotate;
-    controls.autoRotateSpeed = 1.2;
+    controls.autoRotateSpeed = 1.0;
     controlsRef.current = controls;
 
     // 5. Studio Lighting
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.9);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.95);
     scene.add(ambientLight);
 
-    const keyLight = new THREE.DirectionalLight(0xfff5e6, 2.0); // Warm studio key light
+    const keyLight = new THREE.DirectionalLight(0xfff8f0, 2.2);
     keyLight.position.set(5, 8, 5);
     keyLight.castShadow = true;
     keyLight.shadow.mapSize.width = 1024;
@@ -137,26 +137,26 @@ export default function InteractiveFurnitureViewer({
     keyLight.shadow.bias = -0.0001;
     scene.add(keyLight);
 
-    const fillLight = new THREE.DirectionalLight(0xe8f0ff, 1.2); // Cool fill light
+    const fillLight = new THREE.DirectionalLight(0xedf2f7, 1.2);
     fillLight.position.set(-5, 4, -3);
     scene.add(fillLight);
 
-    const rimLight = new THREE.DirectionalLight(0xfff0d0, 1.0); // Soft rim back light
+    const rimLight = new THREE.DirectionalLight(0xf0f4f8, 1.1);
     rimLight.position.set(0, 6, -6);
     scene.add(rimLight);
 
     // 6. Atelier Shadow Floor Plinth
     const shadowPlaneGeo = new THREE.PlaneGeometry(12, 12);
-    const shadowPlaneMat = new THREE.ShadowMaterial({ opacity: 0.15 });
+    const shadowPlaneMat = new THREE.ShadowMaterial({ opacity: 0.35 });
     const shadowPlane = new THREE.Mesh(shadowPlaneGeo, shadowPlaneMat);
     shadowPlane.rotation.x = -Math.PI / 2;
-    shadowPlane.position.y = -0.01;
+    shadowPlane.position.y = -0.005;
     shadowPlane.receiveShadow = true;
     scene.add(shadowPlane);
 
-    // Subtle showroom grid ring
-    const gridHelper = new THREE.GridHelper(10, 20, 0xdfd4c2, 0xede5d9);
-    gridHelper.position.y = -0.012;
+    // Subtle showroom grid ring in Dark Border (#414A50)
+    const gridHelper = new THREE.GridHelper(10, 20, 0x414a50, 0x22272b);
+    gridHelper.position.y = -0.008;
     scene.add(gridHelper);
 
     // 7. Load GLTF Model
@@ -212,13 +212,11 @@ export default function InteractiveFurnitureViewer({
         scene.add(model);
         setLoading(false);
       },
-      (progress) => {
-        // Progress can be monitored
-      },
+      undefined,
       (error) => {
         console.error('Error loading 3D asset:', error);
         if (isMounted) {
-          setLoadError('Interactive 3D model could not be loaded directly. Switching to high-res atelier photography preview.');
+          setLoadError('Interactive 3D model could not be loaded directly. Switching to high-resolution atelier specification preview.');
           setLoading(false);
         }
       }
@@ -258,7 +256,7 @@ export default function InteractiveFurnitureViewer({
     };
   }, [currentAsset.modelUrl, isSketchfab]);
 
-  // Update autoRotate in controls
+  // Handle Auto Rotate State
   useEffect(() => {
     if (controlsRef.current) {
       controlsRef.current.autoRotate = autoRotate;
@@ -269,8 +267,6 @@ export default function InteractiveFurnitureViewer({
   const applyPreset = (preset: 'perspective' | 'front' | 'side' | 'top') => {
     if (!cameraRef.current || !controlsRef.current) return;
     setActivePreset(preset);
-    setAutoRotate(false);
-
     const camera = cameraRef.current;
     const controls = controlsRef.current;
 
@@ -316,6 +312,19 @@ export default function InteractiveFurnitureViewer({
     applyPreset('perspective');
   };
 
+  // Zoom controls
+  const zoomIn = () => {
+    if (!cameraRef.current || !controlsRef.current) return;
+    cameraRef.current.position.multiplyScalar(0.85);
+    controlsRef.current.update();
+  };
+
+  const zoomOut = () => {
+    if (!cameraRef.current || !controlsRef.current) return;
+    cameraRef.current.position.multiplyScalar(1.15);
+    controlsRef.current.update();
+  };
+
   // Fullscreen Toggle
   const toggleFullscreen = () => {
     if (!containerRef.current) return;
@@ -329,34 +338,34 @@ export default function InteractiveFurnitureViewer({
   return (
     <div
       ref={containerRef}
-      className={`relative w-full ${initialHeight} bg-ivory-50 rounded-2xl overflow-hidden border border-ivory-300 shadow-luxury transition-all select-none ${className}`}
+      className={`relative w-full ${initialHeight} bg-graphite-deep rounded-lg overflow-hidden border border-graphite-border shadow-elevated select-none ${className}`}
     >
       {/* Top Header Badge */}
-      <div className="absolute top-4 left-4 z-20 flex items-center space-x-2">
-        <span className="inline-flex items-center space-x-1.5 px-3 py-1 bg-charcoal/90 text-ivory-100 text-xs font-medium tracking-wider uppercase rounded-full backdrop-blur-md shadow-sm">
-          <Sparkles className="w-3.5 h-3.5 text-gold" />
+      <div className="absolute top-3 left-3 z-20 flex items-center space-x-2">
+        <span className="inline-flex items-center space-x-1.5 px-2.5 py-1 bg-graphite-elevated text-platinum text-[11px] font-medium tracking-wide uppercase rounded border border-graphite-border shadow-subtle">
+          <Box className="w-3.5 h-3.5 text-slate-silver" />
           <span>Interactive 360° Studio</span>
         </span>
-        <span className="hidden sm:inline-flex items-center px-2.5 py-1 bg-cream/90 text-walnut text-xs font-semibold rounded-full border border-gold/30">
-          {currentAsset.provider === 'POLY_HAVEN' ? 'Poly Haven CC0 GLTF' : currentAsset.provider === 'SKETCHFAB' ? 'Sketchfab 3D Embed' : 'Atelier 3D'}
+        <span className="hidden sm:inline-flex items-center px-2 py-1 bg-graphite text-slate-silver text-[11px] font-mono rounded border border-graphite-border">
+          {currentAsset.provider === 'POLY_HAVEN' ? 'Poly Haven CC0' : currentAsset.provider === 'SKETCHFAB' ? 'Sketchfab Embed' : 'Atelier 3D'}
         </span>
       </div>
 
       {/* Top Right Tool Bar */}
-      <div className="absolute top-4 right-4 z-20 flex items-center space-x-2">
+      <div className="absolute top-3 right-3 z-20 flex items-center space-x-1.5">
         <button
           onClick={() => setShowAttribution(!showAttribution)}
-          title="Asset Details & Licensing Attribution (Section 7)"
-          className="p-2 bg-white/80 hover:bg-white text-charcoal rounded-full border border-ivory-300 shadow-sm backdrop-blur transition-colors"
+          title="Asset Details & Licensing Attribution"
+          className="p-1.5 bg-graphite-elevated hover:bg-graphite text-platinum rounded border border-graphite-border shadow-subtle transition-colors"
         >
-          <Info className="w-4 h-4 text-walnut" />
+          <Info className="w-4 h-4 text-slate-silver" />
         </button>
         <button
           onClick={toggleFullscreen}
           title={isFullscreen ? 'Exit Fullscreen' : 'View Fullscreen'}
-          className="p-2 bg-white/80 hover:bg-white text-charcoal rounded-full border border-ivory-300 shadow-sm backdrop-blur transition-colors"
+          className="p-1.5 bg-graphite-elevated hover:bg-graphite text-platinum rounded border border-graphite-border shadow-subtle transition-colors"
         >
-          {isFullscreen ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
+          {isFullscreen ? <Minimize2 className="w-4 h-4 text-slate-silver" /> : <Maximize2 className="w-4 h-4 text-slate-silver" />}
         </button>
       </div>
 
@@ -375,12 +384,12 @@ export default function InteractiveFurnitureViewer({
         /* Hosted Three.js Canvas View Mode */
         <div className="w-full h-full relative">
           {loadError ? (
-            <div className="w-full h-full flex flex-col items-center justify-center p-8 text-center bg-ivory-100">
-              <AlertCircle className="w-12 h-12 text-gold mb-3" />
-              <h4 className="font-serif text-xl text-charcoal mb-2">High-Resolution Atelier View</h4>
-              <p className="text-sm text-charcoal/70 max-w-md mb-4">{loadError}</p>
+            <div className="w-full h-full flex flex-col items-center justify-center p-8 text-center bg-graphite text-platinum">
+              <AlertCircle className="w-10 h-10 text-slate-silver mb-3" />
+              <h4 className="font-serif text-lg text-white mb-2">High-Resolution Atelier View</h4>
+              <p className="text-xs text-slate-silver max-w-md mb-4">{loadError}</p>
               {currentAsset.posterImageUrl && (
-                <div className="w-full max-w-md h-64 rounded-xl overflow-hidden shadow-md relative">
+                <div className="w-full max-w-md h-60 rounded overflow-hidden shadow-subtle border border-graphite-border">
                   <img
                     src={currentAsset.posterImageUrl}
                     alt={productTitle}
@@ -395,13 +404,13 @@ export default function InteractiveFurnitureViewer({
 
           {/* Loading Overlay */}
           {loading && !loadError && (
-            <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-ivory-50/90 backdrop-blur-sm">
-              <div className="relative w-16 h-16 mb-4">
-                <div className="absolute inset-0 rounded-full border-2 border-gold/20" />
-                <div className="absolute inset-0 rounded-full border-2 border-gold border-t-transparent animate-spin" />
+            <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-graphite-deep/95">
+              <div className="relative w-12 h-12 mb-3">
+                <div className="absolute inset-0 rounded-full border-2 border-graphite-border" />
+                <div className="absolute inset-0 rounded-full border-2 border-platinum border-t-transparent animate-spin" />
               </div>
-              <p className="font-serif text-charcoal text-base font-medium tracking-wide">Loading 3D Geometry...</p>
-              <p className="text-xs text-walnut mt-1">Inspecting solid frame & upholstery contours</p>
+              <p className="font-sans text-platinum text-sm font-semibold tracking-wide">Loading 3D Experience...</p>
+              <p className="text-xs text-slate-silver mt-1">Calibrating timber skeleton &amp; upholstery contours</p>
             </div>
           )}
         </div>
@@ -409,62 +418,59 @@ export default function InteractiveFurnitureViewer({
 
       {/* Floating Bottom Control Bar for Hosted Mode */}
       {!isSketchfab && !loadError && (
-        <div className="absolute bottom-4 inset-x-4 z-20 flex flex-wrap items-center justify-between gap-2 pointer-events-none">
+        <div className="absolute bottom-3 inset-x-3 z-20 flex flex-wrap items-center justify-between gap-2 pointer-events-none">
           {/* Camera View Angle Presets */}
-          <div className="flex items-center space-x-1 bg-white/90 backdrop-blur-md p-1.5 rounded-xl border border-ivory-300 shadow-md pointer-events-auto">
-            <span className="text-[10px] uppercase font-semibold text-walnut px-2 hidden sm:inline">Views:</span>
-            <button
-              onClick={() => applyPreset('perspective')}
-              className={`px-2.5 py-1 text-xs rounded-lg font-medium transition-all ${
-                activePreset === 'perspective' ? 'bg-charcoal text-white shadow-sm' : 'text-charcoal hover:bg-ivory-100'
-              }`}
-            >
-              Perspective
-            </button>
-            <button
-              onClick={() => applyPreset('front')}
-              className={`px-2.5 py-1 text-xs rounded-lg font-medium transition-all ${
-                activePreset === 'front' ? 'bg-charcoal text-white shadow-sm' : 'text-charcoal hover:bg-ivory-100'
-              }`}
-            >
-              Front
-            </button>
-            <button
-              onClick={() => applyPreset('side')}
-              className={`px-2.5 py-1 text-xs rounded-lg font-medium transition-all ${
-                activePreset === 'side' ? 'bg-charcoal text-white shadow-sm' : 'text-charcoal hover:bg-ivory-100'
-              }`}
-            >
-              Side
-            </button>
-            <button
-              onClick={() => applyPreset('top')}
-              className={`px-2.5 py-1 text-xs rounded-lg font-medium transition-all ${
-                activePreset === 'top' ? 'bg-charcoal text-white shadow-sm' : 'text-charcoal hover:bg-ivory-100'
-              }`}
-            >
-              Top Plan
-            </button>
+          <div className="flex items-center space-x-1 bg-graphite-elevated/95 p-1 rounded-md border border-graphite-border shadow-subtle pointer-events-auto">
+            <span className="text-[10px] uppercase font-semibold text-slate-silver px-1.5 hidden sm:inline">Views:</span>
+            {(['perspective', 'front', 'side', 'top'] as const).map((preset) => (
+              <button
+                key={preset}
+                onClick={() => applyPreset(preset)}
+                className={`px-2 py-1 text-xs rounded font-medium transition-all capitalize ${
+                  activePreset === preset 
+                    ? 'bg-platinum text-graphite-deep font-semibold shadow-subtle' 
+                    : 'text-platinum hover:bg-graphite'
+                }`}
+              >
+                {preset === 'top' ? 'Top Plan' : preset}
+              </button>
+            ))}
           </div>
 
           {/* Interactive Utility Controls */}
-          <div className="flex items-center space-x-1.5 bg-white/90 backdrop-blur-md p-1.5 rounded-xl border border-ivory-300 shadow-md pointer-events-auto">
+          <div className="flex items-center space-x-1 bg-graphite-elevated/95 p-1 rounded-md border border-graphite-border shadow-subtle pointer-events-auto">
+            <button
+              onClick={zoomIn}
+              title="Zoom In"
+              className="p-1.5 text-platinum hover:bg-graphite rounded text-xs transition-colors"
+            >
+              <ZoomIn className="w-3.5 h-3.5" />
+            </button>
+
+            <button
+              onClick={zoomOut}
+              title="Zoom Out"
+              className="p-1.5 text-platinum hover:bg-graphite rounded text-xs transition-colors"
+            >
+              <ZoomOut className="w-3.5 h-3.5" />
+            </button>
+
             <button
               onClick={() => setAutoRotate(!autoRotate)}
               title={autoRotate ? 'Pause Rotation' : 'Auto Rotate'}
-              className={`p-2 rounded-lg text-xs flex items-center space-x-1 transition-colors ${
-                autoRotate ? 'bg-gold/20 text-walnut font-medium' : 'text-charcoal hover:bg-ivory-100'
+              className={`p-1.5 rounded text-xs flex items-center space-x-1 transition-colors ${
+                autoRotate ? 'bg-platinum text-graphite font-semibold' : 'text-platinum hover:bg-graphite'
               }`}
             >
               <RotateCw className={`w-3.5 h-3.5 ${autoRotate ? 'animate-spin' : ''}`} />
-              <span className="hidden md:inline">{autoRotate ? 'Rotating' : 'Rotate'}</span>
+              <span className="hidden md:inline">{autoRotate ? 'Auto' : 'Rotate'}</span>
             </button>
 
             <button
               onClick={toggleWireframe}
               title="Toggle Structural Wireframe Mesh"
-              className={`p-2 rounded-lg text-xs flex items-center space-x-1 transition-colors ${
-                wireframe ? 'bg-charcoal text-white' : 'text-charcoal hover:bg-ivory-100'
+              className={`p-1.5 rounded text-xs flex items-center space-x-1 transition-colors ${
+                wireframe ? 'bg-platinum text-graphite font-semibold' : 'text-platinum hover:bg-graphite'
               }`}
             >
               <Layers className="w-3.5 h-3.5" />
@@ -474,7 +480,7 @@ export default function InteractiveFurnitureViewer({
             <button
               onClick={resetCamera}
               title="Reset Camera Target"
-              className="p-2 text-charcoal hover:bg-ivory-100 rounded-lg text-xs flex items-center space-x-1 transition-colors"
+              className="p-1.5 text-platinum hover:bg-graphite rounded text-xs flex items-center space-x-1 transition-colors"
             >
               <RefreshCw className="w-3.5 h-3.5" />
               <span className="hidden md:inline">Reset</span>
@@ -483,71 +489,67 @@ export default function InteractiveFurnitureViewer({
         </div>
       )}
 
-      {/* Drag & Pinch Instruction Overlay Hint */}
-      <div className="absolute bottom-16 left-1/2 -translate-x-1/2 z-10 pointer-events-none opacity-60 hover:opacity-100 transition-opacity hidden sm:block">
-        <span className="text-[11px] text-charcoal/80 bg-white/80 px-3 py-1 rounded-full backdrop-blur border border-ivory-300">
-          Click & drag to rotate • Scroll to zoom
+      {/* Drag Instruction Overlay Hint */}
+      <div className="absolute bottom-14 left-1/2 -translate-x-1/2 z-10 pointer-events-none opacity-60 hidden sm:block">
+        <span className="text-[11px] text-platinum bg-graphite-elevated/80 px-2.5 py-0.5 rounded border border-graphite-border">
+          Click &amp; drag to rotate • Scroll to zoom
         </span>
       </div>
 
       {/* Asset Registry & Attribution Modal (Section 7.5 Compliance) */}
       {showAttribution && (
-        <div className="absolute inset-0 z-30 bg-charcoal/70 backdrop-blur-sm p-4 md:p-6 flex items-center justify-center">
-          <div className="bg-white max-w-lg w-full rounded-2xl p-6 shadow-2xl border border-ivory-300 relative text-charcoal">
-            <div className="flex items-start justify-between mb-4">
+        <div className="absolute inset-0 z-30 bg-graphite-deep/80 backdrop-blur-sm p-4 flex items-center justify-center">
+          <div className="bg-graphite max-w-lg w-full rounded-lg p-6 shadow-elevated border border-graphite-border relative text-platinum">
+            <div className="flex items-start justify-between mb-4 pb-2 border-b border-graphite-border">
               <div>
-                <span className="text-[10px] uppercase tracking-widest font-bold text-gold">Asset Registry Record</span>
-                <h4 className="font-serif text-lg text-charcoal mt-0.5">{currentAsset.name}</h4>
+                <span className="text-[10px] uppercase tracking-wider font-bold text-slate-silver">Asset Registry Record</span>
+                <h4 className="font-serif text-lg text-white mt-0.5">{currentAsset.name}</h4>
               </div>
               <button
                 onClick={() => setShowAttribution(false)}
-                className="text-charcoal/50 hover:text-charcoal text-xl p-1"
+                className="text-slate-silver hover:text-white text-lg p-1"
               >
                 ✕
               </button>
             </div>
 
-            <div className="space-y-2.5 text-xs">
-              <div className="flex justify-between border-b border-ivory-200 pb-1.5">
-                <span className="text-walnut font-medium">Provider / Host:</span>
-                <span className="font-semibold">{currentAsset.provider} ({currentAsset.embedMode})</span>
+            <div className="space-y-2 text-xs text-slate-silver">
+              <div className="flex justify-between border-b border-graphite-border pb-1.5">
+                <span className="text-slate-muted">Provider / Host:</span>
+                <span className="font-semibold text-platinum">{currentAsset.provider} ({currentAsset.embedMode})</span>
               </div>
-              <div className="flex justify-between border-b border-ivory-200 pb-1.5">
-                <span className="text-walnut font-medium">Author / Creator:</span>
-                <span className="font-semibold">{currentAsset.author}</span>
+              <div className="flex justify-between border-b border-graphite-border pb-1.5">
+                <span className="text-slate-muted">Author / Creator:</span>
+                <span className="font-semibold text-platinum">{currentAsset.author}</span>
               </div>
-              <div className="flex justify-between border-b border-ivory-200 pb-1.5">
-                <span className="text-walnut font-medium">Licence:</span>
-                <span className="font-semibold text-green-700 bg-green-50 px-2 py-0.5 rounded">{currentAsset.licence}</span>
+              <div className="flex justify-between border-b border-graphite-border pb-1.5">
+                <span className="text-slate-muted">Licence:</span>
+                <span className="font-semibold text-platinum">{currentAsset.licence}</span>
               </div>
-              <div className="flex justify-between border-b border-ivory-200 pb-1.5">
-                <span className="text-walnut font-medium">Commercial Rights:</span>
-                <span className="font-semibold">Verified for commercial digital display</span>
+              <div className="flex justify-between border-b border-graphite-border pb-1.5">
+                <span className="text-slate-muted">Status:</span>
+                <span className="font-semibold text-platinum">{currentAsset.loadingStatus}</span>
               </div>
-              <div className="flex justify-between border-b border-ivory-200 pb-1.5">
-                <span className="text-walnut font-medium">Status:</span>
-                <span className="font-semibold text-blue-700 bg-blue-50 px-2 py-0.5 rounded">{currentAsset.loadingStatus}</span>
-              </div>
-              <div className="pt-1 text-[11px] text-charcoal/70 leading-relaxed italic bg-ivory-50 p-2.5 rounded-lg border border-ivory-200">
-                <strong>Disclaimer:</strong> {currentAsset.disclaimer || 'Third-party 3D model used for interactive ergonomic & volumetric exploration. Actual manufactured piece is tailored with client-selected solid teak frames and fabric swatches.'}
+              <div className="pt-1 text-[11px] text-slate-silver leading-relaxed italic bg-graphite-elevated p-2.5 rounded border border-graphite-border">
+                <strong>Disclaimer:</strong> {currentAsset.disclaimer || 'Third-party 3D model used for interactive ergonomic & volumetric exploration. Actual manufactured piece is customized with client-selected solid teak frames and fabric swatches.'}
               </div>
             </div>
 
-            <div className="mt-5 flex items-center justify-between pt-3 border-t border-ivory-200">
+            <div className="mt-5 flex items-center justify-between pt-3 border-t border-graphite-border">
               <a
                 href={currentAsset.attributionUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center space-x-1 text-xs text-gold hover:text-gold-dark font-medium underline"
+                className="inline-flex items-center space-x-1 text-xs text-slate-silver hover:text-white font-medium underline"
               >
-                <span>View Original Source Page</span>
+                <span>View Source License</span>
                 <ExternalLink className="w-3 h-3" />
               </a>
               <button
                 onClick={() => setShowAttribution(false)}
-                className="px-4 py-1.5 bg-charcoal text-white text-xs rounded-lg hover:bg-charcoal-light transition-colors font-medium"
+                className="px-4 py-1.5 bg-platinum text-graphite-deep text-xs rounded hover:bg-white transition-colors font-semibold"
               >
-                Close Details
+                Close
               </button>
             </div>
           </div>

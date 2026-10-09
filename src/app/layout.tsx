@@ -1,38 +1,41 @@
 import type { Metadata } from 'next';
-import { Playfair_Display, Inter } from 'next/font/google';
+import { Manrope, Instrument_Serif } from 'next/font/google';
 import './globals.css';
+import '@/styles/tokens.css';
 import Header from '@/components/ui/Header';
 import Footer from '@/components/ui/Footer';
 import FloatingContact from '@/components/ui/FloatingContact';
 
-const playfair = Playfair_Display({
+const manrope = Manrope({
   subsets: ['latin'],
-  variable: '--font-serif',
-  display: 'swap',
-});
-
-const inter = Inter({
-  subsets: ['latin'],
+  weight: ['400', '500', '600', '700'],
   variable: '--font-sans',
   display: 'swap',
 });
 
+const instrumentSerif = Instrument_Serif({
+  subsets: ['latin'],
+  weight: ['400'],
+  style: ['normal', 'italic'],
+  variable: '--font-serif',
+  display: 'swap',
+});
+
 export const metadata: Metadata = {
-  title: 'Pradeep Furniture Atelier | Luxury 3D Sofa & Fancy Chairs Manufacturer',
+  title: 'Pradeep Furniture Atelier | Bespoke Architectural Sofas & Statement Chairs',
   description:
-    'Bespoke luxury sofas, fancy statement chairs, and custom upholstered seating handcrafted in Agra. Inspect 360° 3D models, request custom dimensions, and commission bespoke furniture.',
+    'High-end architectural sofa & fancy chairs manufacturing studio. Precision woodworking, European textiles, 360° interactive 3D digital showroom, and bespoke commissions.',
   keywords: [
-    'Luxury Sofa Manufacturer',
+    'Architectural Sofa Manufacturer',
     'Custom Sofa Manufacturer',
-    'Fancy Chair Manufacturer',
-    'Bespoke Furniture Manufacturer',
+    'Fancy Chair Studio',
+    'Bespoke Seating Atelier',
     'Upholstered Furniture Manufacturer',
-    'Custom Designer Chairs',
-    'Sofa Manufacturer in Agra',
+    'Designer Lounge Seating',
   ],
   openGraph: {
-    title: 'Pradeep Furniture Atelier | Bespoke Sofas & Fancy Chairs',
-    description: 'Custom handcrafted sofas & fancy chairs with interactive 3D digital showroom and direct atelier manufacturing.',
+    title: 'Pradeep Furniture Atelier | Bespoke Sofas & Statement Chairs',
+    description: 'Architectural furniture manufacturing studio with interactive 3D digital showroom and direct atelier production.',
     url: 'https://pradeepfurniture.com',
     siteName: 'Pradeep Furniture Atelier',
     locale: 'en_IN',
@@ -46,8 +49,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${playfair.variable} ${inter.variable}`}>
-      <body className="min-h-screen flex flex-col bg-ivory-100 text-charcoal">
+    <html lang="en" className={`${manrope.variable} ${instrumentSerif.variable}`}>
+      <body className="min-h-screen flex flex-col bg-platinum text-graphite font-sans antialiased selection:bg-graphite selection:text-white">
         <Header />
         <main className="flex-grow">{children}</main>
         <Footer />

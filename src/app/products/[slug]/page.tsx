@@ -62,7 +62,7 @@ export default async function ProductDetailPage({
     : null;
 
   return (
-    <div className="min-h-screen bg-ivory-100 py-10 md:py-16">
+    <div className="min-h-screen bg-platinum py-10 md:py-16 font-sans text-graphite">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <ProductDetailClient
           product={product}

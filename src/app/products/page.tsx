@@ -40,19 +40,19 @@ export default async function ProductsPage({
   ]);
 
   return (
-    <div className="min-h-screen bg-ivory-100 py-12">
+    <div className="min-h-screen bg-platinum py-12 md:py-20 text-graphite font-sans">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Page Header */}
         <div className="mb-10 text-center md:text-left">
-          <div className="inline-flex items-center space-x-2 text-gold mb-2">
-            <span className="w-6 h-px bg-gold" />
+          <div className="inline-flex items-center space-x-2 text-slate-muted mb-2">
+            <span className="w-6 h-px bg-slate-border" />
             <span className="text-xs uppercase font-bold tracking-widest">Atelier Catalogue</span>
           </div>
-          <h1 className="font-serif text-3xl sm:text-5xl text-charcoal font-medium">
+          <h1 className="font-serif text-3xl sm:text-5xl text-graphite font-medium">
             Furniture Designs &amp; Silhouettes
           </h1>
-          <p className="text-sm text-charcoal/70 mt-2 max-w-2xl">
-            Explore our curated catalogue of bespoke sofas, sectional loungers, and fancy statement chairs. Every piece can be customized to your room measurements, fabric tier, and hardwood preferences.
+          <p className="text-sm text-slate-dark mt-2 max-w-2xl leading-relaxed">
+            Explore our curated catalogue of bespoke sofas, sectional loungers, and statement fancy chairs. Every piece can be customized to your room measurements, fabric tier, and hardwood preferences.
           </p>
         </div>
 

@@ -1,0 +1,84 @@
+/* =========================================================================
+   GPT-6 ASTRA — ARCHITECTURAL GRAPHITE + PLATINUM DESIGN SYSTEM TOKENS
+   Theme: Architectural Minimalism × Contemporary Luxury × Precision Craftsmanship
+   ========================================================================= */
+
+:root {
+  /* Primitive Brand Palette */
+  --color-graphite-primary: #22272B;
+  --color-deep-graphite: #15191C;
+  --color-graphite-elevated: #2D353A;
+  --color-platinum-white: #F3F4F2;
+  --color-pure-white: #FFFFFF;
+  --color-silver-slate: #8D979B;
+  --color-muted-olive: #768177;
+  --color-soft-platinum: #E8EBE9;
+  --color-dark-grey: #4D565B;
+  --color-light-border: #D7DCDA;
+  --color-dark-border: #414A50;
+
+  /* Semantic Feedback Palette */
+  --color-status-success: #24684C;
+  --color-status-warning: #8A5B1D;
+  --color-status-error: #B42318;
+  --color-status-info: #315B75;
+
+  /* Light Theme Semantic Tokens (Default) */
+  --bg-primary: #F3F4F2;
+  --bg-secondary: #FFFFFF;
+  --bg-tertiary: #E8EBE9;
+  --surface-card: #FFFFFF;
+  --surface-hover: #E2E6E3;
+  --text-primary: #22272B;
+  --text-secondary: #4D565B;
+  --text-muted: #687276;
+  --border-default: #D7DCDA;
+  --border-light: #E8EBE9;
+  --btn-primary: #22272B;
+  --btn-primary-text: #FFFFFF;
+  --btn-hover: #353D42;
+  --accent-decorative: #768177;
+
+  /* Spacing Scale */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-24: 96px;
+  --space-32: 128px;
+
+  /* Radius Scale */
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 10px;
+  --radius-xl: 12px;
+  --radius-2xl: 16px;
+
+  /* Subtle Architectural Elevation */
+  --shadow-subtle: 0 1px 3px rgba(34, 39, 43, 0.05), 0 1px 2px rgba(34, 39, 43, 0.03);
+  --shadow-card: 0 4px 12px -2px rgba(34, 39, 43, 0.06), 0 2px 4px -1px rgba(34, 39, 43, 0.03);
+  --shadow-elevated: 0 12px 24px -4px rgba(34, 39, 43, 0.08), 0 4px 8px -2px rgba(34, 39, 43, 0.04);
+}
+
+/* Dark Architectural Section Override */
+.theme-dark-graphite,
+[data-theme="dark-graphite"],
+.dark-section {
+  --bg-primary: #15191C;
+  --bg-secondary: #22272B;
+  --bg-elevated: #2D353A;
+  --surface-card: #22272B;
+  --surface-hover: #2D353A;
+  --text-primary: #F6F7F6;
+  --text-secondary: #BCC5C6;
+  --text-muted: #8D979B;
+  --border-default: #414A50;
+  --btn-primary: #F3F4F2;
+  --btn-primary-text: #15191C;
+  --btn-hover: #E3E7E5;
+  --accent-decorative: #9FAAA1;
+}

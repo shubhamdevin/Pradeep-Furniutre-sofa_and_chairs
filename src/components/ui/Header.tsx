@@ -9,12 +9,10 @@ import {
   Search, 
   ChevronDown, 
   Phone, 
-  Compass, 
-  Sparkles, 
-  FileText,
+  ArrowRight,
   Sliders,
   Layers,
-  ArrowRight
+  FileText
 } from 'lucide-react';
 
 export default function Header() {
@@ -27,7 +25,7 @@ export default function Header() {
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 30);
+      setIsScrolled(window.scrollY > 20);
     };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
@@ -47,12 +45,12 @@ export default function Header() {
     { name: 'Sectional Sofas', slug: 'sectional-sofas', desc: 'Modular architectural layouts' },
     { name: 'Chesterfield Sofas', slug: 'chesterfield-sofas', desc: 'Hand-tufted heritage classics' },
     { name: 'Curved Sofas', slug: 'curved-sofas', desc: 'Organic sculpted Milanese forms' },
-    { name: 'Luxury Sofas', slug: 'luxury-sofas', desc: 'Bespoke hand-gilded atelier creations' },
+    { name: 'Luxury Sofas', slug: 'luxury-sofas', desc: 'Bespoke hand-tailored studio creations' },
   ];
 
   const chairCategories = [
     { name: 'Fancy Chairs', slug: 'fancy-chairs', desc: 'Artisanal sculptural statements' },
-    { name: 'Accent Chairs', slug: 'accent-chairs', desc: 'Design focal points for any room' },
+    { name: 'Accent Chairs', slug: 'accent-chairs', desc: 'Architectural focal points' },
     { name: 'Lounge Chairs', slug: 'lounge-chairs', desc: 'Deep ergonomic relaxation' },
     { name: 'Wingback Chairs', slug: 'wingback-chairs', desc: 'Regal acoustic shelter silhouettes' },
     { name: 'Tub Chairs', slug: 'tub-chairs', desc: 'Enveloping barrel curved comfort' },
@@ -63,60 +61,63 @@ export default function Header() {
     { name: 'Milano Opulence', slug: 'milano-opulence', tagline: 'Italian Haute Couture Living' },
     { name: 'Royal Heritage', slug: 'royal-heritage', tagline: 'Chesterfield Tufting & Teak' },
     { name: 'Scandinavian Serenity', slug: 'scandinavian-serenity', tagline: 'Organic Curves & Oak' },
-    { name: 'Art Deco Atelier', slug: 'art-deco-atelier', tagline: 'Geometric Glamour & Brass' },
+    { name: 'Art Deco Atelier', slug: 'art-deco-atelier', tagline: 'Geometric Precision & Brass' },
   ];
 
   return (
     <>
-      {/* Top Atelier Bar */}
-      <div className="bg-charcoal text-ivory-200 text-xs py-2 px-4 border-b border-charcoal-light">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
+      {/* Top Architectural Notice Bar */}
+      <div className="bg-graphite-deep text-platinum-soft text-xs py-2 px-4 border-b border-graphite-border">
+        <div className="max-w-site mx-auto flex items-center justify-between">
           <div className="flex items-center space-x-4">
-            <span className="flex items-center space-x-1.5 text-gold">
-              <Sparkles className="w-3.5 h-3.5" />
+            <span className="flex items-center space-x-1.5 text-platinum">
+              <span className="w-1.5 h-1.5 rounded-full bg-olive-muted" />
               <span className="font-medium tracking-wide">Bespoke Manufacturing Atelier • Bodla &amp; Civil Lines, Agra</span>
             </span>
-            <span className="hidden md:inline text-ivory-300">|</span>
-            <span className="hidden md:inline text-ivory-300">10-Year Hardwood Frame Structural Guarantee</span>
+            <span className="hidden md:inline text-slate-silver">|</span>
+            <span className="hidden md:inline text-slate-silver">10-Year Solid Hardwood Structural Guarantee</span>
           </div>
           <div className="flex items-center space-x-5">
-            <Link href="/consultation" className="hover:text-gold transition-colors flex items-center space-x-1">
-              <span>Book Atelier Visit</span>
+            <Link href="/consultation" className="hover:text-platinum transition-colors text-[11px] font-medium">
+              Book Private Consultation
             </Link>
-            <Link href="/admin" className="hover:text-gold transition-colors text-[11px] opacity-80 hover:opacity-100">
+            <Link href="/admin" className="hover:text-platinum transition-colors text-[11px] opacity-75 hover:opacity-100">
               Staff Portal
             </Link>
           </div>
         </div>
       </div>
 
-      {/* Main Navigation Header */}
+      {/* Main Architectural Header */}
       <header
-        className={`sticky top-0 z-50 transition-all duration-300 ${
+        className={`sticky top-0 z-50 transition-all duration-200 ${
           isScrolled
-            ? 'bg-white/95 backdrop-blur-md shadow-luxury py-3 border-b border-ivory-200'
-            : 'bg-white py-4 border-b border-ivory-200'
+            ? 'bg-white/98 backdrop-blur shadow-subtle py-3 border-b border-platinum-border'
+            : 'bg-white py-4 border-b border-platinum-border'
         }`}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
-          {/* Brand Logo */}
+        <div className="max-w-site mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
+          {/* Left: Brand Logo */}
           <Link href="/" className="group flex items-center space-x-3">
-            <div className="w-10 h-10 rounded-full bg-charcoal flex items-center justify-center border border-gold/40 text-gold group-hover:scale-105 transition-transform shadow-sm">
-              <span className="font-serif font-bold text-lg">P</span>
+            <div className="w-9 h-9 rounded bg-graphite flex items-center justify-center text-platinum font-serif font-bold text-lg group-hover:bg-graphite-hover transition-colors">
+              P
             </div>
             <div>
-              <span className="block font-serif text-xl sm:text-2xl font-bold tracking-tight text-charcoal leading-none">
+              <span className="block font-serif text-xl sm:text-2xl font-bold tracking-tight text-graphite leading-none">
                 PRADEEP
               </span>
-              <span className="block text-[10px] tracking-[0.25em] text-walnut uppercase font-medium mt-0.5">
+              <span className="block text-[10px] tracking-[0.2em] text-slate-dark uppercase font-semibold mt-0.5">
                 Furniture Atelier
               </span>
             </div>
           </Link>
 
-          {/* Desktop Navigation Links */}
-          <nav className="hidden lg:flex items-center space-x-7 text-sm font-medium text-charcoal">
-            <Link href="/" className="hover:text-gold transition-colors">
+          {/* Centre: Main Navigation Links */}
+          <nav className="hidden lg:flex items-center space-x-6 text-[13px] font-medium text-graphite">
+            <Link 
+              href="/" 
+              className={`hover:text-graphite-hover transition-colors ${pathname === '/' ? 'font-semibold text-graphite' : 'text-slate-dark'}`}
+            >
               Home
             </Link>
 
@@ -126,16 +127,18 @@ export default function Header() {
               onMouseEnter={() => setMegaMenuOpen('sofas')}
               onMouseLeave={() => setMegaMenuOpen(null)}
             >
-              <button className="flex items-center space-x-1 hover:text-gold transition-colors py-2">
-                <span>Sofa Collection</span>
-                <ChevronDown className="w-4 h-4 text-walnut" />
+              <button 
+                className="flex items-center space-x-1 hover:text-graphite transition-colors py-2 text-slate-dark hover:text-graphite"
+              >
+                <span>Sofas</span>
+                <ChevronDown className="w-3.5 h-3.5 text-slate-dark" />
               </button>
 
               {megaMenuOpen === 'sofas' && (
-                <div className="absolute top-full -left-12 w-[540px] bg-white rounded-2xl shadow-luxury-hover border border-ivory-300 p-6 grid grid-cols-2 gap-4 animate-in fade-in slide-in-from-top-2 duration-150">
-                  <div className="col-span-2 pb-2 border-b border-ivory-200 flex justify-between items-center">
-                    <span className="text-xs uppercase font-bold tracking-wider text-gold">Sofa Silhouettes</span>
-                    <Link href="/products?type=SOFA" className="text-xs text-walnut hover:text-charcoal font-medium flex items-center space-x-1">
+                <div className="absolute top-full -left-8 w-[520px] bg-white rounded-lg shadow-elevated border border-platinum-border p-6 grid grid-cols-2 gap-3 z-50 animate-in fade-in duration-150">
+                  <div className="col-span-2 pb-2 border-b border-platinum-border flex justify-between items-center">
+                    <span className="text-[11px] uppercase font-bold tracking-wider text-slate-dark">Sofa Architecture</span>
+                    <Link href="/products?type=SOFA" className="text-xs text-graphite hover:underline font-semibold flex items-center space-x-1">
                       <span>View All Sofas</span>
                       <ArrowRight className="w-3 h-3" />
                     </Link>
@@ -144,10 +147,10 @@ export default function Header() {
                     <Link
                       key={c.slug}
                       href={`/products?category=${c.slug}`}
-                      className="p-2 rounded-xl hover:bg-ivory-100 transition-colors block"
+                      className="p-2.5 rounded-md hover:bg-platinum-soft transition-colors block border border-transparent hover:border-platinum-border"
                     >
-                      <span className="font-serif font-medium text-charcoal text-sm block">{c.name}</span>
-                      <span className="text-xs text-charcoal/60 block mt-0.5">{c.desc}</span>
+                      <span className="font-sans font-semibold text-graphite text-xs block">{c.name}</span>
+                      <span className="text-[11px] text-slate-muted block mt-0.5">{c.desc}</span>
                     </Link>
                   ))}
                 </div>
@@ -160,16 +163,16 @@ export default function Header() {
               onMouseEnter={() => setMegaMenuOpen('chairs')}
               onMouseLeave={() => setMegaMenuOpen(null)}
             >
-              <button className="flex items-center space-x-1 hover:text-gold transition-colors py-2">
+              <button className="flex items-center space-x-1 hover:text-graphite transition-colors py-2 text-slate-dark hover:text-graphite">
                 <span>Fancy Chairs</span>
-                <ChevronDown className="w-4 h-4 text-walnut" />
+                <ChevronDown className="w-3.5 h-3.5 text-slate-dark" />
               </button>
 
               {megaMenuOpen === 'chairs' && (
-                <div className="absolute top-full -left-12 w-[480px] bg-white rounded-2xl shadow-luxury-hover border border-ivory-300 p-6 grid grid-cols-2 gap-4 animate-in fade-in slide-in-from-top-2 duration-150">
-                  <div className="col-span-2 pb-2 border-b border-ivory-200 flex justify-between items-center">
-                    <span className="text-xs uppercase font-bold tracking-wider text-gold">Designer Chairs</span>
-                    <Link href="/products?type=CHAIR" className="text-xs text-walnut hover:text-charcoal font-medium flex items-center space-x-1">
+                <div className="absolute top-full -left-8 w-[480px] bg-white rounded-lg shadow-elevated border border-platinum-border p-6 grid grid-cols-2 gap-3 z-50 animate-in fade-in duration-150">
+                  <div className="col-span-2 pb-2 border-b border-platinum-border flex justify-between items-center">
+                    <span className="text-[11px] uppercase font-bold tracking-wider text-slate-dark">Designer Chairs</span>
+                    <Link href="/products?type=CHAIR" className="text-xs text-graphite hover:underline font-semibold flex items-center space-x-1">
                       <span>View All Chairs</span>
                       <ArrowRight className="w-3 h-3" />
                     </Link>
@@ -178,10 +181,10 @@ export default function Header() {
                     <Link
                       key={c.slug}
                       href={`/products?category=${c.slug}`}
-                      className="p-2 rounded-xl hover:bg-ivory-100 transition-colors block"
+                      className="p-2.5 rounded-md hover:bg-platinum-soft transition-colors block border border-transparent hover:border-platinum-border"
                     >
-                      <span className="font-serif font-medium text-charcoal text-sm block">{c.name}</span>
-                      <span className="text-xs text-charcoal/60 block mt-0.5">{c.desc}</span>
+                      <span className="font-sans font-semibold text-graphite text-xs block">{c.name}</span>
+                      <span className="text-[11px] text-slate-muted block mt-0.5">{c.desc}</span>
                     </Link>
                   ))}
                 </div>
@@ -194,145 +197,130 @@ export default function Header() {
               onMouseEnter={() => setMegaMenuOpen('collections')}
               onMouseLeave={() => setMegaMenuOpen(null)}
             >
-              <button className="flex items-center space-x-1 hover:text-gold transition-colors py-2">
+              <button className="flex items-center space-x-1 hover:text-graphite transition-colors py-2 text-slate-dark hover:text-graphite">
                 <span>Collections</span>
-                <ChevronDown className="w-4 h-4 text-walnut" />
+                <ChevronDown className="w-3.5 h-3.5 text-slate-dark" />
               </button>
 
               {megaMenuOpen === 'collections' && (
-                <div className="absolute top-full -left-6 w-[360px] bg-white rounded-2xl shadow-luxury-hover border border-ivory-300 p-5 space-y-3 animate-in fade-in slide-in-from-top-2 duration-150">
-                  <div className="pb-2 border-b border-ivory-200">
-                    <span className="text-xs uppercase font-bold tracking-wider text-gold">Signature Ateliers</span>
+                <div className="absolute top-full -left-4 w-[340px] bg-white rounded-lg shadow-elevated border border-platinum-border p-5 space-y-2.5 z-50 animate-in fade-in duration-150">
+                  <div className="pb-2 border-b border-platinum-border">
+                    <span className="text-[11px] uppercase font-bold tracking-wider text-slate-dark">Signature Lines</span>
                   </div>
                   {signatureCollections.map((col) => (
                     <Link
                       key={col.slug}
                       href={`/collections#${col.slug}`}
-                      className="p-2 rounded-xl hover:bg-ivory-100 transition-colors block"
+                      className="p-2 rounded-md hover:bg-platinum-soft transition-colors block"
                     >
-                      <span className="font-serif font-medium text-charcoal text-sm block">{col.name}</span>
-                      <span className="text-xs text-walnut block mt-0.5">{col.tagline}</span>
+                      <span className="font-sans font-semibold text-graphite text-xs block">{col.name}</span>
+                      <span className="text-[11px] text-slate-muted block mt-0.5">{col.tagline}</span>
                     </Link>
                   ))}
                 </div>
               )}
             </div>
 
-            {/* Custom Studio */}
-            <Link href="/studio" className="hover:text-gold transition-colors flex items-center space-x-1 text-gold font-semibold">
-              <Sliders className="w-4 h-4" />
-              <span>3D Studio</span>
+            <Link href="/studio" className="hover:text-graphite transition-colors text-slate-dark hover:text-graphite">
+              Customize Furniture
             </Link>
 
-            <Link href="/custom-design" className="hover:text-gold transition-colors">
-              Custom Order
-            </Link>
-
-            <Link href="/manufacturing" className="hover:text-gold transition-colors">
+            <Link href="/manufacturing" className="hover:text-graphite transition-colors text-slate-dark hover:text-graphite">
               Manufacturing
             </Link>
 
-            <Link href="/projects" className="hover:text-gold transition-colors">
-              Projects
+            <Link href="/projects" className="hover:text-graphite transition-colors text-slate-dark hover:text-graphite">
+              Our Projects
+            </Link>
+
+            <Link href="/about" className="hover:text-graphite transition-colors text-slate-dark hover:text-graphite">
+              About
+            </Link>
+
+            <Link href="/contact" className="hover:text-graphite transition-colors text-slate-dark hover:text-graphite">
+              Contact
             </Link>
           </nav>
 
-          {/* Right Header Actions */}
+          {/* Right: Search, Contact & Request Quote CTA */}
           <div className="hidden lg:flex items-center space-x-4">
             <button
               onClick={() => setSearchOpen(true)}
-              className="p-2 text-charcoal hover:text-gold transition-colors rounded-full hover:bg-ivory-100"
-              title="Search furniture models"
+              className="p-2 text-slate-dark hover:text-graphite transition-colors rounded-md hover:bg-platinum-soft"
+              title="Search catalogue"
             >
-              <Search className="w-5 h-5" />
+              <Search className="w-4 h-4" />
             </button>
 
             <Link
               href="/custom-design"
-              className="inline-flex items-center space-x-2 px-5 py-2.5 rounded-full bg-charcoal text-ivory-100 hover:bg-charcoal-light hover:text-gold text-xs uppercase tracking-widest font-semibold transition-all shadow-md border border-charcoal hover:border-gold/50"
+              className="inline-flex items-center space-x-2 px-4 py-2 rounded-md bg-graphite text-white hover:bg-graphite-hover text-xs uppercase tracking-wider font-semibold transition-all shadow-subtle border border-graphite"
             >
-              <FileText className="w-3.5 h-3.5 text-gold" />
-              <span>Request Quotation</span>
+              <span>Request Quote</span>
             </Link>
           </div>
 
-          {/* Mobile Menu Button */}
+          {/* Mobile Navigation Trigger */}
           <div className="flex lg:hidden items-center space-x-2">
             <button
               onClick={() => setSearchOpen(true)}
-              className="p-2 text-charcoal rounded-full hover:bg-ivory-100"
+              className="p-2 text-graphite rounded-md hover:bg-platinum-soft"
+              aria-label="Search"
             >
               <Search className="w-5 h-5" />
             </button>
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 text-charcoal rounded-lg hover:bg-ivory-100"
+              className="p-2 text-graphite rounded-md hover:bg-platinum-soft"
+              aria-label="Toggle Menu"
             >
               {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
           </div>
         </div>
 
-        {/* Mobile Slide-out Drawer */}
+        {/* Mobile Menu Overlay */}
         {mobileMenuOpen && (
-          <div className="lg:hidden bg-white border-b border-ivory-300 px-6 py-6 space-y-4 max-h-[80vh] overflow-y-auto">
-            <Link href="/" className="block py-2 font-medium text-charcoal hover:text-gold">
+          <div className="lg:hidden bg-white border-b border-platinum-border px-6 py-6 space-y-4 max-h-[82vh] overflow-y-auto">
+            <Link href="/" className="block py-2 font-medium text-graphite hover:text-graphite-hover">
               Home
             </Link>
 
-            <div className="border-t border-ivory-200 pt-3">
-              <span className="text-xs uppercase font-bold text-gold tracking-wider block mb-2">Sofas</span>
+            <div className="border-t border-platinum-border pt-3">
+              <span className="text-[11px] uppercase font-bold text-slate-dark tracking-wider block mb-2">Sofas</span>
               <div className="grid grid-cols-2 gap-2 text-xs">
-                {sofaCategories.slice(0, 6).map((c) => (
-                  <Link key={c.slug} href={`/products?category=${c.slug}`} className="py-1.5 text-charcoal/80">
+                {sofaCategories.map((c) => (
+                  <Link key={c.slug} href={`/products?category=${c.slug}`} className="py-1 text-slate-dark hover:text-graphite">
                     {c.name}
                   </Link>
                 ))}
               </div>
             </div>
 
-            <div className="border-t border-ivory-200 pt-3">
-              <span className="text-xs uppercase font-bold text-gold tracking-wider block mb-2">Chairs</span>
+            <div className="border-t border-platinum-border pt-3">
+              <span className="text-[11px] uppercase font-bold text-slate-dark tracking-wider block mb-2">Fancy Chairs</span>
               <div className="grid grid-cols-2 gap-2 text-xs">
                 {chairCategories.map((c) => (
-                  <Link key={c.slug} href={`/products?category=${c.slug}`} className="py-1.5 text-charcoal/80">
+                  <Link key={c.slug} href={`/products?category=${c.slug}`} className="py-1 text-slate-dark hover:text-graphite">
                     {c.name}
                   </Link>
                 ))}
               </div>
             </div>
 
-            <div className="border-t border-ivory-200 pt-3 space-y-2">
-              <Link href="/studio" className="block py-1 text-gold font-semibold">
-                Interactive 3D Studio
-              </Link>
-              <Link href="/custom-design" className="block py-1 text-charcoal">
-                Upload Custom Design
-              </Link>
-              <Link href="/manufacturing" className="block py-1 text-charcoal">
-                Our Manufacturing &amp; Factory
-              </Link>
-              <Link href="/materials" className="block py-1 text-charcoal">
-                Materials &amp; Fabrics
-              </Link>
-              <Link href="/projects" className="block py-1 text-charcoal">
-                Completed Projects
-              </Link>
-              <Link href="/architects" className="block py-1 text-charcoal">
-                Architects &amp; Bulk Enquiries
-              </Link>
-              <Link href="/about" className="block py-1 text-charcoal">
-                About Atelier
-              </Link>
-              <Link href="/contact" className="block py-1 text-charcoal">
-                Contact &amp; Showroom
-              </Link>
+            <div className="border-t border-platinum-border pt-3 space-y-2 text-sm font-medium">
+              <Link href="/collections" className="block text-graphite py-1">Collections</Link>
+              <Link href="/studio" className="block text-graphite py-1">Customize Furniture (3D Studio)</Link>
+              <Link href="/manufacturing" className="block text-graphite py-1">Our Manufacturing</Link>
+              <Link href="/projects" className="block text-graphite py-1">Our Projects</Link>
+              <Link href="/about" className="block text-graphite py-1">About Us</Link>
+              <Link href="/contact" className="block text-graphite py-1">Contact</Link>
             </div>
 
-            <div className="pt-4 border-t border-ivory-200">
+            <div className="pt-4 border-t border-platinum-border">
               <Link
                 href="/custom-design"
-                className="w-full text-center block py-3 rounded-xl bg-charcoal text-ivory-100 font-semibold text-xs uppercase tracking-widest"
+                className="w-full block py-3 text-center rounded-md bg-graphite text-white text-xs uppercase tracking-widest font-semibold"
               >
                 Request Quotation
               </Link>
@@ -341,54 +329,49 @@ export default function Header() {
         )}
       </header>
 
-      {/* Global Quick Search Modal */}
+      {/* Global Architectural Search Modal */}
       {searchOpen && (
-        <div className="fixed inset-0 z-50 bg-charcoal/70 backdrop-blur-sm p-4 flex items-start justify-center pt-24 animate-in fade-in duration-150">
-          <div className="bg-white max-w-xl w-full rounded-2xl shadow-2xl border border-ivory-300 p-6 relative">
-            <div className="flex items-center justify-between pb-3 border-b border-ivory-200">
-              <span className="font-serif text-lg text-charcoal font-semibold">Search Furniture Atelier</span>
-              <button onClick={() => setSearchOpen(false)} className="text-charcoal/50 hover:text-charcoal">
+        <div className="fixed inset-0 z-50 bg-graphite-deep/80 backdrop-blur-sm flex items-start justify-center pt-24 px-4 animate-in fade-in duration-150">
+          <div 
+            className="bg-white rounded-lg max-w-xl w-full p-6 shadow-elevated border border-platinum-border space-y-4"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between border-b border-platinum-border pb-3">
+              <span className="text-xs font-bold uppercase tracking-wider text-slate-dark">
+                Architectural Search
+              </span>
+              <button onClick={() => setSearchOpen(false)} className="text-slate-dark hover:text-graphite">
                 <X className="w-5 h-5" />
               </button>
             </div>
 
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                if (searchQuery.trim()) {
-                  window.location.href = `/products?search=${encodeURIComponent(searchQuery)}`;
-                }
-              }}
-              className="mt-4"
-            >
-              <div className="relative">
-                <input
-                  type="text"
-                  placeholder="Search curved sofas, velvet loungers, wingback chairs..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  autoFocus
-                  className="w-full px-4 py-3 pl-11 rounded-xl bg-ivory-50 border border-ivory-300 focus:outline-none focus:border-gold text-sm text-charcoal"
-                />
-                <Search className="w-5 h-5 text-walnut absolute left-3.5 top-3.5" />
-              </div>
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="Search sofas, fancy chairs, materials, or SKU..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && searchQuery) {
+                    window.location.href = `/products?search=${encodeURIComponent(searchQuery)}`;
+                  }
+                }}
+                className="w-full pl-10 pr-4 py-3 rounded-md bg-platinum-soft border border-platinum-border text-xs text-graphite focus:outline-none focus:border-graphite"
+                autoFocus
+              />
+              <Search className="w-4 h-4 text-slate-dark absolute left-3.5 top-3.5" />
+            </div>
 
-              <div className="mt-4 flex flex-wrap gap-2 text-xs">
-                <span className="text-walnut font-medium">Quick searches:</span>
-                {['Curved Sectional', 'Mid-Century Chair', 'Chesterfield', 'Emerald Velvet', 'Wingback'].map((tag) => (
-                  <button
-                    key={tag}
-                    type="button"
-                    onClick={() => {
-                      window.location.href = `/products?search=${encodeURIComponent(tag)}`;
-                    }}
-                    className="px-2.5 py-1 bg-ivory-100 hover:bg-gold/20 text-charcoal rounded-full transition-colors"
-                  >
-                    {tag}
-                  </button>
-                ))}
-              </div>
-            </form>
+            <div className="pt-2 flex justify-between items-center text-xs text-slate-muted">
+              <span>Press <strong className="text-graphite">Enter</strong> to view matching catalogue items</span>
+              <Link
+                href={`/products?search=${encodeURIComponent(searchQuery)}`}
+                onClick={() => setSearchOpen(false)}
+                className="font-semibold text-graphite hover:underline"
+              >
+                Explore All →
+              </Link>
+            </div>
           </div>
         </div>
       )}

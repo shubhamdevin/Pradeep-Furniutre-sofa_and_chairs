@@ -1,52 +1,52 @@
 import React from 'react';
 import Link from 'next/link';
-import { Sparkles, ShieldCheck, Heart, Award, ArrowRight } from 'lucide-react';
+import { ShieldCheck, Award, Box, ArrowRight } from 'lucide-react';
 
 export default function AboutPage() {
   return (
-    <div className="min-h-screen bg-ivory-100 py-12 md:py-20 text-charcoal">
+    <div className="min-h-screen bg-platinum py-16 md:py-24 text-graphite font-sans">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
-        <div className="max-w-3xl mx-auto text-center space-y-4">
-          <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-cream border border-gold/30 text-xs text-walnut font-semibold uppercase tracking-wider">
-            <span>Generations of Master Craftsmanship</span>
-          </div>
-          <h1 className="font-serif text-4xl sm:text-5xl font-medium text-charcoal">
+        <div className="max-w-3xl mx-auto text-center space-y-3">
+          <span className="text-xs uppercase font-bold tracking-widest text-slate-muted">
+            Generations of Precision Craftsmanship
+          </span>
+          <h1 className="font-serif text-4xl sm:text-6xl font-medium text-graphite">
             The Atelier Story
           </h1>
-          <p className="text-sm text-charcoal/70 leading-relaxed max-w-xl mx-auto">
-            Pradeep Furniture Atelier was founded on a simple conviction: luxury furniture should not be stamped out of anonymous plastic factories. It should be sculpted by human hands from seasoned timber and tailored like bespoke haute couture.
+          <p className="text-sm text-slate-dark leading-relaxed max-w-xl mx-auto">
+            Pradeep Furniture Atelier was established with a singular discipline: luxury seating should not be mass-stamped out of anonymous composite factories. It must be engineered from seasoned hardwoods, chiseled by hand, and tailored to architectural tolerances.
           </p>
         </div>
 
         {/* Narrative Columns */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <div className="space-y-5 text-xs sm:text-sm text-charcoal/80 leading-relaxed font-light">
-            <h2 className="font-serif text-2xl sm:text-3xl font-medium text-charcoal">
-              Rooted in Agra’s Artisanal Heritage
+          <div className="space-y-5 text-xs sm:text-sm text-slate-dark leading-relaxed">
+            <h2 className="font-serif text-2xl sm:text-4xl font-medium text-graphite">
+              Rooted in Agra’s Architectural Heritage
             </h2>
             <p>
-              Agra has inspired the world for centuries with its legendary stone inlays, timber carving, and royal architectural proportions. We carry forward this standard of perfection into contemporary seating.
+              Agra has inspired global design for centuries through geometric inlay precision, master stone masonry, and grand royal proportions. We carry forward this standard of perfection into contemporary architectural seating.
             </p>
             <p>
-              While contemporary retailers import fragile flat-pack sofas held together by staples and particleboard, our workshop in Bodla continues to chisel solid mortise-and-tenon joints out of seasoned Salwood and Teak.
+              While contemporary retailers distribute fragile flat-pack sofas joined by staples and particleboard, our workshop in Bodla continues to construct mortise-and-tenon joints out of seasoned Salwood and Grade-A Teak.
             </p>
             <p>
-              We believe in conscious slow manufacturing. We make fewer pieces, but each sofa is built to last 20 to 30 years without sagging or structural fatigue.
+              We practice conscious slow manufacturing. We produce limited quantities, but every piece is engineered to endure 20 to 30 years without sagging or structural fatigue.
             </p>
 
-            <div className="pt-4 grid grid-cols-2 gap-4 border-t border-ivory-300">
+            <div className="pt-4 grid grid-cols-2 gap-4 border-t border-platinum-border">
               <div>
-                <span className="font-serif text-2xl font-bold text-charcoal">10-Year</span>
-                <span className="block text-xs text-charcoal/60 mt-0.5">Structural Guarantee</span>
+                <span className="font-sans text-3xl font-semibold text-graphite">10-Year</span>
+                <span className="block text-xs text-slate-muted mt-0.5">Structural Warranty</span>
               </div>
               <div>
-                <span className="font-serif text-2xl font-bold text-charcoal">Zero</span>
-                <span className="block text-xs text-charcoal/60 mt-0.5">Cheap Particleboard</span>
+                <span className="font-sans text-3xl font-semibold text-graphite">Zero</span>
+                <span className="block text-xs text-slate-muted mt-0.5">Particleboard or MDF</span>
               </div>
             </div>
           </div>
 
-          <div className="relative aspect-[4/3] rounded-3xl overflow-hidden shadow-luxury bg-white border border-ivory-300">
+          <div className="relative aspect-[4/3] rounded-lg overflow-hidden shadow-sm bg-white border border-platinum-border">
             <img
               src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=1200&q=80"
               alt="Artisan Timber Craftsmanship"
@@ -57,33 +57,33 @@ export default function AboutPage() {
 
         {/* Values */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="bg-white rounded-3xl p-8 border border-ivory-300 shadow-sm space-y-3">
-            <div className="w-10 h-10 rounded-xl bg-ivory-100 flex items-center justify-center text-gold">
-              <Award className="w-5 h-5" />
+          <div className="bg-white rounded-lg p-8 border border-platinum-border shadow-sm space-y-3">
+            <div className="w-10 h-10 rounded-md bg-platinum-soft flex items-center justify-center text-graphite border border-platinum-border">
+              <Award className="w-5 h-5 text-slate-muted" />
             </div>
-            <h3 className="font-serif text-xl font-semibold">Honest Materials</h3>
-            <p className="text-xs text-charcoal/70 leading-relaxed">
-              We never conceal inferior timber behind fabric. We invite our clients into the workshop to inspect the raw skeleton before upholstery.
+            <h3 className="font-serif text-xl font-medium text-graphite">Honest Raw Materials</h3>
+            <p className="text-xs text-slate-dark leading-relaxed">
+              We never conceal substandard framework behind fabric. We welcome our clients to visit our Bodla workshop and inspect the bare joinery before upholstery begins.
             </p>
           </div>
 
-          <div className="bg-white rounded-3xl p-8 border border-ivory-300 shadow-sm space-y-3">
-            <div className="w-10 h-10 rounded-xl bg-ivory-100 flex items-center justify-center text-gold">
-              <ShieldCheck className="w-5 h-5" />
+          <div className="bg-white rounded-lg p-8 border border-platinum-border shadow-sm space-y-3">
+            <div className="w-10 h-10 rounded-md bg-platinum-soft flex items-center justify-center text-graphite border border-platinum-border">
+              <ShieldCheck className="w-5 h-5 text-slate-muted" />
             </div>
-            <h3 className="font-serif text-xl font-semibold">Non-E-Commerce Ethics</h3>
-            <p className="text-xs text-charcoal/70 leading-relaxed">
-              True luxury cannot be bought with an impulsive &apos;Add to Cart&apos; click. Every piece demands consultative measurement and thoughtful fabric selection.
+            <h3 className="font-serif text-xl font-medium text-graphite">Non-E-Commerce Ethics</h3>
+            <p className="text-xs text-slate-dark leading-relaxed">
+              True luxury cannot be bought with an impulsive &apos;Add to Cart&apos; click. Every piece demands consultative spatial measurement and thoughtful fabric selection.
             </p>
           </div>
 
-          <div className="bg-white rounded-3xl p-8 border border-ivory-300 shadow-sm space-y-3">
-            <div className="w-10 h-10 rounded-xl bg-ivory-100 flex items-center justify-center text-gold">
-              <Sparkles className="w-5 h-5" />
+          <div className="bg-white rounded-lg p-8 border border-platinum-border shadow-sm space-y-3">
+            <div className="w-10 h-10 rounded-md bg-platinum-soft flex items-center justify-center text-graphite border border-platinum-border">
+              <Box className="w-5 h-5 text-slate-muted" />
             </div>
-            <h3 className="font-serif text-xl font-semibold">Bespoke Millimeter Precision</h3>
-            <p className="text-xs text-charcoal/70 leading-relaxed">
-              Whether fitting a tricky bay window or matching the exact armrest height of an antique desk, our CAD draftsmen build to your exact architectural requirements.
+            <h3 className="font-serif text-xl font-medium text-graphite">Millimeter Precision</h3>
+            <p className="text-xs text-slate-dark leading-relaxed">
+              Whether tailoring to an asymmetrical living alcove or matching the exact armrest height of a custom credenza, our CAD draftsmen build to your exact architectural requirements.
             </p>
           </div>
         </div>

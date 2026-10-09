@@ -10,10 +10,7 @@ import {
   ShieldCheck, 
   AlertTriangle, 
   Package, 
-  ArrowRight,
-  Plus,
-  Send,
-  Lock
+  ArrowRight
 } from 'lucide-react';
 
 interface Props {
@@ -86,30 +83,32 @@ export default function ManufacturingClient({ initialJobs }: Props) {
   };
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start font-sans">
       {/* Left Jobs List */}
-      <div className="lg:col-span-5 bg-white rounded-2xl border border-ivory-300 shadow-sm divide-y divide-ivory-200 max-h-[750px] overflow-y-auto">
+      <div className="lg:col-span-5 bg-white rounded-md border border-platinum-border shadow-sm divide-y divide-platinum-border max-h-[750px] overflow-y-auto">
         {jobs.map((job) => (
           <div
             key={job.id}
             onClick={() => setSelectedJob(job)}
             className={`p-5 cursor-pointer transition-colors ${
-              selectedJob?.id === job.id ? 'bg-cream/40 border-l-4 border-gold' : 'hover:bg-ivory-50'
+              selectedJob?.id === job.id 
+                ? 'bg-platinum-soft/70 border-l-2 border-graphite' 
+                : 'hover:bg-platinum-soft/40'
             }`}
           >
             <div className="flex items-center justify-between text-xs mb-1">
-              <span className="font-mono font-bold text-charcoal">{job.jobCardNumber}</span>
-              <span className="px-2 py-0.5 rounded-full text-[10px] font-bold uppercase bg-emerald-100 text-emerald-800">
+              <span className="font-mono font-medium text-graphite">{job.jobCardNumber}</span>
+              <span className="px-2 py-0.5 rounded text-[10px] font-medium uppercase bg-status-success/10 text-status-success">
                 {job.currentStage.replace('_', ' ')}
               </span>
             </div>
 
-            <h4 className="font-serif font-medium text-charcoal text-base">{job.productTitle}</h4>
-            <p className="text-xs text-charcoal/70">{job.customer.fullName} • Qty: {job.quantity}</p>
+            <h4 className="font-serif font-medium text-graphite text-base">{job.productTitle}</h4>
+            <p className="text-xs text-slate-dark">{job.customer.fullName} • Qty: {job.quantity}</p>
 
-            <div className="mt-2 flex items-center justify-between text-[11px] text-walnut font-medium">
+            <div className="mt-2 flex items-center justify-between text-[11px] text-slate-muted font-medium">
               <span>Target: {new Date(job.targetCompletionDate).toLocaleDateString()}</span>
-              <span className="font-semibold text-charcoal">{job.priority} Priority</span>
+              <span className="font-medium text-graphite">{job.priority} Priority</span>
             </div>
           </div>
         ))}
@@ -117,19 +116,19 @@ export default function ManufacturingClient({ initialJobs }: Props) {
 
       {/* Right Details Stage & 15 Stages Tracker */}
       {selectedJob ? (
-        <div className="lg:col-span-7 bg-white rounded-2xl p-6 sm:p-8 border border-ivory-300 shadow-luxury space-y-6">
-          <div className="flex items-start justify-between border-b border-ivory-200 pb-4">
+        <div className="lg:col-span-7 bg-white rounded-md p-6 sm:p-8 border border-platinum-border shadow-sm space-y-6">
+          <div className="flex items-start justify-between border-b border-platinum-border pb-4">
             <div>
               <div className="flex items-center space-x-2">
-                <span className="font-mono font-bold text-gold text-sm">{selectedJob.jobCardNumber}</span>
-                <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase bg-emerald-100 text-emerald-800">
+                <span className="font-mono font-medium text-slate-muted text-sm">{selectedJob.jobCardNumber}</span>
+                <span className="px-2.5 py-0.5 rounded text-[10px] font-medium uppercase bg-status-success/10 text-status-success">
                   {selectedJob.currentStage.replace('_', ' ')}
                 </span>
               </div>
-              <h3 className="font-serif text-2xl font-semibold text-charcoal mt-1">
+              <h3 className="font-serif text-2xl font-medium text-graphite mt-1">
                 {selectedJob.productTitle}
               </h3>
-              <p className="text-xs text-charcoal/60 mt-0.5">
+              <p className="text-xs text-slate-muted mt-0.5">
                 Client: {selectedJob.customer.fullName} • Qty: {selectedJob.quantity}
               </p>
             </div>
@@ -137,40 +136,40 @@ export default function ManufacturingClient({ initialJobs }: Props) {
             <button
               onClick={handleAdvanceStage}
               disabled={advancing}
-              className="px-4 py-2 bg-charcoal hover:bg-charcoal-light text-white rounded-xl text-xs font-semibold flex items-center space-x-1.5 transition-colors shadow-sm"
+              className="px-4 py-2 bg-graphite hover:bg-graphite-hover text-white rounded-md text-xs font-medium flex items-center space-x-1.5 transition-colors shadow-sm"
             >
-              <CheckCircle2 className="w-3.5 h-3.5 text-gold" />
+              <CheckCircle2 className="w-3.5 h-3.5 text-slate-silver" />
               <span>{advancing ? 'Updating...' : 'Advance Stage →'}</span>
             </button>
           </div>
 
           {/* Job Specifications Grid */}
-          <div className="grid grid-cols-2 gap-4 bg-ivory-50 p-4 rounded-xl border border-ivory-200 text-xs text-charcoal/80">
+          <div className="grid grid-cols-2 gap-4 bg-platinum-soft/50 p-4 rounded-md border border-platinum-border text-xs text-slate-dark">
             <div>
-              <span className="text-walnut font-medium block">Exact Dimensions:</span>
-              <span className="font-semibold text-charcoal">{selectedJob.exactDimensions}</span>
+              <span className="font-medium text-slate-dark block">Exact Dimensions:</span>
+              <span className="font-semibold text-graphite">{selectedJob.exactDimensions}</span>
             </div>
             <div>
-              <span className="text-walnut font-medium block">Fabric Specification:</span>
-              <span className="font-semibold text-charcoal">{selectedJob.fabricCodeAndColor}</span>
+              <span className="font-medium text-slate-dark block">Fabric Specification:</span>
+              <span className="font-semibold text-graphite">{selectedJob.fabricCodeAndColor}</span>
             </div>
             <div className="col-span-2">
-              <span className="text-walnut font-medium block">Frame Instructions:</span>
-              <p className="text-charcoal/80 mt-0.5">{selectedJob.frameInstructions}</p>
+              <span className="font-medium text-slate-dark block">Frame Instructions:</span>
+              <p className="text-graphite/90 mt-0.5">{selectedJob.frameInstructions}</p>
             </div>
             <div className="col-span-2">
-              <span className="text-walnut font-medium block">Foam &amp; Cushioning Instructions:</span>
-              <p className="text-charcoal/80 mt-0.5">{selectedJob.foamSpecification}</p>
+              <span className="font-medium text-slate-dark block">Foam &amp; Cushioning Instructions:</span>
+              <p className="text-graphite/90 mt-0.5">{selectedJob.foamSpecification}</p>
             </div>
           </div>
 
           {/* 15 Production Stages Stepper (Section 13.2) */}
           <div className="space-y-3">
             <div className="flex justify-between items-center">
-              <span className="text-xs font-semibold text-walnut uppercase tracking-wider">
+              <span className="text-xs font-semibold text-slate-dark uppercase tracking-wider">
                 15 Workshop Stages Progress:
               </span>
-              <span className="text-xs font-mono font-bold text-gold">
+              <span className="text-xs font-mono font-medium text-graphite">
                 Stage {STAGE_ORDER.indexOf(selectedJob.currentStage) + 1} of 15
               </span>
             </div>
@@ -184,12 +183,12 @@ export default function ManufacturingClient({ initialJobs }: Props) {
                 return (
                   <div
                     key={st}
-                    className={`p-2 rounded-lg border text-center font-medium transition-all ${
+                    className={`p-2 rounded border text-center font-medium transition-colors ${
                       isCurrent
-                        ? 'bg-charcoal text-white border-charcoal font-bold ring-2 ring-gold/40'
+                        ? 'bg-graphite text-white border-graphite font-semibold ring-1 ring-slate-muted'
                         : isPassed
-                        ? 'bg-emerald-50 text-emerald-800 border-emerald-200 font-semibold'
-                        : 'bg-ivory-50 text-charcoal/50 border-ivory-200'
+                        ? 'bg-status-success/10 text-status-success border-status-success/20'
+                        : 'bg-platinum-soft text-slate-dark/70 border-platinum-border'
                     }`}
                   >
                     <span className="block text-[9px] opacity-70">Step {i + 1}</span>
@@ -200,19 +199,19 @@ export default function ManufacturingClient({ initialJobs }: Props) {
             </div>
           </div>
 
-          {/* Bill of Materials (BOM) Section 13.3 */}
+          {/* Bill of Materials (BOM) */}
           {selectedJob.bom && (
-            <div className="space-y-2 pt-2 border-t border-ivory-200">
+            <div className="space-y-2 pt-2 border-t border-platinum-border">
               <div className="flex justify-between items-center text-xs">
-                <span className="font-semibold text-walnut uppercase tracking-wider">Bill of Materials (BOM):</span>
-                <span className="font-mono font-bold text-charcoal">
+                <span className="font-semibold text-slate-dark uppercase tracking-wider">Bill of Materials (BOM):</span>
+                <span className="font-mono font-semibold text-graphite">
                   Total Material Cost: ₹{selectedJob.bom.totalCost?.toLocaleString('en-IN')}
                 </span>
               </div>
 
-              <div className="border border-ivory-300 rounded-xl overflow-hidden text-xs">
+              <div className="border border-platinum-border rounded-md overflow-hidden text-xs">
                 <table className="w-full text-left">
-                  <thead className="bg-ivory-50 border-b border-ivory-200 text-walnut font-semibold">
+                  <thead className="bg-platinum-soft border-b border-platinum-border text-slate-dark font-medium">
                     <tr>
                       <th className="p-2.5">Category</th>
                       <th className="p-2.5">Description</th>
@@ -220,13 +219,13 @@ export default function ManufacturingClient({ initialJobs }: Props) {
                       <th className="p-2.5 text-right">Est. Cost</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-ivory-200">
+                  <tbody className="divide-y divide-platinum-border">
                     {selectedJob.bom.items?.map((item: any) => (
-                      <tr key={item.id}>
-                        <td className="p-2.5 font-medium">{item.materialCategory}</td>
-                        <td className="p-2.5 text-charcoal/80">{item.description}</td>
-                        <td className="p-2.5 text-center">{item.requiredQty} {item.unit}</td>
-                        <td className="p-2.5 text-right font-mono">₹{item.totalEstimatedCost?.toLocaleString('en-IN')}</td>
+                      <tr key={item.id} className="hover:bg-platinum-soft/30">
+                        <td className="p-2.5 font-medium text-graphite">{item.materialCategory}</td>
+                        <td className="p-2.5 text-slate-dark">{item.description}</td>
+                        <td className="p-2.5 text-center text-slate-dark">{item.requiredQty} {item.unit}</td>
+                        <td className="p-2.5 text-right font-mono text-graphite">₹{item.totalEstimatedCost?.toLocaleString('en-IN')}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -235,37 +234,37 @@ export default function ManufacturingClient({ initialJobs }: Props) {
             </div>
           )}
 
-          {/* Quality Control (QC) Certificate Section 13.4 */}
-          <div className="space-y-2 pt-2 border-t border-ivory-200">
+          {/* Quality Control (QC) Certificate */}
+          <div className="space-y-2 pt-2 border-t border-platinum-border">
             <div className="flex justify-between items-center text-xs">
-              <span className="font-semibold text-walnut uppercase tracking-wider">Quality Control (QC) Status:</span>
-              <span className="font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded uppercase">
+              <span className="font-semibold text-slate-dark uppercase tracking-wider">Quality Control (QC) Status:</span>
+              <span className="font-medium text-status-success bg-status-success/10 px-2 py-0.5 rounded uppercase">
                 {selectedJob.inspections?.[0]?.result || 'PASS (Certified)'}
               </span>
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs bg-ivory-50 p-3.5 rounded-xl border border-ivory-200">
-              <div className="flex items-center space-x-1.5 text-emerald-700">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-xs bg-platinum-soft/50 p-3.5 rounded-md border border-platinum-border">
+              <div className="flex items-center space-x-1.5 text-status-success">
                 <CheckCircle2 className="w-3.5 h-3.5" />
                 <span>Dimensions Check: PASS</span>
               </div>
-              <div className="flex items-center space-x-1.5 text-emerald-700">
+              <div className="flex items-center space-x-1.5 text-status-success">
                 <CheckCircle2 className="w-3.5 h-3.5" />
                 <span>Frame Mortise: PASS</span>
               </div>
-              <div className="flex items-center space-x-1.5 text-emerald-700">
+              <div className="flex items-center space-x-1.5 text-status-success">
                 <CheckCircle2 className="w-3.5 h-3.5" />
                 <span>Spring Tension: PASS</span>
               </div>
-              <div className="flex items-center space-x-1.5 text-emerald-700">
+              <div className="flex items-center space-x-1.5 text-status-success">
                 <CheckCircle2 className="w-3.5 h-3.5" />
                 <span>Stitching &amp; Tufting: PASS</span>
               </div>
-              <div className="flex items-center space-x-1.5 text-emerald-700">
+              <div className="flex items-center space-x-1.5 text-status-success">
                 <CheckCircle2 className="w-3.5 h-3.5" />
                 <span>Foam Resilience: PASS</span>
               </div>
-              <div className="flex items-center space-x-1.5 text-emerald-700">
+              <div className="flex items-center space-x-1.5 text-status-success">
                 <CheckCircle2 className="w-3.5 h-3.5" />
                 <span>Design Match: 100%</span>
               </div>

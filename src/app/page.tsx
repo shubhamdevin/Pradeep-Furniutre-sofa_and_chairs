@@ -6,21 +6,18 @@ import AssetLicenceRegistry from '@/components/three-d/AssetLicenceRegistry';
 import Home3DShowcase from '@/components/furniture/Home3DShowcase';
 import LuxuryProductCard from '@/components/furniture/LuxuryProductCard';
 import { 
-  Sparkles, 
   ArrowRight, 
   ShieldCheck, 
   Compass, 
-  Layers, 
-  Wrench, 
   CheckCircle2, 
   FileText, 
-  Eye, 
   Sliders, 
   ChevronRight,
   Building2,
   Calendar,
   Star,
-  Quote
+  Quote,
+  Box
 } from 'lucide-react';
 
 export const revalidate = 60; // ISR 60 seconds
@@ -65,7 +62,7 @@ export default async function HomePage() {
     }),
   ]);
 
-  // Format 3D assets for interactive showcase
+  // Transform 3D assets for viewers
   const formatted3DAssets = assetRecords.map((a) => ({
     id: a.id,
     name: a.name,
@@ -88,73 +85,70 @@ export default async function HomePage() {
   }));
 
   return (
-    <div className="space-y-24 md:space-y-32 pb-20">
+    <div className="space-y-20 md:space-y-28 pb-20 bg-platinum">
       {/* =========================================================================
-          SECTION 4.2: CINEMATIC HERO SECTION
+          SECTION 7: PREMIUM HERO SECTION (ARCHITECTURAL MINIMALISM)
          ========================================================================= */}
-      <section className="relative min-h-[92vh] flex items-center justify-center bg-ivory-50 overflow-hidden border-b border-ivory-300">
-        {/* Ambient Showroom Radial Glow */}
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-cream/60 via-ivory-100/40 to-transparent pointer-events-none" />
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24 relative z-10 w-full">
+      <section className="relative min-h-[88vh] flex items-center justify-center bg-platinum overflow-hidden border-b border-platinum-border">
+        <div className="max-w-site mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24 relative z-10 w-full">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
             {/* Left Narrative Column */}
             <div className="lg:col-span-6 space-y-6 text-center lg:text-left">
-              <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-white border border-ivory-300 shadow-sm text-xs text-charcoal">
-                <span className="w-2 h-2 rounded-full bg-gold" />
-                <span className="font-semibold tracking-wide uppercase text-[11px] text-walnut">
-                  Luxury Sofa &amp; Fancy Chairs Manufacturer
+              <div className="inline-flex items-center space-x-2 px-3 py-1 rounded bg-white border border-platinum-border shadow-subtle text-xs text-graphite">
+                <span className="w-1.5 h-1.5 rounded-full bg-graphite" />
+                <span className="font-semibold tracking-wider uppercase text-[11px] text-slate-dark">
+                  Bespoke Architectural Furniture Studio
                 </span>
               </div>
 
-              <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-medium tracking-tight text-charcoal leading-[1.12]">
-                Furniture Beyond <br className="hidden sm:inline" />
-                <span className="italic font-normal text-walnut">Ordinary.</span>
+              <h1 className="font-serif text-4xl sm:text-6xl lg:text-7xl font-medium tracking-tight text-graphite leading-[1.08]">
+                Design Defines <br className="hidden sm:inline" />
+                <span className="italic font-normal text-slate-dark">the Space.</span>
               </h1>
 
-              <p className="text-base sm:text-lg text-charcoal/80 font-light max-w-xl mx-auto lg:mx-0 leading-relaxed">
-                Bespoke Sofas. Statement Chairs. Handcrafted for Your Space. We manufacture one-of-a-kind seating utilizing kiln-dried timber frames, high-density comfort cores, and European upholstery fabrics.
+              <p className="text-base sm:text-lg text-slate-dark font-light max-w-xl mx-auto lg:mx-0 leading-relaxed">
+                Exceptional sofas and statement chairs, thoughtfully manufactured for your space. We craft custom architectural seating with seasoned timber skeletons, multi-density comfort cores, and European contract-grade textiles.
               </p>
 
-              {/* Action Buttons (NO CHECKOUT/CART) */}
-              <div className="pt-2 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
+              {/* Action Buttons (Strictly Non-E-Commerce) */}
+              <div className="pt-2 flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3">
                 <Link
                   href="/products"
-                  className="w-full sm:w-auto px-8 py-4 rounded-full bg-charcoal text-ivory-100 hover:bg-charcoal-light hover:text-gold text-xs uppercase tracking-widest font-semibold transition-all shadow-luxury border border-charcoal flex items-center justify-center space-x-2 group"
+                  className="w-full sm:w-auto px-6 py-3.5 rounded-md bg-graphite text-white hover:bg-graphite-hover text-xs uppercase tracking-wider font-semibold transition-all shadow-subtle border border-graphite flex items-center justify-center space-x-2"
                 >
-                  <span>Explore Collection</span>
-                  <ArrowRight className="w-4 h-4 text-gold group-hover:translate-x-1 transition-transform" />
+                  <span>Explore Our Collection</span>
+                  <ArrowRight className="w-4 h-4 text-slate-silver" />
                 </Link>
 
                 <Link
                   href="/custom-design"
-                  className="w-full sm:w-auto px-8 py-4 rounded-full bg-white text-charcoal hover:bg-ivory-100 text-xs uppercase tracking-widest font-semibold transition-all shadow-sm border border-ivory-300 flex items-center justify-center space-x-2"
+                  className="w-full sm:w-auto px-6 py-3.5 rounded-md bg-transparent text-graphite hover:bg-platinum-soft text-xs uppercase tracking-wider font-semibold transition-all border border-graphite flex items-center justify-center space-x-2"
                 >
-                  <Sliders className="w-4 h-4 text-walnut" />
-                  <span>Design Your Furniture</span>
+                  <Sliders className="w-4 h-4 text-slate-dark" />
+                  <span>Customize Your Furniture</span>
                 </Link>
 
                 <Link
                   href="/consultation"
-                  className="w-full sm:w-auto text-xs font-semibold tracking-wider text-walnut hover:text-charcoal uppercase py-2 underline underline-offset-8"
+                  className="w-full sm:w-auto text-xs font-semibold tracking-wider text-slate-dark hover:text-graphite uppercase py-2 underline underline-offset-4"
                 >
-                  Request Consultation
+                  Private Consultation
                 </Link>
               </div>
 
-              {/* Atelier Key Stats */}
-              <div className="pt-8 border-t border-ivory-300 grid grid-cols-3 gap-6 max-w-lg mx-auto lg:mx-0 text-left">
+              {/* Atelier Key Architectural Specs */}
+              <div className="pt-8 border-t border-platinum-border grid grid-cols-3 gap-6 max-w-lg mx-auto lg:mx-0 text-left">
                 <div>
-                  <span className="block font-serif text-2xl font-bold text-charcoal">10-Yr</span>
-                  <span className="block text-[11px] text-charcoal/70 uppercase tracking-wider mt-0.5">Solid Frame Guarantee</span>
+                  <span className="block font-serif text-2xl font-bold text-graphite">10-Yr</span>
+                  <span className="block text-[11px] text-slate-muted uppercase tracking-wider mt-0.5">Structural Warranty</span>
                 </div>
                 <div>
-                  <span className="block font-serif text-2xl font-bold text-charcoal">100%</span>
-                  <span className="block text-[11px] text-charcoal/70 uppercase tracking-wider mt-0.5">Custom Dimensions</span>
+                  <span className="block font-serif text-2xl font-bold text-graphite">100%</span>
+                  <span className="block text-[11px] text-slate-muted uppercase tracking-wider mt-0.5">Bespoke CAD Scale</span>
                 </div>
                 <div>
-                  <span className="block font-serif text-2xl font-bold text-charcoal">360°</span>
-                  <span className="block text-[11px] text-charcoal/70 uppercase tracking-wider mt-0.5">Interactive 3D Preview</span>
+                  <span className="block font-serif text-2xl font-bold text-graphite">360°</span>
+                  <span className="block text-[11px] text-slate-muted uppercase tracking-wider mt-0.5">Real 3D Verification</span>
                 </div>
               </div>
             </div>
@@ -162,22 +156,22 @@ export default async function HomePage() {
             {/* Right Interactive 3D Hero Visualizer Column */}
             <div className="lg:col-span-6 relative">
               <div className="relative mx-auto max-w-lg lg:max-w-none">
-                {/* 3D Canvas Box */}
+                {/* 3D Canvas Box in Architectural Deep Graphite */}
                 <InteractiveFurnitureViewer
                   asset={formatted3DAssets[0]}
                   productTitle="The Aurelia Italian Curved Sectional"
-                  initialHeight="h-[440px] sm:h-[500px] lg:h-[540px]"
+                  initialHeight="h-[440px] sm:h-[480px] lg:h-[520px]"
                 />
 
-                {/* Floating Highlight Card */}
-                <div className="absolute -bottom-6 -left-4 sm:left-4 bg-white/95 backdrop-blur-md p-4 rounded-2xl shadow-luxury border border-ivory-300 max-w-xs hidden sm:block">
+                {/* Floating Architectural Badge */}
+                <div className="absolute -bottom-4 -left-3 sm:left-4 bg-white p-3.5 rounded-lg shadow-elevated border border-platinum-border max-w-xs hidden sm:block">
                   <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 rounded-xl bg-gold/10 flex items-center justify-center text-gold">
-                      <Sparkles className="w-5 h-5" />
+                    <div className="w-9 h-9 rounded bg-platinum-soft flex items-center justify-center text-graphite">
+                      <Box className="w-4 h-4 text-slate-dark" />
                     </div>
                     <div>
-                      <h4 className="font-serif text-sm font-semibold text-charcoal">Real 3D Geometry</h4>
-                      <p className="text-[11px] text-charcoal/70 mt-0.5">Drag to rotate 360° or zoom contours</p>
+                      <h4 className="font-sans text-xs font-semibold uppercase tracking-wider text-graphite">Real 3D Geometry</h4>
+                      <p className="text-[11px] text-slate-dark mt-0.5">Drag to rotate 360° • 1:1 Workshop Spec</p>
                     </div>
                   </div>
                 </div>
@@ -188,54 +182,53 @@ export default async function HomePage() {
       </section>
 
       {/* =========================================================================
-          SECTION 4.3: FURNITURE CATEGORIES
+          SECTION 3: FURNITURE CATEGORIES (PLATINUM BACKGROUND)
          ========================================================================= */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12">
+      <section className="max-w-site mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 border-b border-platinum-border pb-4">
           <div>
-            <div className="flex items-center space-x-2 text-gold mb-2">
-              <span className="w-6 h-px bg-gold" />
-              <span className="text-xs uppercase font-bold tracking-widest">Our Specialties</span>
-            </div>
-            <h2 className="font-serif text-3xl sm:text-4xl text-charcoal font-medium">
+            <span className="text-xs uppercase font-bold tracking-wider text-slate-dark block mb-1">
+              Atelier Disciplines
+            </span>
+            <h2 className="font-serif text-3xl sm:text-4xl text-graphite font-medium">
               Furniture Categories
             </h2>
-            <p className="text-sm text-charcoal/70 mt-2 max-w-xl">
-              From monumental curved architectural sectionals to royal teak hand-carved armchairs, explore our atelier manufacturing disciplines.
+            <p className="text-sm text-slate-dark mt-1.5 max-w-xl">
+              From monumental curved architectural sectionals to sculpted lounge chairs, explore our specialized disciplines.
             </p>
           </div>
           <Link
             href="/products"
-            className="mt-4 md:mt-0 inline-flex items-center space-x-1.5 text-xs font-semibold uppercase tracking-wider text-charcoal hover:text-gold transition-colors"
+            className="mt-4 md:mt-0 inline-flex items-center space-x-1.5 text-xs font-semibold uppercase tracking-wider text-graphite hover:text-slate-dark transition-colors"
           >
             <span>Explore All 15 Categories</span>
-            <ChevronRight className="w-4 h-4 text-gold" />
+            <ChevronRight className="w-4 h-4" />
           </Link>
         </div>
 
-        {/* 15 Categories Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6">
+        {/* 15 Categories Architectural Grid */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
           {categories.map((cat) => (
             <Link
               key={cat.id}
               href={`/products?category=${cat.slug}`}
-              className="group bg-white rounded-2xl p-5 border border-ivory-300 shadow-sm hover:shadow-luxury hover:border-gold/50 transition-all flex flex-col justify-between"
+              className="group bg-white rounded-lg p-5 border border-platinum-border shadow-subtle hover:border-slate-silver hover:shadow-card transition-all flex flex-col justify-between"
             >
               <div>
-                <div className="w-10 h-10 rounded-xl bg-ivory-100 flex items-center justify-center text-walnut group-hover:bg-charcoal group-hover:text-gold transition-colors mb-4">
-                  <Compass className="w-5 h-5" />
+                <div className="w-8 h-8 rounded bg-platinum-soft flex items-center justify-center text-slate-dark group-hover:bg-graphite group-hover:text-white transition-colors mb-4">
+                  <Compass className="w-4 h-4" />
                 </div>
-                <h3 className="font-serif text-base font-medium text-charcoal group-hover:text-gold transition-colors">
+                <h3 className="font-sans text-sm font-semibold text-graphite group-hover:text-graphite transition-colors">
                   {cat.name}
                 </h3>
-                <p className="text-xs text-charcoal/60 mt-1.5 line-clamp-2">
+                <p className="text-xs text-slate-dark mt-1 line-clamp-2">
                   {cat.description || 'Bespoke custom upholstered manufacturing.'}
                 </p>
               </div>
 
-              <div className="pt-4 mt-3 border-t border-ivory-200 flex items-center justify-between text-[11px] font-semibold text-walnut">
+              <div className="pt-3 mt-3 border-t border-platinum-border flex items-center justify-between text-[11px] font-semibold text-slate-dark group-hover:text-graphite">
                 <span>View Designs</span>
-                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform text-gold" />
+                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
               </div>
             </Link>
           ))}
@@ -243,70 +236,67 @@ export default async function HomePage() {
       </section>
 
       {/* =========================================================================
-          SECTION 4.4: FEATURED FURNITURE DESIGNS (NO CHECKOUT/CART)
+          SECTION 8: FEATURED DESIGNS (WHITE BACKGROUND / ARCHITECTURAL CARDS)
          ========================================================================= */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12">
-          <div>
-            <div className="flex items-center space-x-2 text-gold mb-2">
-              <span className="w-6 h-px bg-gold" />
-              <span className="text-xs uppercase font-bold tracking-widest">Masterpiece Showcase</span>
+      <section className="bg-white py-16 border-y border-platinum-border">
+        <div className="max-w-site mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 border-b border-platinum-border pb-4">
+            <div>
+              <span className="text-xs uppercase font-bold tracking-wider text-slate-dark block mb-1">
+                Curated Studio Works
+              </span>
+              <h2 className="font-serif text-3xl sm:text-4xl text-graphite font-medium">
+                Featured Designs
+              </h2>
+              <p className="text-sm text-slate-dark mt-1.5 max-w-xl">
+                Every design represents a dialogue between seasoned hardwood frames, multi-density foams, and architectural silhouettes.
+              </p>
             </div>
-            <h2 className="font-serif text-3xl sm:text-4xl text-charcoal font-medium">
-              Featured Designs
-            </h2>
-            <p className="text-sm text-charcoal/70 mt-2 max-w-xl">
-              Each piece represents an uncompromising dialogue between seasoned hardwood frames, multi-density foams, and architectural silhouettes.
-            </p>
+            <Link
+              href="/products"
+              className="mt-4 md:mt-0 inline-flex items-center space-x-1.5 text-xs font-semibold uppercase tracking-wider text-graphite hover:text-slate-dark transition-colors"
+            >
+              <span>View Full Catalogue</span>
+              <ChevronRight className="w-4 h-4" />
+            </Link>
           </div>
-          <Link
-            href="/products"
-            className="mt-4 md:mt-0 inline-flex items-center space-x-1.5 text-xs font-semibold uppercase tracking-wider text-charcoal hover:text-gold transition-colors"
-          >
-            <span>View Full Catalogue</span>
-            <ChevronRight className="w-4 h-4 text-gold" />
-          </Link>
-        </div>
 
-        {/* Product Cards Grid with 1:1 Matching 3D Model Inspection */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {featuredProducts.map((prod) => (
-            <LuxuryProductCard
-              key={prod.id}
-              product={prod}
-              showQuickActions={false}
-            />
-          ))}
+          {/* Product Cards Grid with 1:1 Matching 3D Model Inspection */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {featuredProducts.map((prod) => (
+              <LuxuryProductCard
+                key={prod.id}
+                product={prod}
+                showQuickActions={false}
+              />
+            ))}
+          </div>
         </div>
       </section>
 
       {/* =========================================================================
-          SECTION 4.5: CUSTOM FURNITURE FEATURE BANNER
+          SECTION 3: CUSTOM DESIGN BANNER (DEEP GRAPHITE BACKGROUND #15191C)
          ========================================================================= */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="relative rounded-3xl bg-charcoal text-ivory-100 overflow-hidden border border-charcoal-light shadow-2xl p-8 sm:p-12 lg:p-16">
-          {/* Subtle Atelier Background Lines */}
-          <div className="absolute inset-0 bg-[radial-gradient(#b99a68_1px,transparent_1px)] [background-size:24px_24px] opacity-10 pointer-events-none" />
-
-          <div className="relative z-10 max-w-3xl space-y-6">
-            <span className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-charcoal-light border border-gold/40 text-gold text-xs font-semibold uppercase tracking-wider">
-              <Sparkles className="w-3.5 h-3.5" />
+      <section className="max-w-site mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="rounded-xl bg-graphite-deep text-platinum overflow-hidden border border-graphite-border shadow-elevated p-8 sm:p-12 lg:p-14">
+          <div className="relative z-10 max-w-3xl space-y-5">
+            <span className="inline-flex items-center space-x-2 px-2.5 py-1 rounded bg-graphite-elevated border border-graphite-border text-slate-silver text-xs font-semibold uppercase tracking-wider">
               <span>Bespoke Engineering Studio</span>
             </span>
 
             <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-medium tracking-tight text-white leading-tight">
               Love a Furniture Design? <br />
-              <span className="italic text-gold font-normal">We Can Customize It.</span>
+              <span className="italic text-slate-silver font-normal">We Can Customize It.</span>
             </h2>
 
-            <p className="text-sm sm:text-base text-ivory-300 leading-relaxed max-w-2xl">
-              Saw an inspirational luxury sofa or fancy accent chair on Pinterest, Instagram, or an architectural magazine? Upload your reference photograph, specify your dimensions, and our master craftsmen will manufacture it with precision.
+            <p className="text-sm sm:text-base text-slate-silver leading-relaxed max-w-2xl font-light">
+              Found an inspirational sofa or statement chair in an architectural publication, Pinterest, or luxury estate? Upload your reference photograph, specify desired modifications, and our master carpenters will manufacture it to exact millimeter tolerances.
             </p>
 
-            <div className="pt-4 flex flex-col sm:flex-row items-center gap-4">
+            <div className="pt-2 flex flex-col sm:flex-row items-center gap-3">
               <Link
                 href="/custom-design"
-                className="w-full sm:w-auto px-8 py-4 rounded-full bg-gold hover:bg-gold-light text-charcoal-deep font-semibold text-xs uppercase tracking-widest transition-all shadow-luxury-gold flex items-center justify-center space-x-2"
+                className="w-full sm:w-auto px-6 py-3.5 rounded-md bg-platinum text-graphite-deep hover:bg-white font-semibold text-xs uppercase tracking-wider transition-all shadow-subtle flex items-center justify-center space-x-2"
               >
                 <FileText className="w-4 h-4" />
                 <span>Upload Your Design</span>
@@ -314,9 +304,9 @@ export default async function HomePage() {
 
               <Link
                 href="/studio"
-                className="w-full sm:w-auto px-8 py-4 rounded-full bg-white/10 hover:bg-white/20 text-white font-semibold text-xs uppercase tracking-widest border border-white/20 transition-all flex items-center justify-center space-x-2"
+                className="w-full sm:w-auto px-6 py-3.5 rounded-md bg-graphite-elevated hover:bg-graphite text-white font-semibold text-xs uppercase tracking-wider border border-graphite-border transition-all flex items-center justify-center space-x-2"
               >
-                <Sliders className="w-4 h-4 text-gold" />
+                <Sliders className="w-4 h-4 text-slate-silver" />
                 <span>Customize Our Furniture</span>
               </Link>
             </div>
@@ -325,48 +315,46 @@ export default async function HomePage() {
       </section>
 
       {/* =========================================================================
-          SECTION 4.6: SIGNATURE COLLECTIONS
+          SECTION 3: SIGNATURE COLLECTIONS (WHITE EDITORIAL BACKGROUND)
          ========================================================================= */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-2xl mx-auto mb-16">
-          <div className="flex items-center justify-center space-x-2 text-gold mb-2">
-            <span className="w-6 h-px bg-gold" />
-            <span className="text-xs uppercase font-bold tracking-widest">Haute Couture Seating</span>
-            <span className="w-6 h-px bg-gold" />
-          </div>
-          <h2 className="font-serif text-3xl sm:text-4xl text-charcoal font-medium">
+      <section className="max-w-site mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center max-w-2xl mx-auto mb-12">
+          <span className="text-xs uppercase font-bold tracking-wider text-slate-dark block mb-1">
+            Curated Architectural Lines
+          </span>
+          <h2 className="font-serif text-3xl sm:text-4xl text-graphite font-medium">
             Signature Collections
           </h2>
-          <p className="text-sm text-charcoal/70 mt-2">
-            Distinct design narratives spanning Milanese curves, British Chesterfield tufting, Scandinavian warmth, and Art Deco fluting.
+          <p className="text-sm text-slate-dark mt-1.5">
+            Distinct design narratives spanning Milanese curves, British Chesterfield tufting, Scandinavian warmth, and Art Deco geometry.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {collections.map((col) => (
             <div
               key={col.id}
-              className="group relative rounded-3xl overflow-hidden bg-charcoal aspect-[16/10] shadow-luxury border border-ivory-300"
+              className="group relative rounded-lg overflow-hidden bg-graphite-deep aspect-[16/10] shadow-card border border-platinum-border"
             >
               <img
                 src={col.heroImage || 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1200&q=80'}
                 alt={col.name}
-                className="w-full h-full object-cover opacity-80 group-hover:scale-105 group-hover:opacity-70 transition-all duration-700"
+                className="w-full h-full object-cover opacity-80 group-hover:scale-105 transition-all duration-700"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-charcoal-deep via-charcoal/40 to-transparent p-8 sm:p-10 flex flex-col justify-end">
-                <span className="text-xs font-bold uppercase tracking-widest text-gold mb-1">
+              <div className="absolute inset-0 bg-gradient-to-t from-graphite-deep via-graphite-deep/40 to-transparent p-6 sm:p-8 flex flex-col justify-end">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-slate-silver mb-1">
                   {col.tagline}
                 </span>
                 <h3 className="font-serif text-2xl sm:text-3xl font-medium text-white mb-2">
                   {col.name}
                 </h3>
-                <p className="text-xs sm:text-sm text-ivory-200 max-w-md line-clamp-2 mb-4 leading-relaxed">
+                <p className="text-xs sm:text-sm text-slate-silver max-w-md line-clamp-2 mb-4 leading-relaxed font-light">
                   {col.description}
                 </p>
                 <div>
                   <Link
                     href={`/products?collection=${col.slug}`}
-                    className="inline-flex items-center space-x-2 px-5 py-2.5 rounded-full bg-white text-charcoal hover:bg-gold hover:text-white text-xs font-semibold uppercase tracking-wider transition-colors shadow-md"
+                    className="inline-flex items-center space-x-2 px-4 py-2 rounded-md bg-platinum text-graphite-deep hover:bg-white text-xs font-semibold uppercase tracking-wider transition-colors shadow-subtle"
                   >
                     <span>Explore {col.name}</span>
                     <ArrowRight className="w-3.5 h-3.5" />
@@ -379,76 +367,75 @@ export default async function HomePage() {
       </section>
 
       {/* =========================================================================
-          SECTION 4.7: 3D FURNITURE SHOWCASE (REAL THIRD-PARTY 3D MODELS)
+          SECTION 12: 3D FURNITURE SHOWROOM (DEEP GRAPHITE BACKGROUND #15191C)
          ========================================================================= */}
-      <section className="bg-ivory-50 border-y border-ivory-300 py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="bg-graphite-deep py-20 border-y border-graphite-border">
+        <div className="max-w-site mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-2xl mx-auto mb-12">
-            <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-cream border border-gold/30 text-walnut text-xs font-semibold uppercase tracking-wider mb-3">
-              <Sparkles className="w-3.5 h-3.5 text-gold" />
-              <span>Section 7 Compliant 3D Studio</span>
-            </div>
-            <h2 className="font-serif text-3xl sm:text-4xl text-charcoal font-medium">
+            <span className="inline-flex items-center space-x-1.5 px-3 py-1 rounded bg-graphite-elevated text-slate-silver text-xs font-semibold uppercase tracking-wider mb-2 border border-graphite-border">
+              <Box className="w-3.5 h-3.5" />
+              <span>Section 12 Architectural 3D Studio</span>
+            </span>
+            <h2 className="font-serif text-3xl sm:text-4xl text-white font-medium">
               Real Interactive 3D Furniture Models
             </h2>
-            <p className="text-sm text-charcoal/70 mt-2">
-              Experience genuine 3D geometry in your browser. Rotate 360°, inspect structural depths, examine seating contours, and view full licensing attribution.
+            <p className="text-sm text-slate-silver mt-2 font-light">
+              Experience genuine 3D geometry in your browser. Rotate 360°, inspect structural depths, examine seating contours, and view legally verified licensing attribution.
             </p>
           </div>
 
-          {/* Interactive Multi-Model Switcher Showcase */}
+          {/* Interactive Multi-Model Switcher Showcase in Deep Graphite */}
           <Home3DShowcase assets={formatted3DAssets} />
         </div>
       </section>
 
       {/* =========================================================================
-          SECTION 4.8: OUR MANUFACTURING & CRAFTSMANSHIP
+          SECTION 3: OUR MANUFACTURING (ALTERNATING PLATINUM / GRAPHITE)
          ========================================================================= */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="max-w-site mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           <div className="lg:col-span-5 space-y-6">
-            <div className="flex items-center space-x-2 text-gold">
-              <span className="w-6 h-px bg-gold" />
-              <span className="text-xs uppercase font-bold tracking-widest">Workshop Capabilities</span>
-            </div>
+            <span className="text-xs uppercase font-bold tracking-wider text-slate-dark block">
+              Workshop Capabilities
+            </span>
 
-            <h2 className="font-serif text-3xl sm:text-4xl text-charcoal font-medium leading-tight">
+            <h2 className="font-serif text-3xl sm:text-4xl text-graphite font-medium leading-tight">
               Anatomy of Uncompromising <br />
-              <span className="italic text-walnut font-normal">Handcrafted Quality.</span>
+              <span className="italic text-slate-dark font-normal">Handcrafted Quality.</span>
             </h2>
 
-            <p className="text-sm text-charcoal/80 leading-relaxed">
-              Unlike mass factory lines that rely on particleboard and staple guns, our Bodla atelier employs generational carpenters and master upholsterers. Every piece is built to become a cherished heirloom.
+            <p className="text-sm text-slate-dark leading-relaxed">
+              Unlike mass factory lines that rely on particleboard and staple guns, our Bodla atelier employs generational carpenters and master upholsterers. Every piece is built to become an architectural heirloom.
             </p>
 
             <div className="space-y-4 pt-2">
               <div className="flex items-start space-x-3.5">
-                <div className="w-8 h-8 rounded-full bg-cream flex items-center justify-center text-walnut shrink-0 mt-0.5">
-                  <CheckCircle2 className="w-4 h-4 text-gold" />
+                <div className="w-7 h-7 rounded bg-white border border-platinum-border flex items-center justify-center text-graphite shrink-0 mt-0.5">
+                  <CheckCircle2 className="w-4 h-4 text-graphite" />
                 </div>
                 <div>
-                  <h4 className="font-serif text-sm font-semibold text-charcoal">Kiln-Dried Hardwood Skeletons</h4>
-                  <p className="text-xs text-charcoal/70 mt-0.5">Seasoned Salwood and Teak timbers dried below 10% moisture content to prevent warping or creaking.</p>
+                  <h4 className="font-sans text-xs font-bold uppercase tracking-wider text-graphite">Kiln-Dried Hardwood Skeletons</h4>
+                  <p className="text-xs text-slate-dark mt-0.5">Seasoned Salwood and Teak timbers dried below 10% moisture content to prevent warping or creaking.</p>
                 </div>
               </div>
 
               <div className="flex items-start space-x-3.5">
-                <div className="w-8 h-8 rounded-full bg-cream flex items-center justify-center text-walnut shrink-0 mt-0.5">
-                  <CheckCircle2 className="w-4 h-4 text-gold" />
+                <div className="w-7 h-7 rounded bg-white border border-platinum-border flex items-center justify-center text-graphite shrink-0 mt-0.5">
+                  <CheckCircle2 className="w-4 h-4 text-graphite" />
                 </div>
                 <div>
-                  <h4 className="font-serif text-sm font-semibold text-charcoal">Multi-Density High Resilience Foams</h4>
-                  <p className="text-xs text-charcoal/70 mt-0.5">45D &amp; 50D sag-resistant cores crowned with microfiber feather duvets for lasting posture support.</p>
+                  <h4 className="font-sans text-xs font-bold uppercase tracking-wider text-graphite">Multi-Density High Resilience Foams</h4>
+                  <p className="text-xs text-slate-dark mt-0.5">45D &amp; 50D sag-resistant cores crowned with microfiber feather duvets for lasting posture support.</p>
                 </div>
               </div>
 
               <div className="flex items-start space-x-3.5">
-                <div className="w-8 h-8 rounded-full bg-cream flex items-center justify-center text-walnut shrink-0 mt-0.5">
-                  <CheckCircle2 className="w-4 h-4 text-gold" />
+                <div className="w-7 h-7 rounded bg-white border border-platinum-border flex items-center justify-center text-graphite shrink-0 mt-0.5">
+                  <CheckCircle2 className="w-4 h-4 text-graphite" />
                 </div>
                 <div>
-                  <h4 className="font-serif text-sm font-semibold text-charcoal">Hand-Pleated Diamond Tufting</h4>
-                  <p className="text-xs text-charcoal/70 mt-0.5">Master artisans hand-fold each diamond crease without fabric slitting, securing each button by hand.</p>
+                  <h4 className="font-sans text-xs font-bold uppercase tracking-wider text-graphite">Hand-Pleated Diamond Tufting</h4>
+                  <p className="text-xs text-slate-dark mt-0.5">Master artisans hand-fold each diamond crease without fabric slitting, securing each button by hand.</p>
                 </div>
               </div>
             </div>
@@ -456,39 +443,39 @@ export default async function HomePage() {
             <div className="pt-2">
               <Link
                 href="/manufacturing"
-                className="inline-flex items-center space-x-2 text-xs font-semibold uppercase tracking-wider text-charcoal hover:text-gold transition-colors"
+                className="inline-flex items-center space-x-2 text-xs font-semibold uppercase tracking-wider text-graphite hover:underline"
               >
                 <span>Read Full Factory &amp; Process Story</span>
-                <ArrowRight className="w-4 h-4 text-gold" />
+                <ArrowRight className="w-4 h-4" />
               </Link>
             </div>
           </div>
 
-          <div className="lg:col-span-7 grid grid-cols-2 gap-4 sm:gap-6">
-            <div className="space-y-4 sm:space-y-6">
-              <div className="rounded-2xl overflow-hidden aspect-[4/5] shadow-luxury">
+          <div className="lg:col-span-7 grid grid-cols-2 gap-4">
+            <div className="space-y-4">
+              <div className="rounded-lg overflow-hidden aspect-[4/5] shadow-subtle border border-platinum-border">
                 <img
                   src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=800&q=80"
                   alt="Timber Carpentry"
-                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                  className="w-full h-full object-cover hover:scale-[1.03] transition-transform duration-500"
                 />
               </div>
-              <div className="p-5 rounded-2xl bg-white border border-ivory-300 shadow-sm">
-                <span className="font-serif text-2xl font-bold text-charcoal block">180+</span>
-                <span className="text-xs text-charcoal/70 mt-1 block">Artisan hours per bespoke curved sectional</span>
+              <div className="p-4 rounded-lg bg-white border border-platinum-border shadow-subtle">
+                <span className="font-serif text-2xl font-bold text-graphite block">180+</span>
+                <span className="text-xs text-slate-dark mt-0.5 block">Artisan hours per bespoke curved sectional</span>
               </div>
             </div>
 
-            <div className="space-y-4 sm:space-y-6 pt-8">
-              <div className="p-5 rounded-2xl bg-charcoal text-ivory-100 shadow-luxury">
-                <span className="font-serif text-2xl font-bold text-gold block">65,000</span>
-                <span className="text-xs text-ivory-300 mt-1 block">Martindale rubs on atelier Belgian velvets</span>
+            <div className="space-y-4 pt-6">
+              <div className="p-4 rounded-lg bg-graphite-deep text-platinum shadow-subtle border border-graphite-border">
+                <span className="font-serif text-2xl font-bold text-white block">65,000</span>
+                <span className="text-xs text-slate-silver mt-0.5 block">Martindale rubs on contract-grade textiles</span>
               </div>
-              <div className="rounded-2xl overflow-hidden aspect-[4/5] shadow-luxury">
+              <div className="rounded-lg overflow-hidden aspect-[4/5] shadow-subtle border border-platinum-border">
                 <img
                   src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=800&q=80"
                   alt="Bespoke Upholstery"
-                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                  className="w-full h-full object-cover hover:scale-[1.03] transition-transform duration-500"
                 />
               </div>
             </div>
@@ -497,67 +484,66 @@ export default async function HomePage() {
       </section>
 
       {/* =========================================================================
-          SECTION 4.9: COMPLETED PROJECTS & CASE STUDIES
+          SECTION 3: COMPLETED PROJECTS (PLATINUM BACKGROUND)
          ========================================================================= */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12">
+      <section className="max-w-site mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 border-b border-platinum-border pb-4">
           <div>
-            <div className="flex items-center space-x-2 text-gold mb-2">
-              <span className="w-6 h-px bg-gold" />
-              <span className="text-xs uppercase font-bold tracking-widest">Installation Portfolio</span>
-            </div>
-            <h2 className="font-serif text-3xl sm:text-4xl text-charcoal font-medium">
+            <span className="text-xs uppercase font-bold tracking-wider text-slate-dark block mb-1">
+              Installation Portfolio
+            </span>
+            <h2 className="font-serif text-3xl sm:text-4xl text-graphite font-medium">
               Completed Projects
             </h2>
-            <p className="text-sm text-charcoal/70 mt-2 max-w-xl">
+            <p className="text-sm text-slate-dark mt-1.5 max-w-xl">
               Inspect bespoke installations crafted for luxury penthouses, boutique heritage suites, and modernist architectural villas.
             </p>
           </div>
           <Link
             href="/projects"
-            className="mt-4 md:mt-0 inline-flex items-center space-x-1.5 text-xs font-semibold uppercase tracking-wider text-charcoal hover:text-gold transition-colors"
+            className="mt-4 md:mt-0 inline-flex items-center space-x-1.5 text-xs font-semibold uppercase tracking-wider text-graphite hover:text-slate-dark transition-colors"
           >
             <span>View All Installations</span>
-            <ChevronRight className="w-4 h-4 text-gold" />
+            <ChevronRight className="w-4 h-4" />
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {projects.map((proj) => (
             <div
               key={proj.id}
-              className="bg-white rounded-2xl overflow-hidden border border-ivory-300 shadow-sm hover:shadow-luxury-hover transition-all flex flex-col justify-between group"
+              className="bg-white rounded-lg overflow-hidden border border-platinum-border shadow-subtle hover:border-slate-silver hover:shadow-card transition-all flex flex-col justify-between group"
             >
               <div>
-                <div className="aspect-[16/10] overflow-hidden bg-ivory-100">
+                <div className="aspect-[16/10] overflow-hidden bg-platinum-soft border-b border-platinum-border">
                   <img
                     src={proj.coverImage}
                     alt={proj.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500"
                   />
                 </div>
-                <div className="p-6 space-y-3">
-                  <div className="flex items-center justify-between text-xs text-walnut font-medium">
+                <div className="p-5 space-y-2.5">
+                  <div className="flex items-center justify-between text-xs text-slate-dark font-medium">
                     <span>{proj.clientType}</span>
-                    <span className="text-charcoal/50">• {proj.location}</span>
+                    <span className="text-slate-muted">• {proj.location}</span>
                   </div>
-                  <h3 className="font-serif text-xl font-medium text-charcoal group-hover:text-gold transition-colors">
+                  <h3 className="font-serif text-lg font-medium text-graphite group-hover:text-graphite transition-colors">
                     {proj.title}
                   </h3>
-                  <p className="text-xs text-charcoal/70 line-clamp-3 leading-relaxed">
+                  <p className="text-xs text-slate-dark line-clamp-3 leading-relaxed">
                     {proj.description}
                   </p>
-                  <div className="pt-3 border-t border-ivory-200 text-xs text-charcoal/80">
-                    <strong className="text-walnut block mb-0.5">Custom Seating Supplied:</strong>
+                  <div className="pt-2.5 border-t border-platinum-border text-xs text-slate-dark">
+                    <strong className="text-graphite block mb-0.5">Seating Supplied:</strong>
                     <span>{proj.furnitureSupplied}</span>
                   </div>
                 </div>
               </div>
 
-              <div className="p-6 pt-0">
+              <div className="p-5 pt-0">
                 <Link
                   href={`/projects#${proj.slug}`}
-                  className="w-full block py-2.5 text-center rounded-xl bg-ivory-100 hover:bg-ivory-200 text-charcoal text-xs font-semibold uppercase tracking-wider transition-colors"
+                  className="w-full block py-2 text-center rounded-md bg-platinum-soft hover:bg-platinum text-graphite text-xs font-semibold uppercase tracking-wider transition-colors border border-platinum-border"
                 >
                   View Case Study
                 </Link>
@@ -568,50 +554,50 @@ export default async function HomePage() {
       </section>
 
       {/* =========================================================================
-          SECTION 4.10: ARCHITECTS & BULK ENQUIRIES
+          SECTION 3: ARCHITECTS & BULK ENQUIRIES (WHITE EDITORIAL BACKGROUND)
          ========================================================================= */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="rounded-3xl bg-cream/70 border border-gold/30 p-8 sm:p-12 lg:p-16 flex flex-col lg:flex-row items-center justify-between gap-8">
-          <div className="space-y-4 max-w-2xl">
-            <span className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-white border border-gold/40 text-walnut text-xs font-semibold uppercase tracking-wider">
-              <Building2 className="w-3.5 h-3.5 text-gold" />
+      <section className="max-w-site mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="rounded-xl bg-white border border-platinum-border p-8 sm:p-12 flex flex-col lg:flex-row items-center justify-between gap-8 shadow-subtle">
+          <div className="space-y-3.5 max-w-2xl">
+            <span className="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded bg-platinum-soft border border-platinum-border text-slate-dark text-xs font-semibold uppercase tracking-wider">
+              <Building2 className="w-3.5 h-3.5" />
               <span>For Architects &amp; Interior Designers</span>
             </span>
 
-            <h2 className="font-serif text-3xl sm:text-4xl text-charcoal font-medium">
+            <h2 className="font-serif text-3xl sm:text-4xl text-graphite font-medium">
               Contract Manufacturing &amp; Bulk Projects
             </h2>
 
-            <p className="text-sm text-charcoal/80 leading-relaxed">
+            <p className="text-sm text-slate-dark leading-relaxed font-light">
               We collaborate directly with architectural studios, hospitality developers, and interior designers. We translate your CAD elevations into precision prototypes, provide contract-grade Martindale fabric certifications, and execute bulk sofa/chair manufacturing.
             </p>
 
-            <div className="pt-2 flex flex-wrap gap-4 text-xs font-medium text-walnut">
+            <div className="pt-2 flex flex-wrap gap-4 text-xs font-medium text-slate-dark">
               <span className="flex items-center space-x-1.5">
-                <CheckCircle2 className="w-4 h-4 text-gold" />
+                <CheckCircle2 className="w-3.5 h-3.5 text-graphite" />
                 <span>Custom CAD Drafting &amp; Spec Sheets</span>
               </span>
               <span className="flex items-center space-x-1.5">
-                <CheckCircle2 className="w-4 h-4 text-gold" />
+                <CheckCircle2 className="w-3.5 h-3.5 text-graphite" />
                 <span>B2B Contract Pricing Schedules</span>
               </span>
               <span className="flex items-center space-x-1.5">
-                <CheckCircle2 className="w-4 h-4 text-gold" />
+                <CheckCircle2 className="w-3.5 h-3.5 text-graphite" />
                 <span>On-Site White-Glove Installation</span>
               </span>
             </div>
           </div>
 
-          <div className="shrink-0 flex flex-col sm:flex-row lg:flex-col gap-3 w-full sm:w-auto">
+          <div className="shrink-0 flex flex-col sm:flex-row lg:flex-col gap-2.5 w-full sm:w-auto">
             <Link
               href="/architects"
-              className="px-8 py-4 rounded-full bg-charcoal text-ivory-100 hover:bg-charcoal-light hover:text-gold text-xs font-semibold uppercase tracking-widest text-center shadow-luxury transition-all"
+              className="px-6 py-3 rounded-md bg-graphite text-white hover:bg-graphite-hover text-xs font-semibold uppercase tracking-wider text-center shadow-subtle transition-all"
             >
               Architect Collaboration
             </Link>
             <Link
               href="/custom-design?type=B2B"
-              className="px-8 py-4 rounded-full bg-white text-charcoal hover:bg-ivory-100 text-xs font-semibold uppercase tracking-widest text-center border border-ivory-300 transition-all"
+              className="px-6 py-3 rounded-md bg-transparent text-graphite hover:bg-platinum-soft text-xs font-semibold uppercase tracking-wider text-center border border-graphite transition-all"
             >
               Submit Bulk RFQ
             </Link>
@@ -620,48 +606,46 @@ export default async function HomePage() {
       </section>
 
       {/* =========================================================================
-          SECTION 4.11: REVIEWS AND TRUST
+          SECTION 3: REVIEWS AND TRUST
          ========================================================================= */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-2xl mx-auto mb-16">
-          <div className="flex items-center justify-center space-x-2 text-gold mb-2">
-            <span className="w-6 h-px bg-gold" />
-            <span className="text-xs uppercase font-bold tracking-widest">Verified Client Testimonials</span>
-            <span className="w-6 h-px bg-gold" />
-          </div>
-          <h2 className="font-serif text-3xl sm:text-4xl text-charcoal font-medium">
+      <section className="max-w-site mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center max-w-2xl mx-auto mb-10 border-b border-platinum-border pb-4">
+          <span className="text-xs uppercase font-bold tracking-wider text-slate-dark block mb-1">
+            Verified Client Testimonials
+          </span>
+          <h2 className="font-serif text-3xl sm:text-4xl text-graphite font-medium">
             Voices of Connoisseurs
           </h2>
-          <p className="text-sm text-charcoal/70 mt-2">
-            Read verified feedback from private estate homeowners and prominent architecture studios.
+          <p className="text-sm text-slate-dark mt-1">
+            Verified feedback from private estate homeowners and prominent architecture studios.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {testimonials.map((t) => (
             <div
               key={t.id}
-              className="bg-white rounded-2xl p-8 border border-ivory-300 shadow-sm hover:shadow-luxury transition-all flex flex-col justify-between relative"
+              className="bg-white rounded-lg p-6 border border-platinum-border shadow-subtle flex flex-col justify-between relative"
             >
               <div>
-                <div className="flex items-center space-x-1 text-gold mb-4">
+                <div className="flex items-center space-x-1 text-graphite mb-3">
                   {[...Array(t.rating)].map((_, i) => (
-                    <Star key={i} className="w-4 h-4 fill-gold text-gold" />
+                    <Star key={i} className="w-3.5 h-3.5 fill-graphite text-graphite" />
                   ))}
                 </div>
 
-                <Quote className="w-8 h-8 text-gold/20 mb-2" />
+                <Quote className="w-6 h-6 text-platinum-border mb-2" />
 
-                <p className="text-xs sm:text-sm text-charcoal/80 italic leading-relaxed mb-6">
+                <p className="text-xs sm:text-sm text-slate-dark italic leading-relaxed mb-5">
                   &ldquo;{t.quote}&rdquo;
                 </p>
               </div>
 
-              <div className="pt-4 border-t border-ivory-200">
-                <span className="font-serif font-semibold text-charcoal text-sm block">
+              <div className="pt-3 border-t border-platinum-border">
+                <span className="font-sans font-semibold text-graphite text-xs block">
                   {t.clientName}
                 </span>
-                <span className="text-xs text-walnut block mt-0.5">
+                <span className="text-[11px] text-slate-muted block mt-0.5">
                   {t.clientTitle} • {t.location}
                 </span>
               </div>
@@ -673,17 +657,17 @@ export default async function HomePage() {
       {/* =========================================================================
           SECTION 7.5: 3D ASSET LICENCE REGISTRY SECTION
          ========================================================================= */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="max-w-site mx-auto px-4 sm:px-6 lg:px-8">
         <AssetLicenceRegistry assets={formatted3DAssets} />
       </section>
 
       {/* =========================================================================
-          SECTION 4.12: CONSULTATION & APPOINTMENT CTA
+          SECTION 3: CONSULTATION & APPOINTMENT CTA (GRAPHITE BACKGROUND #22272B)
          ========================================================================= */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="rounded-3xl bg-charcoal text-ivory-100 p-8 sm:p-12 lg:p-16 text-center relative overflow-hidden shadow-2xl border border-charcoal-light">
-          <div className="relative z-10 max-w-2xl mx-auto space-y-5">
-            <span className="text-xs font-bold uppercase tracking-widest text-gold">
+      <section className="max-w-site mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="rounded-xl bg-graphite text-platinum p-8 sm:p-12 lg:p-14 text-center relative overflow-hidden shadow-elevated border border-graphite-border">
+          <div className="relative z-10 max-w-2xl mx-auto space-y-4">
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-silver">
               Private Atelier Experience
             </span>
 
@@ -691,14 +675,14 @@ export default async function HomePage() {
               Schedule a Design Meeting or Workshop Tour
             </h2>
 
-            <p className="text-xs sm:text-sm text-ivory-300 leading-relaxed">
-              Visit our Civil Lines showroom gallery to touch raw fabric swatches, or tour our Bodla manufacturing compound to inspect seasoned teak frames in production.
+            <p className="text-xs sm:text-sm text-slate-silver leading-relaxed font-light">
+              Visit our Civil Lines gallery to touch raw fabric swatches, or tour our Bodla manufacturing compound to inspect seasoned teak frames in production.
             </p>
 
-            <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
+            <div className="pt-3 flex flex-col sm:flex-row items-center justify-center gap-3">
               <Link
                 href="/consultation"
-                className="w-full sm:w-auto px-8 py-4 rounded-full bg-gold hover:bg-gold-light text-charcoal-deep font-semibold text-xs uppercase tracking-widest transition-all shadow-luxury-gold flex items-center justify-center space-x-2"
+                className="w-full sm:w-auto px-6 py-3 rounded-md bg-platinum text-graphite-deep hover:bg-white font-semibold text-xs uppercase tracking-wider transition-all shadow-subtle flex items-center justify-center space-x-2"
               >
                 <Calendar className="w-4 h-4" />
                 <span>Book Atelier Appointment</span>
@@ -708,7 +692,7 @@ export default async function HomePage() {
                 href="https://wa.me/919897023456"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full sm:w-auto px-8 py-4 rounded-full bg-white/10 hover:bg-white/20 text-white font-semibold text-xs uppercase tracking-widest border border-white/20 transition-all"
+                className="w-full sm:w-auto px-6 py-3 rounded-md bg-graphite-elevated hover:bg-graphite text-white font-semibold text-xs uppercase tracking-wider border border-graphite-border transition-all"
               >
                 Direct WhatsApp Concierge
               </a>

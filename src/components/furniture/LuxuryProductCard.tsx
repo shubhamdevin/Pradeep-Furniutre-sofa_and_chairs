@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { 
-  Sparkles, 
   RotateCw, 
   Sliders, 
   ArrowRight, 
@@ -11,10 +10,8 @@ import {
   X, 
   Heart, 
   Scale, 
-  Eye, 
-  Layers, 
-  ShieldCheck,
-  CheckCircle2
+  CheckCircle2,
+  Box
 } from 'lucide-react';
 import InteractiveFurnitureViewer from '@/components/three-d/InteractiveFurnitureViewer';
 
@@ -72,48 +69,48 @@ export default function LuxuryProductCard({
 
   return (
     <>
-      <div className="luxury-card bg-white rounded-2xl overflow-hidden flex flex-col justify-between group relative transition-all duration-300 hover:shadow-luxury-hover">
+      <div className="architectural-card bg-white rounded-lg overflow-hidden flex flex-col justify-between group relative border border-platinum-border transition-all duration-200 hover:border-slate-silver hover:shadow-card">
         <div>
           {/* Product Image Stage */}
-          <div className="relative aspect-[4/3] bg-ivory-100 overflow-hidden sheen-overlay">
+          <div className="relative aspect-[4/3] bg-platinum-soft overflow-hidden border-b border-platinum-border">
             <img
               src={primaryImg}
               alt={product.name}
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+              className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-500 ease-out"
               loading="lazy"
             />
 
             {/* Top Badges */}
-            <div className="absolute top-3 inset-x-3 flex items-center justify-between z-10">
-              <span className="px-2.5 py-1 bg-white/95 backdrop-blur-md text-charcoal text-[10px] font-mono font-semibold rounded-full border border-ivory-300 shadow-sm">
+            <div className="absolute top-2.5 inset-x-2.5 flex items-center justify-between z-10">
+              <span className="px-2 py-0.5 bg-white/95 text-graphite text-[10px] font-mono font-semibold rounded border border-platinum-border shadow-subtle">
                 {product.sku}
               </span>
 
               {showQuickActions && (
-                <div className="flex items-center space-x-1.5">
+                <div className="flex items-center space-x-1">
                   {onToggleShortlist && (
                     <button
                       onClick={() => onToggleShortlist(product.id)}
-                      className={`p-1.5 rounded-full backdrop-blur-md transition-colors shadow-sm ${
+                      className={`p-1.5 rounded transition-colors shadow-subtle ${
                         isShortlisted
-                          ? 'bg-red-50 text-red-600'
-                          : 'bg-white/90 text-charcoal/70 hover:bg-white hover:text-red-500'
+                          ? 'bg-status-error text-white'
+                          : 'bg-white/95 text-slate-dark hover:bg-white hover:text-graphite'
                       }`}
                       title={isShortlisted ? 'Saved in Shortlist' : 'Save to Shortlist'}
                     >
-                      <Heart className={`w-3.5 h-3.5 ${isShortlisted ? 'fill-red-600' : ''}`} />
+                      <Heart className={`w-3.5 h-3.5 ${isShortlisted ? 'fill-white' : ''}`} />
                     </button>
                   )}
 
                   {onToggleCompare && (
                     <button
                       onClick={() => onToggleCompare(product.id)}
-                      className={`p-1.5 rounded-full backdrop-blur-md transition-colors shadow-sm ${
+                      className={`p-1.5 rounded transition-colors shadow-subtle ${
                         isCompared
-                          ? 'bg-charcoal text-gold'
-                          : 'bg-white/90 text-charcoal/70 hover:bg-white hover:text-charcoal'
+                          ? 'bg-graphite text-white'
+                          : 'bg-white/95 text-slate-dark hover:bg-white hover:text-graphite'
                       }`}
-                      title="Compare Design"
+                      title="Compare Technical Specs"
                     >
                       <Scale className="w-3.5 h-3.5" />
                     </button>
@@ -124,26 +121,26 @@ export default function LuxuryProductCard({
 
             {/* 3D Model Badge & Quick Inspect Trigger */}
             {has3D && (
-              <div className="absolute bottom-3 inset-x-3 flex items-center justify-between z-10">
-                <span className="px-2.5 py-1 bg-charcoal/90 backdrop-blur text-gold text-[10px] font-semibold rounded-full flex items-center space-x-1.5 border border-gold/30 shadow-md">
-                  <span className="w-1.5 h-1.5 rounded-full bg-gold animate-ping" />
-                  <span>Exact 3D Model</span>
+              <div className="absolute bottom-2.5 inset-x-2.5 flex items-center justify-between z-10">
+                <span className="px-2 py-0.5 bg-graphite-deep text-platinum text-[10px] font-sans font-semibold rounded flex items-center space-x-1 border border-graphite-border shadow-subtle">
+                  <Box className="w-3 h-3 text-slate-silver" />
+                  <span>Interactive 3D</span>
                 </span>
 
                 <button
                   onClick={() => setShow3DModal(true)}
-                  className="px-3 py-1 bg-white/95 hover:bg-gold hover:text-charcoal text-charcoal text-[10px] font-bold uppercase tracking-wider rounded-full backdrop-blur-md transition-all shadow-md flex items-center space-x-1 border border-ivory-300 group-hover:scale-105"
+                  className="px-2.5 py-1 bg-white hover:bg-graphite hover:text-white text-graphite text-[10px] font-sans font-semibold uppercase tracking-wider rounded transition-all shadow-subtle flex items-center space-x-1 border border-platinum-border"
                   title="Inspect interactive 3D model with 360° rotation"
                 >
-                  <RotateCw className="w-3 h-3 text-gold group-hover:text-charcoal" />
+                  <RotateCw className="w-3 h-3" />
                   <span>Inspect 3D</span>
                 </button>
               </div>
             )}
 
             {!has3D && product.isCustomizable && (
-              <div className="absolute bottom-3 left-3 z-10">
-                <span className="px-2.5 py-0.5 bg-cream/95 text-walnut text-[10px] font-semibold rounded-full border border-gold/30">
+              <div className="absolute bottom-2.5 left-2.5 z-10">
+                <span className="px-2 py-0.5 bg-platinum-soft text-slate-dark text-[10px] font-sans font-medium rounded border border-platinum-border">
                   Customizable
                 </span>
               </div>
@@ -151,14 +148,14 @@ export default function LuxuryProductCard({
           </div>
 
           {/* Card Body */}
-          <div className="p-5 space-y-2.5">
+          <div className="p-4 space-y-2">
             <div className="flex items-center justify-between">
-              <span className="text-[10px] uppercase font-bold tracking-widest text-gold">
-                {product.category?.name || 'Bespoke Atelier'}
+              <span className="text-[10px] uppercase font-bold tracking-wider text-slate-dark">
+                {product.category?.name || 'Architectural Seating'}
               </span>
 
               {has3D && (
-                <span className="inline-flex items-center space-x-1 text-[10px] text-emerald-700 font-medium">
+                <span className="inline-flex items-center space-x-1 text-[10px] text-status-success font-medium">
                   <CheckCircle2 className="w-3 h-3" />
                   <span>1:1 Photo &amp; 3D Match</span>
                 </span>
@@ -166,29 +163,29 @@ export default function LuxuryProductCard({
             </div>
 
             <Link href={`/products/${product.slug}`} className="block">
-              <h3 className="font-serif text-lg font-medium text-charcoal hover:text-gold transition-colors line-clamp-1">
+              <h3 className="font-serif text-lg font-medium text-graphite hover:text-graphite-hover transition-colors line-clamp-1">
                 {product.name}
               </h3>
             </Link>
 
             {product.description && (
-              <p className="text-xs text-charcoal/70 line-clamp-2 leading-relaxed font-light">
+              <p className="text-xs text-slate-dark line-clamp-2 leading-relaxed">
                 {product.description}
               </p>
             )}
 
-            {/* Specifications Grid */}
-            <div className="pt-3 border-t border-ivory-200/80 space-y-1.5 text-xs text-charcoal/80">
+            {/* Specifications Details */}
+            <div className="pt-2.5 border-t border-platinum-border space-y-1 text-xs text-slate-dark">
               {product.seatingCapacity && (
                 <div className="flex justify-between">
-                  <span className="text-walnut font-medium">Capacity:</span>
-                  <span className="text-charcoal">{product.seatingCapacity}</span>
+                  <span className="text-slate-muted">Capacity:</span>
+                  <span className="text-graphite font-medium">{product.seatingCapacity}</span>
                 </div>
               )}
               {product.dimensionsSummary && (
                 <div className="flex justify-between">
-                  <span className="text-walnut font-medium">Dimensions:</span>
-                  <span className="truncate max-w-[150px] text-right text-charcoal">
+                  <span className="text-slate-muted">Dimensions:</span>
+                  <span className="truncate max-w-[150px] text-right text-graphite">
                     {product.dimensionsSummary}
                   </span>
                 </div>
@@ -197,18 +194,18 @@ export default function LuxuryProductCard({
           </div>
         </div>
 
-        {/* Footer Actions (NO SHOPPING CART / BUY NOW) */}
-        <div className="p-5 pt-0 space-y-2">
+        {/* Footer Actions (STRICTLY NO CART / BUY NOW) */}
+        <div className="p-4 pt-0 space-y-2">
           <div className="grid grid-cols-2 gap-2">
             <Link
               href={`/products/${product.slug}`}
-              className="px-3 py-2.5 text-center rounded-xl bg-ivory-100 hover:bg-charcoal hover:text-ivory-100 text-charcoal text-xs font-semibold transition-all border border-ivory-300"
+              className="px-3 py-2 text-center rounded-md bg-transparent hover:bg-platinum-soft text-graphite text-xs font-semibold transition-colors border border-graphite"
             >
               View Details
             </Link>
             <Link
               href={`/studio?baseProduct=${product.id}`}
-              className="px-3 py-2.5 text-center rounded-xl bg-gold/15 hover:bg-gold hover:text-charcoal text-walnut text-xs font-semibold transition-all border border-gold/30 flex items-center justify-center space-x-1"
+              className="px-3 py-2 text-center rounded-md bg-graphite hover:bg-graphite-hover text-white text-xs font-semibold transition-colors border border-graphite flex items-center justify-center space-x-1"
             >
               <Sliders className="w-3 h-3" />
               <span>Customize</span>
@@ -216,8 +213,8 @@ export default function LuxuryProductCard({
           </div>
 
           <Link
-            href={`/quotation?productId=${product.id}`}
-            className="w-full block py-2 text-center text-[11px] font-semibold uppercase tracking-wider text-charcoal/70 hover:text-gold transition-colors"
+            href={`/custom-design?product=${product.id}`}
+            className="w-full block py-1.5 text-center text-[11px] font-semibold uppercase tracking-wider text-slate-dark hover:text-graphite transition-colors"
           >
             Request Factory Quotation →
           </Link>
@@ -225,81 +222,83 @@ export default function LuxuryProductCard({
       </div>
 
       {/* =========================================================================
-          INTERACTIVE 3D QUICK-INSPECTION MODAL (STRICT 1:1 MODEL MATCH PROOF)
+          INTERACTIVE 3D QUICK-INSPECTION MODAL (ARCHITECTURAL DEEP GRAPHITE STAGE)
          ========================================================================= */}
       {show3DModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-charcoal/80 backdrop-blur-sm animate-fade-in">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-graphite-deep/80 backdrop-blur-sm animate-in fade-in duration-150">
           <div 
-            className="bg-white rounded-3xl max-w-4xl w-full max-h-[92vh] overflow-y-auto shadow-2xl border border-ivory-300 flex flex-col"
+            className="bg-white rounded-xl max-w-4xl w-full max-h-[92vh] overflow-y-auto shadow-elevated border border-platinum-border flex flex-col"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Modal Header */}
-            <div className="p-5 sm:p-6 border-b border-ivory-200 flex items-center justify-between bg-ivory-50/70">
+            <div className="p-5 border-b border-platinum-border flex items-center justify-between bg-platinum-soft">
               <div className="space-y-1">
                 <div className="flex items-center space-x-2">
-                  <span className="px-2.5 py-0.5 bg-charcoal text-gold text-[10px] font-semibold rounded-full">
+                  <span className="px-2 py-0.5 bg-graphite text-white text-[10px] font-mono font-semibold rounded">
                     {product.sku}
                   </span>
-                  <span className="px-2.5 py-0.5 bg-emerald-50 text-emerald-800 border border-emerald-200 text-[10px] font-semibold rounded-full flex items-center space-x-1">
-                    <CheckCircle2 className="w-3 h-3 text-emerald-600" />
-                    <span>Exact 1:1 Photo &amp; 3D Match</span>
+                  <span className="px-2 py-0.5 bg-white text-status-success border border-platinum-border text-[10px] font-semibold rounded flex items-center space-x-1">
+                    <CheckCircle2 className="w-3 h-3" />
+                    <span>Exact 1:1 Photo &amp; 3D Match Verified</span>
                   </span>
                 </div>
-                <h3 className="font-serif text-xl sm:text-2xl font-semibold text-charcoal">
+                <h3 className="font-serif text-xl sm:text-2xl font-medium text-graphite">
                   {product.name}
                 </h3>
               </div>
 
               <button
                 onClick={() => setShow3DModal(false)}
-                className="w-10 h-10 rounded-full bg-ivory-100 hover:bg-ivory-200 text-charcoal flex items-center justify-center transition-colors"
+                className="w-8 h-8 rounded bg-white hover:bg-platinum-soft text-graphite flex items-center justify-center border border-platinum-border transition-colors"
                 title="Close Viewer"
               >
-                <X className="w-5 h-5" />
+                <X className="w-4 h-4" />
               </button>
             </div>
 
             {/* Modal Navigation Tabs */}
-            <div className="px-6 pt-4 border-b border-ivory-200 flex items-center space-x-4 bg-ivory-50/40">
+            <div className="px-6 pt-3 border-b border-platinum-border flex items-center space-x-4 bg-white">
               <button
                 onClick={() => setModalActiveTab('3d')}
-                className={`pb-3 text-xs font-semibold uppercase tracking-wider flex items-center space-x-1.5 border-b-2 transition-all ${
+                className={`pb-2.5 text-xs font-semibold uppercase tracking-wider flex items-center space-x-1.5 border-b-2 transition-all ${
                   modalActiveTab === '3d'
-                    ? 'border-gold text-charcoal'
-                    : 'border-transparent text-charcoal/50 hover:text-charcoal'
+                    ? 'border-graphite text-graphite'
+                    : 'border-transparent text-slate-muted hover:text-graphite'
                 }`}
               >
-                <RotateCw className="w-3.5 h-3.5 text-gold" />
+                <RotateCw className="w-3.5 h-3.5" />
                 <span>Interactive 3D Geometry (Rotate 360°)</span>
               </button>
 
               <button
                 onClick={() => setModalActiveTab('compare')}
-                className={`pb-3 text-xs font-semibold uppercase tracking-wider flex items-center space-x-1.5 border-b-2 transition-all ${
+                className={`pb-2.5 text-xs font-semibold uppercase tracking-wider flex items-center space-x-1.5 border-b-2 transition-all ${
                   modalActiveTab === 'compare'
-                    ? 'border-gold text-charcoal'
-                    : 'border-transparent text-charcoal/50 hover:text-charcoal'
+                    ? 'border-graphite text-graphite'
+                    : 'border-transparent text-slate-muted hover:text-graphite'
                 }`}
               >
-                <Scale className="w-3.5 h-3.5 text-gold" />
-                <span>Side-by-Side Photo &amp; 3D Match</span>
+                <Scale className="w-3.5 h-3.5" />
+                <span>Side-by-Side Photo &amp; 3D Verification</span>
               </button>
             </div>
 
             {/* Modal Body */}
             <div className="p-6">
               {modalActiveTab === '3d' ? (
-                <div className="space-y-4">
-                  <InteractiveFurnitureViewer
-                    asset={formatted3D}
-                    productTitle={product.name}
-                    initialHeight="h-[420px] sm:h-[480px]"
-                  />
-                  <div className="p-3 bg-ivory-50 rounded-xl border border-ivory-200 text-xs text-charcoal/80 flex items-center justify-between">
+                <div className="space-y-3">
+                  <div className="rounded-lg overflow-hidden border border-platinum-border">
+                    <InteractiveFurnitureViewer
+                      asset={formatted3D}
+                      productTitle={product.name}
+                      initialHeight="h-[400px] sm:h-[460px]"
+                    />
+                  </div>
+                  <div className="p-3 bg-platinum-soft rounded-lg border border-platinum-border text-xs text-slate-dark flex items-center justify-between">
                     <span>
-                      <strong className="text-walnut">Interactive Controls:</strong> Left-click and drag to rotate 360° | Scroll wheel to zoom | Right-click to pan
+                      <strong className="text-graphite">Controls:</strong> Click &amp; drag to rotate 360° • Scroll wheel to zoom • Right-click to pan
                     </span>
-                    <span className="text-[11px] text-emerald-800 font-semibold flex items-center space-x-1">
+                    <span className="text-[11px] text-status-success font-semibold flex items-center space-x-1">
                       <Check className="w-3.5 h-3.5" />
                       <span>Verified Workshop Geometry</span>
                     </span>
@@ -308,46 +307,46 @@ export default function LuxuryProductCard({
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
                   {/* Left: Card Photo */}
-                  <div className="bg-ivory-50 rounded-2xl p-4 border border-ivory-200 space-y-3">
+                  <div className="bg-platinum-soft rounded-lg p-4 border border-platinum-border space-y-3">
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-bold uppercase tracking-wider text-charcoal">
+                      <span className="text-xs font-bold uppercase tracking-wider text-graphite">
                         1. Product Card Photograph
                       </span>
-                      <span className="text-[10px] bg-white px-2 py-0.5 rounded-full border border-ivory-300 font-mono">
-                        Original Render
+                      <span className="text-[10px] bg-white px-2 py-0.5 rounded border border-platinum-border font-mono">
+                        Official Spec
                       </span>
                     </div>
-                    <div className="aspect-[4/3] rounded-xl overflow-hidden bg-white border border-ivory-200">
+                    <div className="aspect-[4/3] rounded overflow-hidden bg-white border border-platinum-border">
                       <img
                         src={primaryImg}
                         alt="Original Photograph"
                         className="w-full h-full object-cover"
                       />
                     </div>
-                    <p className="text-[11px] text-charcoal/70 leading-relaxed">
-                      This is the official atelier master photograph shown on the product card.
+                    <p className="text-[11px] text-slate-dark leading-relaxed">
+                      Official workshop master photograph shown across the digital showroom catalogue.
                     </p>
                   </div>
 
                   {/* Right: Live 3D Model */}
-                  <div className="bg-ivory-50 rounded-2xl p-4 border border-ivory-200 space-y-3">
+                  <div className="bg-platinum-soft rounded-lg p-4 border border-platinum-border space-y-3">
                     <div className="flex items-center justify-between">
-                      <span className="text-xs font-bold uppercase tracking-wider text-gold">
+                      <span className="text-xs font-bold uppercase tracking-wider text-graphite">
                         2. Live Interactive 3D Model
                       </span>
-                      <span className="text-[10px] bg-charcoal text-gold px-2 py-0.5 rounded-full font-mono">
-                        360° Active
+                      <span className="text-[10px] bg-graphite text-white px-2 py-0.5 rounded font-mono">
+                        360° Geometry
                       </span>
                     </div>
-                    <div className="rounded-xl overflow-hidden border border-ivory-200">
+                    <div className="rounded overflow-hidden border border-platinum-border">
                       <InteractiveFurnitureViewer
                         asset={formatted3D}
                         productTitle={product.name}
-                        initialHeight="h-[260px] sm:h-[300px]"
+                        initialHeight="h-[250px] sm:h-[280px]"
                       />
                     </div>
-                    <p className="text-[11px] text-charcoal/70 leading-relaxed">
-                      Exact 1:1 geometry match. Rotate and zoom to verify the armrest, cushions, and frame proportions.
+                    <p className="text-[11px] text-slate-dark leading-relaxed">
+                      Exact 1:1 geometry match. Rotate and zoom to verify proportional cushions, armrests, and frame.
                     </p>
                   </div>
                 </div>
@@ -355,17 +354,17 @@ export default function LuxuryProductCard({
             </div>
 
             {/* Modal Footer Actions */}
-            <div className="p-5 sm:p-6 border-t border-ivory-200 bg-ivory-50/70 flex flex-col sm:flex-row items-center justify-between gap-4">
-              <div className="text-xs text-charcoal/70">
-                <span>Model Dimensions: <strong>{product.dimensionsSummary || 'Custom CAD Available'}</strong></span>
-                <span className="mx-2">•</span>
-                <span>Seating: <strong>{product.seatingCapacity || 'Custom'}</strong></span>
+            <div className="p-5 border-t border-platinum-border bg-platinum-soft flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="text-xs text-slate-dark">
+                <span>Dimensions: <strong className="text-graphite">{product.dimensionsSummary || 'Custom CAD Available'}</strong></span>
+                <span className="mx-2 text-slate-silver">•</span>
+                <span>Seating: <strong className="text-graphite">{product.seatingCapacity || 'Custom'}</strong></span>
               </div>
 
               <div className="flex items-center space-x-3 w-full sm:w-auto">
                 <Link
                   href={`/studio?baseProduct=${product.id}`}
-                  className="flex-1 sm:flex-initial px-5 py-2.5 rounded-xl bg-gold text-charcoal hover:bg-gold-dark text-xs font-bold uppercase tracking-wider transition-colors flex items-center justify-center space-x-1.5 shadow-sm"
+                  className="flex-1 sm:flex-initial px-4 py-2.5 rounded-md bg-white hover:bg-platinum text-graphite text-xs font-semibold uppercase tracking-wider transition-colors border border-platinum-border flex items-center justify-center space-x-1.5"
                 >
                   <Sliders className="w-3.5 h-3.5" />
                   <span>Customize in 3D Studio</span>
@@ -373,10 +372,10 @@ export default function LuxuryProductCard({
 
                 <Link
                   href={`/products/${product.slug}`}
-                  className="flex-1 sm:flex-initial px-5 py-2.5 rounded-xl bg-charcoal text-white hover:bg-charcoal-light text-xs font-bold uppercase tracking-wider transition-colors flex items-center justify-center space-x-1.5"
+                  className="flex-1 sm:flex-initial px-4 py-2.5 rounded-md bg-graphite text-white hover:bg-graphite-hover text-xs font-semibold uppercase tracking-wider transition-colors flex items-center justify-center space-x-1.5"
                 >
                   <span>Full Specifications</span>
-                  <ArrowRight className="w-3.5 h-3.5 text-gold" />
+                  <ArrowRight className="w-3.5 h-3.5" />
                 </Link>
               </div>
             </div>

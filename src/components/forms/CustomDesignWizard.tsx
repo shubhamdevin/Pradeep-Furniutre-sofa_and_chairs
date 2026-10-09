@@ -8,15 +8,11 @@ import {
   Check, 
   ArrowRight, 
   ArrowLeft, 
-  Sparkles, 
   ShieldCheck, 
   FileText, 
   Image as ImageIcon,
   CheckCircle2,
-  AlertCircle,
-  HelpCircle,
   Sliders,
-  Calendar,
   Send
 } from 'lucide-react';
 
@@ -48,7 +44,7 @@ export default function CustomDesignWizard({ preselectedProduct, allProducts }: 
     measurementUnit: 'Inches',
     fabricPreference: 'Belgian Luxe Velvet',
     colorPreference: '',
-    framePreference: 'Kiln-Dried CP Teakwood',
+    framePreference: 'Solid Kiln-Dried CP Teakwood',
     foamFirmness: 'Medium Balanced (45D HR)',
     legFinish: 'Solid Walnut with Brass Sleeves',
     quantity: 1,
@@ -84,7 +80,6 @@ export default function CustomDesignWizard({ preselectedProduct, allProducts }: 
     const files = e.target.files;
     if (!files || files.length === 0) return;
 
-    // Convert file to local object URL or sample placeholder
     Array.from(files).forEach((file) => {
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -157,55 +152,57 @@ export default function CustomDesignWizard({ preselectedProduct, allProducts }: 
   };
 
   return (
-    <div className="bg-white rounded-3xl p-6 sm:p-10 border border-ivory-300 shadow-luxury text-charcoal">
+    <div className="bg-white rounded-lg p-6 sm:p-10 border border-platinum-border shadow-sm text-graphite font-sans">
       {/* Success View */}
       {submitSuccess ? (
-        <div className="py-12 text-center space-y-6">
-          <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center mx-auto shadow-sm">
-            <CheckCircle2 className="w-8 h-8" />
+        <div className="py-10 text-center space-y-6">
+          <div className="w-14 h-14 rounded-full bg-emerald-50 text-emerald-800 flex items-center justify-center mx-auto border border-emerald-200">
+            <CheckCircle2 className="w-7 h-7 text-emerald-700" />
           </div>
 
           <div className="space-y-2">
-            <span className="text-xs font-bold uppercase tracking-widest text-gold">Commission Received</span>
-            <h2 className="font-serif text-3xl sm:text-4xl text-charcoal font-medium">
-              Your Custom Design Request is Recorded
+            <span className="text-xs font-bold uppercase tracking-widest text-slate-muted">
+              Commission Recorded
+            </span>
+            <h2 className="font-serif text-3xl sm:text-4xl text-graphite font-medium">
+              Bespoke Request Successfully Registered
             </h2>
-            <p className="text-sm text-charcoal/70 max-w-lg mx-auto leading-relaxed">
-              Our master draftsmen and CAD designers are reviewing your reference photos and room dimensions. We will prepare an initial proposal drawing and connect via your preferred contact channel.
+            <p className="text-sm text-slate-dark max-w-lg mx-auto leading-relaxed">
+              Our lead draftsmen and CAD engineers are analyzing your reference photographs and space dimensions. We will prepare custom technical blueprints and transmit the detailed proposal schedule.
             </p>
           </div>
 
-          <div className="bg-ivory-50 max-w-md mx-auto p-5 rounded-2xl border border-ivory-300 space-y-2 text-left text-xs">
-            <div className="flex justify-between border-b border-ivory-200 pb-2">
-              <span className="text-walnut font-medium">Reference Code:</span>
-              <span className="font-mono font-bold text-charcoal text-sm">{submitSuccess.referenceNumber}</span>
+          <div className="bg-platinum-soft max-w-md mx-auto p-5 rounded-md border border-platinum-border space-y-2.5 text-left text-xs">
+            <div className="flex justify-between border-b border-platinum-border pb-2">
+              <span className="text-slate-dark font-medium">Atelier Reference:</span>
+              <span className="font-mono font-bold text-graphite text-sm">{submitSuccess.referenceNumber}</span>
             </div>
-            <div className="flex justify-between border-b border-ivory-200 pb-2">
-              <span className="text-walnut font-medium">CRM Tracking ID:</span>
-              <span className="font-mono text-charcoal">{submitSuccess.leadCode}</span>
+            <div className="flex justify-between border-b border-platinum-border pb-2">
+              <span className="text-slate-dark font-medium">CRM Tracking ID:</span>
+              <span className="font-mono text-graphite">{submitSuccess.leadCode}</span>
             </div>
-            <div className="flex justify-between border-b border-ivory-200 pb-2">
-              <span className="text-walnut font-medium">Customer:</span>
-              <span className="font-semibold">{formData.customerName}</span>
+            <div className="flex justify-between border-b border-platinum-border pb-2">
+              <span className="text-slate-dark font-medium">Client:</span>
+              <span className="font-medium text-graphite">{formData.customerName}</span>
             </div>
             <div className="flex justify-between">
-              <span className="text-walnut font-medium">Commercial Settlement:</span>
-              <span className="font-semibold text-emerald-800">Strictly Offline / Bank Transfer</span>
+              <span className="text-slate-dark font-medium">Commercial Protocol:</span>
+              <span className="font-semibold text-graphite">Strictly Offline / Direct Bank Transfer</span>
             </div>
           </div>
 
-          <div className="pt-4 flex flex-col sm:flex-row justify-center gap-4">
+          <div className="pt-4 flex flex-col sm:flex-row justify-center gap-3">
             <Link
               href="/"
-              className="px-8 py-3.5 rounded-full bg-charcoal text-white hover:bg-charcoal-light text-xs font-semibold uppercase tracking-wider transition-colors"
+              className="px-6 py-3 rounded-md bg-graphite text-white hover:bg-graphite-hover text-xs font-medium uppercase tracking-wider transition-colors"
             >
               Return to Atelier Home
             </Link>
             <Link
               href="/products"
-              className="px-8 py-3.5 rounded-full bg-ivory-100 hover:bg-ivory-200 text-charcoal text-xs font-semibold uppercase tracking-wider transition-colors"
+              className="px-6 py-3 rounded-md bg-platinum hover:bg-platinum-soft text-graphite border border-platinum-border text-xs font-medium uppercase tracking-wider transition-colors"
             >
-              Browse More Designs
+              Browse Catalogue
             </Link>
           </div>
         </div>
@@ -213,8 +210,8 @@ export default function CustomDesignWizard({ preselectedProduct, allProducts }: 
         <div>
           {/* Progress Indicator */}
           <div className="mb-8">
-            <div className="flex items-center justify-between text-xs text-charcoal/70 mb-2">
-              <span className="font-semibold text-charcoal">
+            <div className="flex items-center justify-between text-xs text-slate-dark mb-2">
+              <span className="font-medium text-graphite">
                 Step {step} of {totalSteps}: {
                   [
                     'Furniture Reference',
@@ -228,11 +225,11 @@ export default function CustomDesignWizard({ preselectedProduct, allProducts }: 
                   ][step - 1]
                 }
               </span>
-              <span className="font-mono text-gold font-bold">{Math.round((step / totalSteps) * 100)}%</span>
+              <span className="font-mono text-slate-muted font-bold">{Math.round((step / totalSteps) * 100)}%</span>
             </div>
-            <div className="w-full h-2 rounded-full bg-ivory-200 overflow-hidden">
+            <div className="w-full h-1.5 rounded-full bg-platinum-soft overflow-hidden">
               <div
-                className="h-full bg-gold transition-all duration-300"
+                className="h-full bg-graphite transition-all duration-300"
                 style={{ width: `${(step / totalSteps) * 100}%` }}
               />
             </div>
@@ -242,51 +239,53 @@ export default function CustomDesignWizard({ preselectedProduct, allProducts }: 
           {step === 1 && (
             <div className="space-y-6 animate-in fade-in duration-200">
               <div>
-                <h3 className="font-serif text-2xl font-medium text-charcoal">1. Furniture Reference</h3>
-                <p className="text-xs text-charcoal/70 mt-1">
-                  Are you customizing one of our existing catalogue designs or uploading an external photo from Google / Pinterest?
+                <h3 className="font-serif text-2xl font-medium text-graphite">1. Furniture Reference</h3>
+                <p className="text-xs text-slate-dark mt-1">
+                  Are you customizing one of our existing catalogue specimens or uploading an external photo from Pinterest / architectural blueprints?
                 </p>
               </div>
 
               {/* Reference Type Toggle */}
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <button
                   type="button"
                   onClick={() => setFormData({ ...formData, referenceType: 'EXTERNAL_UPLOAD' })}
-                  className={`p-4 rounded-2xl border text-left transition-all ${
+                  className={`p-4 rounded-md border text-left transition-all ${
                     formData.referenceType === 'EXTERNAL_UPLOAD'
-                      ? 'border-gold bg-cream/30 ring-2 ring-gold/20'
-                      : 'border-ivory-300 hover:border-ivory-400'
+                      ? 'border-graphite bg-platinum-soft ring-1 ring-graphite'
+                      : 'border-platinum-border hover:border-slate-muted'
                   }`}
                 >
-                  <Upload className="w-5 h-5 text-gold mb-2" />
-                  <span className="font-serif font-semibold text-sm block">Upload External Photo</span>
-                  <span className="text-xs text-charcoal/60 mt-0.5 block">From Pinterest, Instagram, showroom, or sketch</span>
+                  <Upload className="w-5 h-5 text-slate-muted mb-2" />
+                  <span className="font-medium text-sm text-graphite block">Upload External Photo</span>
+                  <span className="text-xs text-slate-dark mt-0.5 block">From Pinterest, Instagram, showroom, or architectural drawing</span>
                 </button>
 
                 <button
                   type="button"
                   onClick={() => setFormData({ ...formData, referenceType: 'EXISTING_PRODUCT' })}
-                  className={`p-4 rounded-2xl border text-left transition-all ${
+                  className={`p-4 rounded-md border text-left transition-all ${
                     formData.referenceType === 'EXISTING_PRODUCT'
-                      ? 'border-gold bg-cream/30 ring-2 ring-gold/20'
-                      : 'border-ivory-300 hover:border-ivory-400'
+                      ? 'border-graphite bg-platinum-soft ring-1 ring-graphite'
+                      : 'border-platinum-border hover:border-slate-muted'
                   }`}
                 >
-                  <Sliders className="w-5 h-5 text-gold mb-2" />
-                  <span className="font-serif font-semibold text-sm block">Modify Existing Model</span>
-                  <span className="text-xs text-charcoal/60 mt-0.5 block">Select a sofa or chair from our website</span>
+                  <Sliders className="w-5 h-5 text-slate-muted mb-2" />
+                  <span className="font-medium text-sm text-graphite block">Modify Existing Model</span>
+                  <span className="text-xs text-slate-dark mt-0.5 block">Select a sofa or chair from our atelier collection</span>
                 </button>
               </div>
 
               {/* If existing product, select it */}
               {formData.referenceType === 'EXISTING_PRODUCT' && (
                 <div className="space-y-2">
-                  <label className="block text-xs font-semibold text-walnut">Select Base Website Model:</label>
+                  <label className="block text-xs font-semibold text-slate-dark uppercase tracking-wider">
+                    Select Base Website Model:
+                  </label>
                   <select
                     value={formData.productId}
                     onChange={(e) => handleProductSelect(e.target.value)}
-                    className="w-full p-3 rounded-xl bg-ivory-50 border border-ivory-300 text-xs focus:outline-none focus:border-gold"
+                    className="w-full p-3 rounded-md bg-platinum-soft border border-platinum-border text-xs text-graphite focus:outline-none focus:border-graphite"
                   >
                     <option value="">-- Choose Catalogue Item --</option>
                     {allProducts.map((p) => (
@@ -300,11 +299,11 @@ export default function CustomDesignWizard({ preselectedProduct, allProducts }: 
 
               {/* Image Upload Area */}
               <div className="space-y-3">
-                <label className="block text-xs font-semibold text-walnut">
+                <label className="block text-xs font-semibold text-slate-dark uppercase tracking-wider">
                   Upload Reference Photographs or Architectural Sketches:
                 </label>
 
-                <div className="border-2 border-dashed border-ivory-300 hover:border-gold rounded-2xl p-6 text-center bg-ivory-50/50 transition-colors">
+                <div className="border border-dashed border-platinum-border hover:border-graphite rounded-md p-6 text-center bg-platinum-soft/50 transition-colors">
                   <input
                     type="file"
                     multiple
@@ -314,11 +313,11 @@ export default function CustomDesignWizard({ preselectedProduct, allProducts }: 
                     id="wizard-file-upload"
                   />
                   <label htmlFor="wizard-file-upload" className="cursor-pointer block space-y-2">
-                    <ImageIcon className="w-8 h-8 text-walnut mx-auto" />
-                    <span className="text-xs font-semibold text-charcoal block">
+                    <ImageIcon className="w-8 h-8 text-slate-muted mx-auto" />
+                    <span className="text-xs font-medium text-graphite block">
                       Click to browse image files (PNG, JPG, WEBP)
                     </span>
-                    <span className="text-[11px] text-charcoal/60 block">
+                    <span className="text-[11px] text-slate-dark block">
                       You can upload multiple angles or room views
                     </span>
                   </label>
@@ -331,12 +330,12 @@ export default function CustomDesignWizard({ preselectedProduct, allProducts }: 
                     placeholder="Or paste an image web link (e.g. Pinterest / Imgur URL)..."
                     value={imageInput}
                     onChange={(e) => setImageInput(e.target.value)}
-                    className="flex-grow px-3 py-2 rounded-xl bg-ivory-50 border border-ivory-300 text-xs focus:outline-none focus:border-gold"
+                    className="flex-grow px-3.5 py-2 rounded-md bg-platinum-soft border border-platinum-border text-xs text-graphite focus:outline-none focus:border-graphite"
                   />
                   <button
                     type="button"
                     onClick={() => handleAddImage(imageInput)}
-                    className="px-4 py-2 bg-charcoal text-white rounded-xl text-xs font-semibold"
+                    className="px-4 py-2 bg-graphite hover:bg-graphite-hover text-white rounded-md text-xs font-medium transition-colors"
                   >
                     Add
                   </button>
@@ -346,12 +345,12 @@ export default function CustomDesignWizard({ preselectedProduct, allProducts }: 
                 {formData.referenceImages.length > 0 && (
                   <div className="grid grid-cols-3 sm:grid-cols-4 gap-3 pt-2">
                     {formData.referenceImages.map((img, i) => (
-                      <div key={i} className="relative aspect-square rounded-xl overflow-hidden border border-ivory-300 group">
+                      <div key={i} className="relative aspect-square rounded-md overflow-hidden border border-platinum-border group">
                         <img src={img} alt="Upload Preview" className="w-full h-full object-cover" />
                         <button
                           type="button"
                           onClick={() => removeImage(i)}
-                          className="absolute top-1 right-1 p-1 bg-charcoal/80 text-white rounded-full hover:bg-red-600 transition-colors"
+                          className="absolute top-1 right-1 p-1 bg-graphite/80 text-white rounded hover:bg-status-error transition-colors"
                         >
                           <X className="w-3 h-3" />
                         </button>
@@ -367,9 +366,9 @@ export default function CustomDesignWizard({ preselectedProduct, allProducts }: 
           {step === 2 && (
             <div className="space-y-6 animate-in fade-in duration-200">
               <div>
-                <h3 className="font-serif text-2xl font-medium text-charcoal">2. Furniture Silhouette Type</h3>
-                <p className="text-xs text-charcoal/70 mt-1">
-                  Which category best describes the furniture piece you wish to commission?
+                <h3 className="font-serif text-2xl font-medium text-graphite">2. Furniture Silhouette Type</h3>
+                <p className="text-xs text-slate-dark mt-1">
+                  Which category best describes the furniture silhouette you wish to commission?
                 </p>
               </div>
 
@@ -392,10 +391,10 @@ export default function CustomDesignWizard({ preselectedProduct, allProducts }: 
                     key={type}
                     type="button"
                     onClick={() => setFormData({ ...formData, furnitureType: type })}
-                    className={`p-3.5 rounded-xl border text-left text-xs font-semibold transition-all ${
+                    className={`p-3.5 rounded-md border text-left text-xs font-medium transition-colors ${
                       formData.furnitureType === type
-                        ? 'border-gold bg-cream text-charcoal font-bold shadow-sm'
-                        : 'border-ivory-300 bg-white hover:bg-ivory-50 text-charcoal'
+                        ? 'border-graphite bg-platinum-soft text-graphite font-semibold shadow-sm'
+                        : 'border-platinum-border bg-white hover:bg-platinum text-graphite/80'
                     }`}
                   >
                     {type}
@@ -409,9 +408,9 @@ export default function CustomDesignWizard({ preselectedProduct, allProducts }: 
           {step === 3 && (
             <div className="space-y-6 animate-in fade-in duration-200">
               <div>
-                <h3 className="font-serif text-2xl font-medium text-charcoal">3. Customization Requirements</h3>
-                <p className="text-xs text-charcoal/70 mt-1">
-                  Select all modifications you require compared to the reference photo.
+                <h3 className="font-serif text-2xl font-medium text-graphite">3. Customization Requirements</h3>
+                <p className="text-xs text-slate-dark mt-1">
+                  Select all modifications you require compared to the reference design.
                 </p>
               </div>
 
@@ -431,28 +430,28 @@ export default function CustomDesignWizard({ preselectedProduct, allProducts }: 
                 ].map((req) => (
                   <label
                     key={req}
-                    className="flex items-center space-x-3 p-3 rounded-xl border border-ivory-300 hover:border-gold cursor-pointer bg-ivory-50/40 text-xs"
+                    className="flex items-center space-x-3 p-3 rounded-md border border-platinum-border hover:border-graphite cursor-pointer bg-white text-xs transition-colors"
                   >
                     <input
                       type="checkbox"
                       checked={formData.customizationChecklist.includes(req)}
                       onChange={() => toggleChecklist(req)}
-                      className="rounded text-gold focus:ring-0"
+                      className="rounded border-platinum-border text-graphite focus:ring-0 accent-graphite"
                     />
-                    <span className="font-medium">{req}</span>
+                    <span className="font-medium text-graphite">{req}</span>
                   </label>
                 ))}
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-walnut mb-1">
+                <label className="block text-xs font-semibold text-slate-dark uppercase tracking-wider mb-1">
                   Detailed Instructions / Special Modifications:
                 </label>
                 <textarea
                   rows={3}
                   value={formData.customizationDetails}
                   onChange={(e) => setFormData({ ...formData, customizationDetails: e.target.value })}
-                  className="w-full p-3 rounded-xl bg-ivory-50 border border-ivory-300 text-xs focus:outline-none focus:border-gold"
+                  className="w-full p-3 rounded-md bg-platinum-soft border border-platinum-border text-xs text-graphite focus:outline-none focus:border-graphite"
                   placeholder="Describe your vision (e.g. 'We need the armrest to be 2 inches narrower, and the seating depth to be 28 inches for lounging...')"
                 />
               </div>
@@ -463,36 +462,38 @@ export default function CustomDesignWizard({ preselectedProduct, allProducts }: 
           {step === 4 && (
             <div className="space-y-6 animate-in fade-in duration-200">
               <div>
-                <h3 className="font-serif text-2xl font-medium text-charcoal">4. Dimensions &amp; Seating Capacity</h3>
-                <p className="text-xs text-charcoal/70 mt-1">
+                <h3 className="font-serif text-2xl font-medium text-graphite">4. Dimensions &amp; Seating Capacity</h3>
+                <p className="text-xs text-slate-dark mt-1">
                   Provide exact measurements if known, or request our complimentary site measurement visit.
                 </p>
               </div>
 
-              <div className="flex items-center space-x-2 bg-ivory-50 p-3 rounded-xl border border-ivory-300">
+              <div className="flex items-center space-x-2.5 bg-platinum-soft p-3 rounded-md border border-platinum-border">
                 <input
                   type="checkbox"
                   id="dimensions-unknown"
                   checked={!formData.dimensionsKnown}
                   onChange={(e) => setFormData({ ...formData, dimensionsKnown: !e.target.checked })}
-                  className="rounded text-gold focus:ring-0"
+                  className="rounded border-platinum-border text-graphite focus:ring-0 accent-graphite"
                 />
-                <label htmlFor="dimensions-unknown" className="text-xs font-semibold text-charcoal cursor-pointer">
+                <label htmlFor="dimensions-unknown" className="text-xs font-medium text-graphite cursor-pointer">
                   I don&apos;t know the exact measurements. (Require designer consultation or site visit)
                 </label>
               </div>
 
               {formData.dimensionsKnown && (
                 <div className="space-y-4">
-                  <div className="flex justify-end space-x-2 text-xs">
-                    <span className="text-walnut font-medium">Unit:</span>
+                  <div className="flex justify-end items-center space-x-2 text-xs">
+                    <span className="text-slate-dark font-medium">Unit:</span>
                     {['Inches', 'Centimeters', 'Feet'].map((unit) => (
                       <button
                         key={unit}
                         type="button"
                         onClick={() => setFormData({ ...formData, measurementUnit: unit })}
-                        className={`px-2.5 py-1 rounded-lg font-semibold ${
-                          formData.measurementUnit === unit ? 'bg-charcoal text-white' : 'bg-ivory-100 text-charcoal'
+                        className={`px-2.5 py-1 rounded text-xs font-medium transition-colors ${
+                          formData.measurementUnit === unit 
+                            ? 'bg-graphite text-white' 
+                            : 'bg-platinum-soft text-graphite border border-platinum-border'
                         }`}
                       >
                         {unit}
@@ -502,43 +503,43 @@ export default function CustomDesignWizard({ preselectedProduct, allProducts }: 
 
                   <div className="grid grid-cols-3 gap-3">
                     <div>
-                      <label className="block text-xs text-walnut font-medium mb-1">Length / Width</label>
+                      <label className="block text-xs text-slate-dark font-medium mb-1">Length / Width</label>
                       <input
                         type="text"
                         placeholder="e.g. 96"
                         value={formData.length}
                         onChange={(e) => setFormData({ ...formData, length: e.target.value })}
-                        className="w-full p-2.5 rounded-xl bg-ivory-50 border border-ivory-300 text-xs focus:outline-none focus:border-gold"
+                        className="w-full p-2.5 rounded-md bg-platinum-soft border border-platinum-border text-xs text-graphite focus:outline-none focus:border-graphite"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs text-walnut font-medium mb-1">Depth</label>
+                      <label className="block text-xs text-slate-dark font-medium mb-1">Depth</label>
                       <input
                         type="text"
                         placeholder="e.g. 38"
                         value={formData.depth}
                         onChange={(e) => setFormData({ ...formData, depth: e.target.value })}
-                        className="w-full p-2.5 rounded-xl bg-ivory-50 border border-ivory-300 text-xs focus:outline-none focus:border-gold"
+                        className="w-full p-2.5 rounded-md bg-platinum-soft border border-platinum-border text-xs text-graphite focus:outline-none focus:border-graphite"
                       />
                     </div>
                     <div>
-                      <label className="block text-xs text-walnut font-medium mb-1">Height</label>
+                      <label className="block text-xs text-slate-dark font-medium mb-1">Height</label>
                       <input
                         type="text"
                         placeholder="e.g. 32"
                         value={formData.height}
                         onChange={(e) => setFormData({ ...formData, height: e.target.value })}
-                        className="w-full p-2.5 rounded-xl bg-ivory-50 border border-ivory-300 text-xs focus:outline-none focus:border-gold"
+                        className="w-full p-2.5 rounded-md bg-platinum-soft border border-platinum-border text-xs text-graphite focus:outline-none focus:border-graphite"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-xs text-walnut font-medium mb-1">Seating Capacity</label>
+                    <label className="block text-xs text-slate-dark font-medium mb-1">Seating Capacity</label>
                     <select
                       value={formData.seatingCapacity}
                       onChange={(e) => setFormData({ ...formData, seatingCapacity: e.target.value })}
-                      className="w-full p-2.5 rounded-xl bg-ivory-50 border border-ivory-300 text-xs focus:outline-none focus:border-gold"
+                      className="w-full p-2.5 rounded-md bg-platinum-soft border border-platinum-border text-xs text-graphite focus:outline-none focus:border-graphite"
                     >
                       <option value="1 Seater (Chair)">1 Seater (Single Chair)</option>
                       <option value="2 Seater">2 Seater</option>
@@ -557,19 +558,19 @@ export default function CustomDesignWizard({ preselectedProduct, allProducts }: 
           {step === 5 && (
             <div className="space-y-6 animate-in fade-in duration-200">
               <div>
-                <h3 className="font-serif text-2xl font-medium text-charcoal">5. Materials &amp; Finishes</h3>
-                <p className="text-xs text-charcoal/70 mt-1">
-                  Specify your preferred upholstery tier and wood framing.
+                <h3 className="font-serif text-2xl font-medium text-graphite">5. Materials &amp; Finishes</h3>
+                <p className="text-xs text-slate-dark mt-1">
+                  Specify your preferred upholstery tier and wood framing specification.
                 </p>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
                 <div>
-                  <label className="block text-walnut font-medium mb-1">Upholstery Fabric Tier:</label>
+                  <label className="block text-slate-dark font-medium mb-1">Upholstery Fabric Tier:</label>
                   <select
                     value={formData.fabricPreference}
                     onChange={(e) => setFormData({ ...formData, fabricPreference: e.target.value })}
-                    className="w-full p-2.5 rounded-xl bg-ivory-50 border border-ivory-300 focus:outline-none focus:border-gold"
+                    className="w-full p-2.5 rounded-md bg-platinum-soft border border-platinum-border text-graphite focus:outline-none focus:border-graphite"
                   >
                     <option value="Belgian Luxe Velvet">Belgian Luxe Velvet (65k Rub)</option>
                     <option value="Textured Bouclé">Alabaster Italian Bouclé</option>
@@ -580,22 +581,22 @@ export default function CustomDesignWizard({ preselectedProduct, allProducts }: 
                 </div>
 
                 <div>
-                  <label className="block text-walnut font-medium mb-1">Color Shade Preference:</label>
+                  <label className="block text-slate-dark font-medium mb-1">Color Shade Preference:</label>
                   <input
                     type="text"
                     placeholder="e.g. Emerald Green, Ivory Bouclé, Cognac Tan"
                     value={formData.colorPreference}
                     onChange={(e) => setFormData({ ...formData, colorPreference: e.target.value })}
-                    className="w-full p-2.5 rounded-xl bg-ivory-50 border border-ivory-300 focus:outline-none focus:border-gold"
+                    className="w-full p-2.5 rounded-md bg-platinum-soft border border-platinum-border text-graphite focus:outline-none focus:border-graphite"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-walnut font-medium mb-1">Solid Frame Wood:</label>
+                  <label className="block text-slate-dark font-medium mb-1">Solid Frame Wood:</label>
                   <select
                     value={formData.framePreference}
                     onChange={(e) => setFormData({ ...formData, framePreference: e.target.value })}
-                    className="w-full p-2.5 rounded-xl bg-ivory-50 border border-ivory-300 focus:outline-none focus:border-gold"
+                    className="w-full p-2.5 rounded-md bg-platinum-soft border border-platinum-border text-graphite focus:outline-none focus:border-graphite"
                   >
                     <option value="Solid Kiln-Dried CP Teakwood">Solid Kiln-Dried CP Teakwood (Grade-A)</option>
                     <option value="Seasoned Salwood Core">Seasoned Salwood Structural Framework</option>
@@ -604,11 +605,11 @@ export default function CustomDesignWizard({ preselectedProduct, allProducts }: 
                 </div>
 
                 <div>
-                  <label className="block text-walnut font-medium mb-1">Cushion Core Firmness:</label>
+                  <label className="block text-slate-dark font-medium mb-1">Cushion Core Firmness:</label>
                   <select
                     value={formData.foamFirmness}
                     onChange={(e) => setFormData({ ...formData, foamFirmness: e.target.value })}
-                    className="w-full p-2.5 rounded-xl bg-ivory-50 border border-ivory-300 focus:outline-none focus:border-gold"
+                    className="w-full p-2.5 rounded-md bg-platinum-soft border border-platinum-border text-graphite focus:outline-none focus:border-graphite"
                   >
                     <option value="Medium Balanced (45D HR)">Medium Balanced (45D HR with Down Crown)</option>
                     <option value="Plush Cloud Soft">Plush Cloud Soft (Dual Microfiber)</option>
@@ -623,30 +624,30 @@ export default function CustomDesignWizard({ preselectedProduct, allProducts }: 
           {step === 6 && (
             <div className="space-y-6 animate-in fade-in duration-200">
               <div>
-                <h3 className="font-serif text-2xl font-medium text-charcoal">6. Project &amp; Delivery Information</h3>
-                <p className="text-xs text-charcoal/70 mt-1">
-                  Help us understand your timeline and logistics requirements.
+                <h3 className="font-serif text-2xl font-medium text-graphite">6. Project &amp; Delivery Information</h3>
+                <p className="text-xs text-slate-dark mt-1">
+                  Help us calibrate your production lead time and logistics specifications.
                 </p>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
                 <div>
-                  <label className="block text-walnut font-medium mb-1">Quantity of Units:</label>
+                  <label className="block text-slate-dark font-medium mb-1">Quantity of Units:</label>
                   <input
                     type="number"
                     min="1"
                     value={formData.quantity}
                     onChange={(e) => setFormData({ ...formData, quantity: parseInt(e.target.value) || 1 })}
-                    className="w-full p-2.5 rounded-xl bg-ivory-50 border border-ivory-300 focus:outline-none focus:border-gold"
+                    className="w-full p-2.5 rounded-md bg-platinum-soft border border-platinum-border text-graphite focus:outline-none focus:border-graphite"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-walnut font-medium mb-1">Expected Budget Range:</label>
+                  <label className="block text-slate-dark font-medium mb-1">Expected Budget Range:</label>
                   <select
                     value={formData.budgetRange}
                     onChange={(e) => setFormData({ ...formData, budgetRange: e.target.value })}
-                    className="w-full p-2.5 rounded-xl bg-ivory-50 border border-ivory-300 focus:outline-none focus:border-gold"
+                    className="w-full p-2.5 rounded-md bg-platinum-soft border border-platinum-border text-graphite focus:outline-none focus:border-graphite"
                   >
                     <option value="₹75,000 - ₹1,25,000">₹75,000 - ₹1,25,000</option>
                     <option value="₹1,25,000 - ₹2,00,000">₹1,25,000 - ₹2,00,000</option>
@@ -656,32 +657,32 @@ export default function CustomDesignWizard({ preselectedProduct, allProducts }: 
                 </div>
 
                 <div>
-                  <label className="block text-walnut font-medium mb-1">Delivery City:</label>
+                  <label className="block text-slate-dark font-medium mb-1">Delivery City:</label>
                   <input
                     type="text"
                     value={formData.deliveryCity}
                     onChange={(e) => setFormData({ ...formData, deliveryCity: e.target.value })}
-                    className="w-full p-2.5 rounded-xl bg-ivory-50 border border-ivory-300 focus:outline-none focus:border-gold"
+                    className="w-full p-2.5 rounded-md bg-platinum-soft border border-platinum-border text-graphite focus:outline-none focus:border-graphite"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-walnut font-medium mb-1">Pincode:</label>
+                  <label className="block text-slate-dark font-medium mb-1">Pincode:</label>
                   <input
                     type="text"
                     placeholder="e.g. 282001"
                     value={formData.deliveryPincode}
                     onChange={(e) => setFormData({ ...formData, deliveryPincode: e.target.value })}
-                    className="w-full p-2.5 rounded-xl bg-ivory-50 border border-ivory-300 focus:outline-none focus:border-gold"
+                    className="w-full p-2.5 rounded-md bg-platinum-soft border border-platinum-border text-graphite focus:outline-none focus:border-graphite"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-walnut font-medium mb-1">Required Timeline:</label>
+                  <label className="block text-slate-dark font-medium mb-1">Required Timeline:</label>
                   <select
                     value={formData.timeline}
                     onChange={(e) => setFormData({ ...formData, timeline: e.target.value })}
-                    className="w-full p-2.5 rounded-xl bg-ivory-50 border border-ivory-300 focus:outline-none focus:border-gold"
+                    className="w-full p-2.5 rounded-md bg-platinum-soft border border-platinum-border text-graphite focus:outline-none focus:border-graphite"
                   >
                     <option value="3-4 Weeks">3-4 Weeks (Standard Atelier Craft)</option>
                     <option value="2-3 Weeks (Expedited)">2-3 Weeks (Expedited Priority)</option>
@@ -690,13 +691,13 @@ export default function CustomDesignWizard({ preselectedProduct, allProducts }: 
                 </div>
 
                 <div>
-                  <label className="block text-walnut font-medium mb-1">Intended Space Usage:</label>
+                  <label className="block text-slate-dark font-medium mb-1">Intended Space Usage:</label>
                   <input
                     type="text"
                     placeholder="e.g. Penthouse Living Room, Hotel Suite, Office"
                     value={formData.intendedUsage}
                     onChange={(e) => setFormData({ ...formData, intendedUsage: e.target.value })}
-                    className="w-full p-2.5 rounded-xl bg-ivory-50 border border-ivory-300 focus:outline-none focus:border-gold"
+                    className="w-full p-2.5 rounded-md bg-platinum-soft border border-platinum-border text-graphite focus:outline-none focus:border-graphite"
                   />
                 </div>
               </div>
@@ -707,65 +708,65 @@ export default function CustomDesignWizard({ preselectedProduct, allProducts }: 
           {step === 7 && (
             <div className="space-y-6 animate-in fade-in duration-200">
               <div>
-                <h3 className="font-serif text-2xl font-medium text-charcoal">7. Contact &amp; Client Information</h3>
-                <p className="text-xs text-charcoal/70 mt-1">
-                  Our designer will reach out with the custom CAD drawings and quotation schedule.
+                <h3 className="font-serif text-2xl font-medium text-graphite">7. Contact &amp; Client Information</h3>
+                <p className="text-xs text-slate-dark mt-1">
+                  Our designer will reach out with the custom CAD drawings and formal quotation schedule.
                 </p>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
                 <div className="sm:col-span-2">
-                  <label className="block text-walnut font-medium mb-1">Full Name *</label>
+                  <label className="block text-slate-dark font-medium mb-1">Full Name *</label>
                   <input
                     type="text"
                     required
                     placeholder="e.g. Dr. Siddharth Mehra"
                     value={formData.customerName}
                     onChange={(e) => setFormData({ ...formData, customerName: e.target.value })}
-                    className="w-full p-3 rounded-xl bg-ivory-50 border border-ivory-300 focus:outline-none focus:border-gold"
+                    className="w-full p-3 rounded-md bg-platinum-soft border border-platinum-border text-graphite focus:outline-none focus:border-graphite"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-walnut font-medium mb-1">Phone Number (Calling) *</label>
+                  <label className="block text-slate-dark font-medium mb-1">Phone Number (Calling) *</label>
                   <input
                     type="tel"
                     required
                     placeholder="+91 98970 00000"
                     value={formData.customerPhone}
                     onChange={(e) => setFormData({ ...formData, customerPhone: e.target.value })}
-                    className="w-full p-3 rounded-xl bg-ivory-50 border border-ivory-300 focus:outline-none focus:border-gold"
+                    className="w-full p-3 rounded-md bg-platinum-soft border border-platinum-border text-graphite focus:outline-none focus:border-graphite"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-walnut font-medium mb-1">WhatsApp Number</label>
+                  <label className="block text-slate-dark font-medium mb-1">WhatsApp Number</label>
                   <input
                     type="tel"
                     placeholder="+91 98970 00000 (if different)"
                     value={formData.customerWhatsapp}
                     onChange={(e) => setFormData({ ...formData, customerWhatsapp: e.target.value })}
-                    className="w-full p-3 rounded-xl bg-ivory-50 border border-ivory-300 focus:outline-none focus:border-gold"
+                    className="w-full p-3 rounded-md bg-platinum-soft border border-platinum-border text-graphite focus:outline-none focus:border-graphite"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-walnut font-medium mb-1">Email Address</label>
+                  <label className="block text-slate-dark font-medium mb-1">Email Address</label>
                   <input
                     type="email"
                     placeholder="name@example.com"
                     value={formData.customerEmail}
                     onChange={(e) => setFormData({ ...formData, customerEmail: e.target.value })}
-                    className="w-full p-3 rounded-xl bg-ivory-50 border border-ivory-300 focus:outline-none focus:border-gold"
+                    className="w-full p-3 rounded-md bg-platinum-soft border border-platinum-border text-graphite focus:outline-none focus:border-graphite"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-walnut font-medium mb-1">Preferred Channel:</label>
+                  <label className="block text-slate-dark font-medium mb-1">Preferred Channel:</label>
                   <select
                     value={formData.preferredContact}
                     onChange={(e) => setFormData({ ...formData, preferredContact: e.target.value })}
-                    className="w-full p-3 rounded-xl bg-ivory-50 border border-ivory-300 focus:outline-none focus:border-gold"
+                    className="w-full p-3 rounded-md bg-platinum-soft border border-platinum-border text-graphite focus:outline-none focus:border-graphite"
                   >
                     <option value="WhatsApp">WhatsApp Message with Drawings</option>
                     <option value="Phone Call">Phone Call from Lead Designer</option>
@@ -775,12 +776,12 @@ export default function CustomDesignWizard({ preselectedProduct, allProducts }: 
               </div>
 
               <div className="pt-2">
-                <label className="flex items-center space-x-2 text-xs text-charcoal/80 cursor-pointer">
+                <label className="flex items-center space-x-2 text-xs text-graphite/80 cursor-pointer">
                   <input
                     type="checkbox"
                     checked={formData.agreeConsent}
                     onChange={(e) => setFormData({ ...formData, agreeConsent: e.target.checked })}
-                    className="rounded text-gold focus:ring-0"
+                    className="rounded border-platinum-border text-graphite focus:ring-0 accent-graphite"
                   />
                   <span>I agree to receive custom furniture drawings and quotation estimates via phone/WhatsApp.</span>
                 </label>
@@ -792,55 +793,55 @@ export default function CustomDesignWizard({ preselectedProduct, allProducts }: 
           {step === 8 && (
             <div className="space-y-6 animate-in fade-in duration-200">
               <div>
-                <h3 className="font-serif text-2xl font-medium text-charcoal">8. Review Specifications</h3>
-                <p className="text-xs text-charcoal/70 mt-1">
-                  Please verify all details before submitting your bespoke manufacturing request.
+                <h3 className="font-serif text-2xl font-medium text-graphite">8. Review Specifications</h3>
+                <p className="text-xs text-slate-dark mt-1">
+                  Please verify all technical parameters before submitting your bespoke manufacturing request.
                 </p>
               </div>
 
-              <div className="bg-ivory-50 rounded-2xl p-6 border border-ivory-300 space-y-4 text-xs">
-                <div className="grid grid-cols-2 gap-4 pb-4 border-b border-ivory-200">
+              <div className="bg-platinum-soft/70 rounded-md p-6 border border-platinum-border space-y-4 text-xs">
+                <div className="grid grid-cols-2 gap-4 pb-4 border-b border-platinum-border">
                   <div>
-                    <span className="text-walnut font-medium block">Furniture Type:</span>
-                    <span className="font-semibold text-charcoal">{formData.furnitureType}</span>
+                    <span className="text-slate-dark font-medium block">Furniture Type:</span>
+                    <span className="font-medium text-graphite">{formData.furnitureType}</span>
                   </div>
                   <div>
-                    <span className="text-walnut font-medium block">Reference Source:</span>
-                    <span className="font-semibold text-charcoal">
+                    <span className="text-slate-dark font-medium block">Reference Source:</span>
+                    <span className="font-medium text-graphite">
                       {formData.referenceType === 'EXISTING_PRODUCT' ? `Website Model (${formData.productName})` : 'External Photo Upload'}
                     </span>
                   </div>
                   <div>
-                    <span className="text-walnut font-medium block">Dimensions:</span>
-                    <span className="font-semibold text-charcoal">
-                      {formData.dimensionsKnown ? `${formData.length}L x ${formData.depth}D x ${formData.height}H ${formData.measurementUnit}` : 'Site Measurement Needed'}
+                    <span className="text-slate-dark font-medium block">Dimensions:</span>
+                    <span className="font-medium text-graphite">
+                      {formData.dimensionsKnown ? `${formData.length}L × ${formData.depth}D × ${formData.height}H ${formData.measurementUnit}` : 'Site Measurement Needed'}
                     </span>
                   </div>
                   <div>
-                    <span className="text-walnut font-medium block">Fabric &amp; Color:</span>
-                    <span className="font-semibold text-charcoal">
+                    <span className="text-slate-dark font-medium block">Fabric &amp; Color:</span>
+                    <span className="font-medium text-graphite">
                       {formData.fabricPreference} ({formData.colorPreference || 'Custom Selection'})
                     </span>
                   </div>
                   <div>
-                    <span className="text-walnut font-medium block">Quantity &amp; Timeline:</span>
-                    <span className="font-semibold text-charcoal">{formData.quantity} Unit(s) • {formData.timeline}</span>
+                    <span className="text-slate-dark font-medium block">Quantity &amp; Timeline:</span>
+                    <span className="font-medium text-graphite">{formData.quantity} Unit(s) • {formData.timeline}</span>
                   </div>
                   <div>
-                    <span className="text-walnut font-medium block">Delivery City:</span>
-                    <span className="font-semibold text-charcoal">{formData.deliveryCity}</span>
+                    <span className="text-slate-dark font-medium block">Delivery City:</span>
+                    <span className="font-medium text-graphite">{formData.deliveryCity}</span>
                   </div>
                 </div>
 
                 <div>
-                  <span className="text-walnut font-medium block mb-1">Customer:</span>
-                  <span className="font-semibold text-charcoal">{formData.customerName} • {formData.customerPhone} ({formData.preferredContact})</span>
+                  <span className="text-slate-dark font-medium block mb-1">Customer:</span>
+                  <span className="font-medium text-graphite">{formData.customerName} • {formData.customerPhone} ({formData.preferredContact})</span>
                 </div>
 
                 {formData.customizationChecklist.length > 0 && (
                   <div>
-                    <span className="text-walnut font-medium block mb-1">Customization Requests:</span>
-                    <ul className="list-disc list-inside space-y-0.5 text-charcoal/80">
+                    <span className="text-slate-dark font-medium block mb-1">Customization Requests:</span>
+                    <ul className="list-disc list-inside space-y-0.5 text-graphite/80">
                       {formData.customizationChecklist.map((c, i) => (
                         <li key={i}>{c}</li>
                       ))}
@@ -850,10 +851,10 @@ export default function CustomDesignWizard({ preselectedProduct, allProducts }: 
 
                 {formData.referenceImages.length > 0 && (
                   <div>
-                    <span className="text-walnut font-medium block mb-1">Attached Images ({formData.referenceImages.length}):</span>
+                    <span className="text-slate-dark font-medium block mb-1">Attached Images ({formData.referenceImages.length}):</span>
                     <div className="flex gap-2">
                       {formData.referenceImages.slice(0, 4).map((img, i) => (
-                        <div key={i} className="w-12 h-12 rounded-lg overflow-hidden border border-ivory-300">
+                        <div key={i} className="w-12 h-12 rounded border border-platinum-border overflow-hidden">
                           <img src={img} alt="" className="w-full h-full object-cover" />
                         </div>
                       ))}
@@ -863,22 +864,22 @@ export default function CustomDesignWizard({ preselectedProduct, allProducts }: 
               </div>
 
               {/* Absolute Notice */}
-              <div className="p-4 rounded-xl bg-cream/70 border border-gold/30 text-xs text-charcoal/80 flex items-start space-x-2">
-                <ShieldCheck className="w-4 h-4 text-gold shrink-0 mt-0.5" />
+              <div className="p-4 rounded-md bg-platinum-soft border border-platinum-border text-xs text-graphite/80 flex items-start space-x-2.5">
+                <ShieldCheck className="w-4 h-4 text-slate-muted shrink-0 mt-0.5" />
                 <span>
-                  <strong>Atelier Policy:</strong> This submission initiates an offline design review and personalized quotation. No online payment is requested or collected on this platform.
+                  <strong>Atelier Policy:</strong> This submission initiates an offline technical review and personalized quotation. No online payment is requested or processed on this platform.
                 </span>
               </div>
             </div>
           )}
 
           {/* Navigation Controls */}
-          <div className="mt-10 pt-6 border-t border-ivory-200 flex items-center justify-between">
+          <div className="mt-8 pt-6 border-t border-platinum-border flex items-center justify-between">
             {step > 1 ? (
               <button
                 type="button"
                 onClick={() => setStep(step - 1)}
-                className="inline-flex items-center space-x-2 px-6 py-3 rounded-full bg-ivory-100 hover:bg-ivory-200 text-charcoal text-xs font-semibold uppercase tracking-wider transition-colors"
+                className="inline-flex items-center space-x-2 px-5 py-2.5 rounded-md bg-platinum hover:bg-platinum-soft text-graphite border border-platinum-border text-xs font-medium uppercase tracking-wider transition-colors"
               >
                 <ArrowLeft className="w-4 h-4" />
                 <span>Previous</span>
@@ -895,19 +896,19 @@ export default function CustomDesignWizard({ preselectedProduct, allProducts }: 
                   }
                   setStep(step + 1);
                 }}
-                className="inline-flex items-center space-x-2 px-8 py-3.5 rounded-full bg-charcoal text-white hover:bg-charcoal-light text-xs font-semibold uppercase tracking-wider transition-colors shadow-md"
+                className="inline-flex items-center space-x-2 px-7 py-2.5 rounded-md bg-graphite text-white hover:bg-graphite-hover text-xs font-medium uppercase tracking-wider transition-colors shadow-sm"
               >
                 <span>Continue</span>
-                <ArrowRight className="w-4 h-4 text-gold" />
+                <ArrowRight className="w-4 h-4 text-slate-silver" />
               </button>
             ) : (
               <button
                 type="button"
                 disabled={isSubmitting}
                 onClick={handleSubmit}
-                className="inline-flex items-center space-x-2 px-10 py-4 rounded-full bg-charcoal hover:bg-charcoal-light text-white text-xs font-semibold uppercase tracking-widest transition-all shadow-luxury border border-gold/50"
+                className="inline-flex items-center space-x-2 px-8 py-3 rounded-md bg-graphite hover:bg-graphite-hover text-white text-xs font-medium uppercase tracking-widest transition-all shadow-sm"
               >
-                <Send className="w-4 h-4 text-gold" />
+                <Send className="w-4 h-4 text-slate-silver" />
                 <span>{isSubmitting ? 'Recording Commission...' : 'Submit Custom Request'}</span>
               </button>
             )}
