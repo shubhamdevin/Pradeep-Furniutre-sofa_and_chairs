@@ -1,7 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
 import { prisma } from '@/lib/prisma';
-import InteractiveFurnitureViewer from '@/components/three-d/InteractiveFurnitureViewer';
 import AssetLicenceRegistry from '@/components/three-d/AssetLicenceRegistry';
 import Home3DShowcase from '@/components/furniture/Home3DShowcase';
 import LuxuryProductCard from '@/components/furniture/LuxuryProductCard';
@@ -87,27 +86,31 @@ export default async function HomePage() {
   return (
     <div className="space-y-20 md:space-y-28 pb-20 bg-platinum">
       {/* =========================================================================
-          SECTION 7: PREMIUM HERO SECTION (ARCHITECTURAL MINIMALISM)
+          SECTION 7: PREMIUM HERO SECTION (ARCHITECTURAL LUXURY SHOWCASE)
          ========================================================================= */}
       <section className="relative min-h-[88vh] flex items-center justify-center bg-platinum overflow-hidden border-b border-platinum-border">
         <div className="max-w-site mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24 relative z-10 w-full">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-10 items-center">
             {/* Left Narrative Column */}
             <div className="lg:col-span-6 space-y-6 text-center lg:text-left">
               <div className="inline-flex items-center space-x-2 px-3 py-1 rounded bg-white border border-platinum-border shadow-subtle text-xs text-graphite">
                 <span className="w-1.5 h-1.5 rounded-full bg-graphite" />
                 <span className="font-semibold tracking-wider uppercase text-[11px] text-slate-dark">
-                  Bespoke Architectural Furniture Studio
+                  Atelier Pradeep • Bespoke Furniture Manufacturing
                 </span>
               </div>
 
-              <h1 className="font-serif text-4xl sm:text-6xl lg:text-7xl font-medium tracking-tight text-graphite leading-[1.08]">
-                Design Defines <br className="hidden sm:inline" />
-                <span className="italic font-normal text-slate-dark">the Space.</span>
+              <h1 className="font-serif text-4xl sm:text-6xl lg:text-7xl font-medium tracking-tight text-graphite leading-[1.05]">
+                Furniture Beyond <br className="hidden sm:inline" />
+                <span className="italic font-normal text-slate-dark">Ordinary.</span>
               </h1>
 
+              <p className="text-xs uppercase font-bold tracking-widest text-slate-muted">
+                Bespoke Sofas • Statement Chairs • Crafted For Your Space
+              </p>
+
               <p className="text-base sm:text-lg text-slate-dark font-light max-w-xl mx-auto lg:mx-0 leading-relaxed">
-                Exceptional sofas and statement chairs, thoughtfully manufactured for your space. We craft custom architectural seating with seasoned timber skeletons, multi-density comfort cores, and European contract-grade textiles.
+                We engineer architectural seating tailored to your exact floor plan. Seasoned Salwood and Teak skeletons, multi-density high-resilience cores, and European contract-grade textiles—handcrafted with generational mastery in our Agra workshop.
               </p>
 
               {/* Action Buttons (Strictly Non-E-Commerce) */}
@@ -116,7 +119,7 @@ export default async function HomePage() {
                   href="/products"
                   className="w-full sm:w-auto px-6 py-3.5 rounded-md bg-graphite text-white hover:bg-graphite-hover text-xs uppercase tracking-wider font-semibold transition-all shadow-subtle border border-graphite flex items-center justify-center space-x-2"
                 >
-                  <span>Explore Our Collection</span>
+                  <span>Explore Collection</span>
                   <ArrowRight className="w-4 h-4 text-slate-silver" />
                 </Link>
 
@@ -125,14 +128,14 @@ export default async function HomePage() {
                   className="w-full sm:w-auto px-6 py-3.5 rounded-md bg-transparent text-graphite hover:bg-platinum-soft text-xs uppercase tracking-wider font-semibold transition-all border border-graphite flex items-center justify-center space-x-2"
                 >
                   <Sliders className="w-4 h-4 text-slate-dark" />
-                  <span>Customize Your Furniture</span>
+                  <span>Design Your Furniture</span>
                 </Link>
 
                 <Link
                   href="/consultation"
                   className="w-full sm:w-auto text-xs font-semibold tracking-wider text-slate-dark hover:text-graphite uppercase py-2 underline underline-offset-4"
                 >
-                  Private Consultation
+                  Book Private Consultation
                 </Link>
               </div>
 
@@ -140,39 +143,111 @@ export default async function HomePage() {
               <div className="pt-8 border-t border-platinum-border grid grid-cols-3 gap-6 max-w-lg mx-auto lg:mx-0 text-left">
                 <div>
                   <span className="block font-serif text-2xl font-bold text-graphite">10-Yr</span>
-                  <span className="block text-[11px] text-slate-muted uppercase tracking-wider mt-0.5">Structural Warranty</span>
+                  <span className="block text-[11px] text-slate-muted uppercase tracking-wider mt-0.5">Structural Guarantee</span>
                 </div>
                 <div>
                   <span className="block font-serif text-2xl font-bold text-graphite">100%</span>
                   <span className="block text-[11px] text-slate-muted uppercase tracking-wider mt-0.5">Bespoke CAD Scale</span>
                 </div>
                 <div>
-                  <span className="block font-serif text-2xl font-bold text-graphite">360°</span>
-                  <span className="block text-[11px] text-slate-muted uppercase tracking-wider mt-0.5">Real 3D Verification</span>
+                  <span className="block font-serif text-2xl font-bold text-graphite">Agra</span>
+                  <span className="block text-[11px] text-slate-muted uppercase tracking-wider mt-0.5">Bodla Workshop Works</span>
                 </div>
               </div>
             </div>
 
-            {/* Right Interactive 3D Hero Visualizer Column */}
+            {/* Right Professional Showcase Gallery (No 3D Model) */}
             <div className="lg:col-span-6 relative">
               <div className="relative mx-auto max-w-lg lg:max-w-none">
-                {/* 3D Canvas Box in Architectural Deep Graphite */}
-                <InteractiveFurnitureViewer
-                  asset={formatted3DAssets[0]}
-                  productTitle="The Aurelia Italian Curved Sectional"
-                  initialHeight="h-[440px] sm:h-[480px] lg:h-[520px]"
-                />
+                {/* Main Luxury Sofa Showcase Card */}
+                <div className="relative rounded-xl overflow-hidden bg-white border border-platinum-border shadow-elevated group">
+                  <div className="aspect-[4/3] sm:aspect-[16/11] relative overflow-hidden bg-platinum-soft">
+                    <img
+                      src="/images/models/sofa_3_sketchfab.jpeg"
+                      alt="The Aurelia Architectural Sectional"
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-graphite/75 via-graphite/15 to-transparent" />
 
-                {/* Floating Architectural Badge */}
-                <div className="absolute -bottom-4 -left-3 sm:left-4 bg-white p-3.5 rounded-lg shadow-elevated border border-platinum-border max-w-xs hidden sm:block">
+                    {/* Top Status Overlays */}
+                    <div className="absolute top-4 left-4 right-4 flex items-center justify-between pointer-events-none">
+                      <span className="px-3 py-1 rounded bg-white/95 backdrop-blur-sm border border-platinum-border text-[10px] font-bold uppercase tracking-wider text-graphite shadow-subtle">
+                        Atelier Masterpiece • 2026 Collection
+                      </span>
+                      <span className="px-2.5 py-1 rounded bg-graphite/90 backdrop-blur-sm text-[10px] font-mono text-platinum font-semibold">
+                        Agra Works
+                      </span>
+                    </div>
+
+                    {/* Bottom Card Specifications */}
+                    <div className="absolute bottom-4 left-4 right-4 text-white space-y-1">
+                      <div className="flex items-center space-x-2">
+                        <span className="w-2 h-2 rounded-full bg-emerald-400" />
+                        <span className="text-[11px] uppercase tracking-widest text-slate-silver font-semibold">
+                          Bespoke Handcrafted Specimen
+                        </span>
+                      </div>
+                      <h3 className="font-serif text-2xl font-medium text-white tracking-wide">
+                        The Aurelia Italian Sectional
+                      </h3>
+                      <p className="text-xs text-platinum-soft/90 font-light line-clamp-1">
+                        Kiln-Dried CP Teakwood • 45D HR Multi-Density Foam • Alabaster Bouclé
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Card Technical Specifications Matrix */}
+                  <div className="p-4 bg-white border-t border-platinum-border grid grid-cols-3 gap-2 text-center text-xs">
+                    <div className="border-r border-platinum-border pr-2">
+                      <span className="block text-[10px] uppercase tracking-wider text-slate-muted">Scale</span>
+                      <span className="block font-semibold text-graphite font-mono text-[11px] mt-0.5">96″W × 38″D</span>
+                    </div>
+                    <div className="border-r border-platinum-border px-2">
+                      <span className="block text-[10px] uppercase tracking-wider text-slate-muted">Core Comfort</span>
+                      <span className="block font-semibold text-graphite text-[11px] mt-0.5">45D + Down Crown</span>
+                    </div>
+                    <div className="pl-2">
+                      <span className="block text-[10px] uppercase tracking-wider text-slate-muted">Craft Time</span>
+                      <span className="block font-semibold text-graphite text-[11px] mt-0.5">3–4 Weeks</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Floating Statement Fancy Chair Card (Overlapping) */}
+                <div className="absolute -bottom-6 -left-4 sm:-left-6 bg-white p-3.5 sm:p-4 rounded-lg shadow-elevated border border-platinum-border max-w-[260px] sm:max-w-[280px] hidden sm:block">
                   <div className="flex items-center space-x-3">
-                    <div className="w-9 h-9 rounded bg-platinum-soft flex items-center justify-center text-graphite">
-                      <Box className="w-4 h-4 text-slate-dark" />
+                    <div className="w-16 h-16 rounded bg-platinum-soft border border-platinum-border overflow-hidden shrink-0 flex items-center justify-center p-1">
+                      <img
+                        src="/images/models/mid_century_lounge_chair_primary.png"
+                        alt="Mid-Century Fancy Chair"
+                        className="w-full h-full object-contain"
+                      />
                     </div>
                     <div>
-                      <h4 className="font-sans text-xs font-semibold uppercase tracking-wider text-graphite">Real 3D Geometry</h4>
-                      <p className="text-[11px] text-slate-dark mt-0.5">Drag to rotate 360° • 1:1 Workshop Spec</p>
+                      <span className="text-[9px] uppercase font-bold tracking-widest text-slate-dark block">
+                        Fancy Statement Chair
+                      </span>
+                      <h4 className="font-serif text-sm font-medium text-graphite leading-tight mt-0.5">
+                        Mid-Century Sculpted Lounge
+                      </h4>
+                      <p className="text-[10px] text-slate-muted mt-1 font-mono">
+                        Solid Walnut • Italian Nappa
+                      </p>
                     </div>
+                  </div>
+                </div>
+
+                {/* Floating Material Palette Tag (Top Right) */}
+                <div className="absolute -top-4 -right-3 sm:-right-5 bg-white py-2 px-3.5 rounded-lg shadow-elevated border border-platinum-border hidden md:flex items-center space-x-3">
+                  <div className="flex -space-x-1.5">
+                    <span className="w-5 h-5 rounded-full border-2 border-white shadow-sm" style={{ backgroundColor: '#E2DFD2' }} title="Alabaster Bouclé" />
+                    <span className="w-5 h-5 rounded-full border-2 border-white shadow-sm" style={{ backgroundColor: '#1F382B' }} title="Belgian Emerald Velvet" />
+                    <span className="w-5 h-5 rounded-full border-2 border-white shadow-sm" style={{ backgroundColor: '#7C4B2E' }} title="Cognac Tan Nappa" />
+                    <span className="w-5 h-5 rounded-full border-2 border-white shadow-sm" style={{ backgroundColor: '#22272B' }} title="Graphite Wool" />
+                  </div>
+                  <div className="text-left">
+                    <span className="block text-[9px] uppercase font-bold tracking-wider text-slate-muted">Materials</span>
+                    <span className="block text-[11px] font-semibold text-graphite">Curated Textures</span>
                   </div>
                 </div>
               </div>
