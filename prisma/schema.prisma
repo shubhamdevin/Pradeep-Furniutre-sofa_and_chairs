@@ -1,0 +1,668 @@
+// Prisma schema for Pradeep Furniture - Luxury Digital Showroom & Atelier
+// Supports SQLite for instant local out-of-the-box operation and easily configurable to PostgreSQL
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+// -------------------------------------------------------------
+// USER & RBAC
+// -------------------------------------------------------------
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String
+  passwordHash  String
+  role          String    @default("SUPER_ADMIN") // SUPER_ADMIN, CONTENT_MANAGER, SALES_MANAGER, SALES_EXECUTIVE, FURNITURE_DESIGNER, PRODUCTION_MANAGER, WORKSHOP_STAFF, INVENTORY_MANAGER, QC_INSPECTOR, SERVICE_STAFF
+  avatar        String?
+  phone         String?
+  department    String?
+  isActive      Boolean   @default(true)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  assignedLeads       Lead[]               @relation("AssignedLeads")
+  leadActivities      LeadActivity[]
+  designRevisions     DesignRevision[]     @relation("RevisionAuthor")
+  approvedRevisions   DesignRevision[]     @relation("RevisionApprover")
+  jobAssignments      JobAssignment[]
+  qualityInspections  QualityInspection[]
+  quotationsCreated   Quotation[]
+  auditLogs           AuditLog[]
+}
+
+// -------------------------------------------------------------
+// CUSTOMER & B2B COMPANY
+// -------------------------------------------------------------
+model Customer {
+  id              String    @id @default(cuid())
+  fullName        String
+  phone           String
+  whatsapp        String?
+  email           String?
+  city            String?
+  pincode         String?
+  address         String?
+  companyName     String?
+  customerType    String    @default("RESIDENTIAL") // RESIDENTIAL, ARCHITECT, INTERIOR_DESIGNER, COMMERCIAL, HOTELIER
+  notes           String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  leads                 Lead[]
+  designRequests        DesignRequest[]
+  quotations            Quotation[]
+  manufacturingJobs     ManufacturingJob[]
+  consultationBookings  ConsultationBooking[]
+  savedConfigurations   SavedConfiguration[]
+}
+
+// -------------------------------------------------------------
+// CATALOGUE & PRODUCTS
+// -------------------------------------------------------------
+model Category {
+  id          String    @id @default(cuid())
+  name        String
+  slug        String    @unique
+  description String?
+  imageUrl    String?
+  sortOrder   Int       @default(0)
+  isFeatured  Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  products    Product[]
+}
+
+model Collection {
+  id          String    @id @default(cuid())
+  name        String
+  slug        String    @unique
+  tagline     String?
+  description String?
+  heroImage   String?
+  isPublished Boolean   @default(true)
+  sortOrder   Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  products    Product[]
+}
+
+model Product {
+  id                  String    @id @default(cuid())
+  sku                 String    @unique
+  name                String
+  slug                String    @unique
+  tagline             String?
+  description         String
+  categoryId          String
+  collectionId        String?
+  furnitureType       String    // SOFA, CHAIR, LOUNGE, SECTIONAL, ACCENT
+  seatingCapacity     String?   // "2 Seater", "3 Seater", "L-Shape 5-6 Seater", etc.
+  dimensionsSummary   String?   // e.g. "88\"W x 38\"D x 32\"H"
+  widthCm             Float?
+  depthCm             Float?
+  heightCm            Float?
+  seatHeightCm        Float?
+  frameMaterial       String?   // "Kiln-dried Grade-A Sal Wood / Teak"
+  upholsteryType      String?   // "Belgian Velvet / Top Grain Leather / Linen Boucle"
+  foamDensity         String?   // "40 High-Resilience PU Foam with feather crown"
+  suspension          String?   // "High tensile zig-zag springs & reinforced webbing"
+  legFinish           String?   // "Hand-rubbed walnut wood with brushed brass ferrules"
+  warrantyYears       Int       @default(10)
+  isCustomizable      Boolean   @default(true)
+  isFeatured          Boolean   @default(false)
+  isAvailable         Boolean   @default(true)
+  indicativePriceRange String?  // e.g. "Estimates from ₹58,000 depending on fabric tier" (NEVER checkout)
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+
+  category            Category     @relation(fields: [categoryId], references: [id])
+  collection          Collection?  @relation(fields: [collectionId], references: [id])
+  images              ProductImage[]
+  specifications      ProductSpecification[]
+  threeDAsset         ThreeDAsset?
+  customizationRules  ProductCustomizationRule[]
+  designRequests      DesignRequest[]
+  leads               Lead[]
+}
+
+model ProductImage {
+  id          String    @id @default(cuid())
+  productId   String
+  url         String
+  altText     String?
+  viewAngle   String?   // "Front", "Angled 45°", "Side", "Back", "Close-up Texture", "Atmospheric Room"
+  sortOrder   Int       @default(0)
+  isPrimary   Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+
+  product     Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+}
+
+model ProductSpecification {
+  id          String   @id @default(cuid())
+  productId   String
+  group       String   // "Dimensions", "Frame & Foundation", "Cushioning", "Finishes", "Care"
+  label       String
+  value       String
+  sortOrder   Int      @default(0)
+
+  product     Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+}
+
+// -------------------------------------------------------------
+// 3D ASSETS & REGISTRY (SECTION 7 COMPLIANT)
+// -------------------------------------------------------------
+model ThreeDAsset {
+  id                  String    @id @default(cuid())
+  productId           String?   @unique
+  name                String
+  provider            String    // "POLY_HAVEN", "SKETCHFAB", "SELF_HOSTED"
+  embedMode           String    // "HOSTED_GLB", "SKETCHFAB_EMBED"
+  modelUrl            String    // glb path or sketchfab embed url/UID
+  sketchfabUid        String?
+  author              String
+  licence             String    // "CC0 1.0 Universal", "CC-BY-4.0"
+  attributionUrl      String
+  posterImageUrl      String?
+  fileFormat          String    @default("glb")
+  loadingStatus       String    @default("VERIFIED") // VERIFIED, PENDING_REVIEW, ERROR
+  isAccurateRep       Boolean   @default(false)      // "Whether it accurately represents real manufactured item or serves as visual demonstration"
+  disclaimer          String?
+  initialCameraPos    String?   // e.g. "0, 1.2, 2.5"
+  isEnabled           Boolean   @default(true)
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+
+  product             Product?  @relation(fields: [productId], references: [id])
+}
+
+// -------------------------------------------------------------
+// MATERIALS & FABRIC SWATCHES
+// -------------------------------------------------------------
+model FurnitureMaterial {
+  id            String    @id @default(cuid())
+  category      String    // "FABRIC", "LEATHER", "WOOD", "FOAM", "METAL"
+  code          String    @unique
+  name          String
+  description   String?
+  tier          String    @default("PREMIUM") // STANDARD, PREMIUM, LUXURY_ATELIER
+  colorHex      String?
+  textureUrl    String?
+  stockUnit     String    // "METERS", "SQ_FT", "CUBIC_FT", "PIECES"
+  currentStock  Float     @default(0)
+  reorderLevel  Float     @default(10)
+  supplierName  String?
+  isActive      Boolean   @default(true)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  swatches      FabricSwatch[]
+}
+
+model FabricSwatch {
+  id            String    @id @default(cuid())
+  materialId    String
+  name          String
+  code          String
+  colorHex      String
+  textureUrl    String?
+  weaveType     String?   // "Velvet", "Chenille", "Boucle", "Linen", "Full Grain"
+  rubCount      Int?      // e.g. 50000 Martindale
+  isRecommended Boolean   @default(false)
+  createdAt     DateTime  @default(now())
+
+  material      FurnitureMaterial @relation(fields: [materialId], references: [id], onDelete: Cascade)
+}
+
+model ProductCustomizationRule {
+  id              String   @id @default(cuid())
+  productId       String
+  ruleType        String   // "ALLOWED_FABRIC", "CUSTOM_DIMENSIONS", "LEG_OPTIONS", "ARMREST_STYLES"
+  ruleValue       String   // JSON or comma separated values
+  notes           String?
+  requiresApproval Boolean @default(false)
+
+  product         Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+}
+
+model SavedConfiguration {
+  id              String    @id @default(cuid())
+  customerId      String?
+  productId       String?
+  configCode      String    @unique
+  seatingConfig   String?
+  dimensions      String?
+  fabricChoice    String?
+  colorChoice     String?
+  cushionFirmness String?
+  armrestStyle    String?
+  backrestStyle   String?
+  legFinish       String?
+  customNotes     String?
+  createdAt       DateTime  @default(now())
+
+  customer        Customer? @relation(fields: [customerId], references: [id])
+}
+
+// -------------------------------------------------------------
+// CUSTOM DESIGN REQUEST & REVISIONS (SECTIONS 8, 10)
+// -------------------------------------------------------------
+model DesignRequest {
+  id                  String    @id @default(cuid())
+  referenceNumber     String    @unique // e.g. CFR-2026-0001
+  requestType         String    // "EXISTING_CUSTOMIZATION" or "EXTERNAL_REFERENCE"
+  customerId          String
+  productId           String?
+  furnitureType       String    // Sofa, L-Shape, Sectional, Accent Chair, Lounge Chair, etc.
+  customizationReqs   String    // JSON / summary of options checked
+  dimensionsSummary   String?   // L x D x H, seating capacity
+  fabricPreference    String?
+  colorPreference     String?
+  framePreference     String?
+  foamFirmness        String?
+  legFinish           String?
+  quantity            Int       @default(1)
+  budgetRange         String?
+  intendedUsage       String?   // Residential Living Room, Hotel Suite, Penthouse, Cafe
+  requiredTimeline    String?   // 2-3 Weeks, 4-6 Weeks, Immediate
+  deliveryCity        String?
+  deliveryPincode     String?
+  specialInstructions String?
+  status              String    @default("REQUEST_RECEIVED") 
+  // REQUEST_RECEIVED, UNDER_REVIEW, MORE_DETAILS_REQUIRED, FEASIBILITY_CHECK, 
+  // DESIGN_IN_PROGRESS, CONCEPT_READY, REVISION_REQUESTED, DESIGN_APPROVED, QUOTATION_PENDING, CLOSED_REJECTED
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+
+  customer            Customer                    @relation(fields: [customerId], references: [id])
+  product             Product?                    @relation(fields: [productId], references: [id])
+  attachments         DesignRequestAttachment[]
+  revisions           DesignRevision[]
+  leads               Lead[]
+  manufacturingJobs   ManufacturingJob[]
+}
+
+model DesignRequestAttachment {
+  id              String    @id @default(cuid())
+  designRequestId String
+  fileUrl         String
+  fileName        String
+  fileType        String    // "CUSTOMER_REFERENCE", "ROOM_PHOTO", "SKETCH_CAD", "PROPOSED_CONCEPT"
+  fileSizeBytes   Int?
+  notes           String?
+  createdAt       DateTime  @default(now())
+
+  designRequest   DesignRequest @relation(fields: [designRequestId], references: [id], onDelete: Cascade)
+}
+
+model DesignRevision {
+  id                  String    @id @default(cuid())
+  designRequestId     String
+  revisionCode        String    // e.g. "REV-01", "REV-02"
+  versionNumber       Int       @default(1)
+  designerId          String
+  proposedCadUrl      String?
+  proposedConceptUrl  String?
+  specifications      String    // Frame, foam, fabric, dimensions freeze
+  designerNotes       String?
+  isFrozenForJob      Boolean   @default(false) // Frozen once approved for manufacturing
+  approvalStatus      String    @default("PENDING") // PENDING, APPROVED, REVISE
+  approvedById        String?
+  approvedAt          DateTime?
+  customerFeedback    String?
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+
+  designRequest       DesignRequest @relation(fields: [designRequestId], references: [id], onDelete: Cascade)
+  designer            User          @relation("RevisionAuthor", fields: [designerId], references: [id])
+  approver            User?         @relation("RevisionApprover", fields: [approvedById], references: [id])
+  quotations          Quotation[]
+  manufacturingJobs   ManufacturingJob[]
+}
+
+// -------------------------------------------------------------
+// LEAD MANAGEMENT CRM (SECTION 11)
+// -------------------------------------------------------------
+model Lead {
+  id              String    @id @default(cuid())
+  leadCode        String    @unique // e.g. "LEAD-2026-0042"
+  source          String    // "PRODUCT_ENQUIRY", "EXTERNAL_REFERENCE", "CUSTOM_STUDIO", "CONSULTATION", "WHATSAPP", "B2B_ARCHITECT", "MANUAL"
+  stage           String    @default("NEW") 
+  // NEW -> CONTACTED -> REQUIREMENTS_COLLECTED -> DESIGN_REVIEW -> QUOTATION_SENT -> NEGOTIATION -> CONVERTED / LOST / ON_HOLD
+  priority        String    @default("MEDIUM") // LOW, MEDIUM, HIGH, URGENT
+  customerId      String
+  assignedToId    String?
+  productId       String?
+  designRequestId String?
+  budgetRange     String?
+  tags            String?   // Comma separated tags e.g. "Villa Project, Velvet, Premium"
+  lostReason      String?
+  nextFollowUpAt  DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  customer        Customer       @relation(fields: [customerId], references: [id])
+  assignedTo      User?          @relation("AssignedLeads", fields: [assignedToId], references: [id])
+  product         Product?       @relation(fields: [productId], references: [id])
+  designRequest   DesignRequest? @relation(fields: [designRequestId], references: [id])
+  activities      LeadActivity[]
+  followUps       FollowUp[]
+  quotations      Quotation[]
+}
+
+model LeadActivity {
+  id          String    @id @default(cuid())
+  leadId      String
+  userId      String?
+  action      String    // "STAGE_CHANGE", "CALL_LOGGED", "NOTE_ADDED", "QUOTE_GENERATED", "WHATSAPP_SENT"
+  details     String
+  createdAt   DateTime  @default(now())
+
+  lead        Lead      @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  user        User?     @relation(fields: [userId], references: [id])
+}
+
+model FollowUp {
+  id          String    @id @default(cuid())
+  leadId      String
+  scheduledAt DateTime
+  type        String    // "PHONE_CALL", "SHOWROOM_VISIT", "DESIGN_CALL", "QUOTE_FOLLOWUP"
+  notes       String?
+  isCompleted Boolean   @default(false)
+  createdAt   DateTime  @default(now())
+
+  lead        Lead      @relation(fields: [leadId], references: [id], onDelete: Cascade)
+}
+
+model ConsultationBooking {
+  id              String    @id @default(cuid())
+  customerId      String
+  preferredDate   DateTime
+  preferredTime   String    // "Morning (10 AM - 1 PM)", "Afternoon (2 PM - 5 PM)", "Evening (5 PM - 8 PM)"
+  consultationType String   // "SHOWROOM_VISIT", "FACTORY_ATELIER_VISIT", "VIRTUAL_DESIGN_MEETING", "HOME_MEASUREMENT"
+  address         String?
+  message         String?
+  status          String    @default("PENDING") // PENDING, CONFIRMED, COMPLETED, RESCHEDULED, CANCELLED
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  customer        Customer  @relation(fields: [customerId], references: [id])
+}
+
+// -------------------------------------------------------------
+// QUOTATIONS & APPROVAL (SECTION 12 - STRICTLY NO CHECKOUT)
+// -------------------------------------------------------------
+model Quotation {
+  id                  String    @id @default(cuid())
+  quoteNumber         String    @unique // e.g. "QTE-2026-0089"
+  revisionCode        String    @default("REV-01") // REV-01, REV-02
+  customerId          String
+  leadId              String?
+  designRevisionId    String?
+  createdById         String
+  status              String    @default("DRAFT") // DRAFT, UNDER_REVIEW, SENT, REVISION_REQUESTED, ACCEPTED, REJECTED, EXPIRED
+  subtotal            Float
+  taxPercent          Float     @default(18.0) // GST 18%
+  taxAmount           Float     @default(0.0)
+  shippingCost        Float     @default(0.0)
+  totalEstimate       Float     // Customer quotation total (strictly offline business finalization)
+  internalEstimatedCost Float?  // SENSITIVE: Never show on customer PDF
+  internalProfitMargin Float?   // SENSITIVE: Never show on customer PDF
+  deliveryLeadWeeks   Int       @default(4)
+  validUntil          DateTime
+  termsAndConditions  String
+  warrantyTerms       String
+  clientNotes         String?
+  internalStaffNotes  String?
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+
+  customer            Customer         @relation(fields: [customerId], references: [id])
+  lead                Lead?            @relation(fields: [leadId], references: [id])
+  designRevision      DesignRevision?  @relation(fields: [designRevisionId], references: [id])
+  createdBy           User             @relation(fields: [createdById], references: [id])
+  items               QuotationItem[]
+  manufacturingJobs   ManufacturingJob[]
+}
+
+model QuotationItem {
+  id              String    @id @default(cuid())
+  quotationId     String
+  itemDescription String
+  dimensions      String?
+  upholsterySpec  String?
+  frameSpec       String?
+  quantity        Int       @default(1)
+  unitEstimate    Float
+  totalLineAmount Float
+
+  quotation       Quotation @relation(fields: [quotationId], references: [id], onDelete: Cascade)
+}
+
+// -------------------------------------------------------------
+// MANUFACTURING MANAGEMENT & FACTORY OPS (SECTION 13)
+// -------------------------------------------------------------
+model ManufacturingJob {
+  id                  String    @id @default(cuid())
+  jobCardNumber       String    @unique // e.g. "JOB-2026-0055"
+  customerId          String
+  designRequestId     String?
+  designRevisionId    String?
+  quotationId         String?
+  productTitle        String
+  quantity            Int       @default(1)
+  exactDimensions     String
+  frameInstructions   String
+  foamSpecification   String
+  fabricCodeAndColor  String
+  priority            String    @default("STANDARD") // STANDARD, HIGH, EXPEDITE
+  currentStage        String    @default("JOB_RELEASED")
+  // 15 Standard Stages:
+  // JOB_RELEASED -> MATERIAL_PLANNING -> WOOD_CUTTING -> FRAME_ASSEMBLY -> SPRING_WEBBING -> 
+  // FOAM_CUTTING -> CUSHIONING -> FABRIC_CUTTING -> STITCHING -> UPHOLSTERY -> 
+  // FINAL_FINISHING -> QUALITY_INSPECTION -> PACKAGING -> DISPATCH_READY -> CLOSED_INTERNALLY
+  startDate           DateTime  @default(now())
+  targetCompletionDate DateTime
+  actualCompletionDate DateTime?
+  notes               String?
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+
+  customer            Customer          @relation(fields: [customerId], references: [id])
+  designRequest       DesignRequest?    @relation(fields: [designRequestId], references: [id])
+  designRevision      DesignRevision?   @relation(fields: [designRevisionId], references: [id])
+  quotation           Quotation?        @relation(fields: [quotationId], references: [id])
+  assignments         JobAssignment[]
+  tasks               JobTask[]
+  bom                 BillOfMaterials?
+  inspections         QualityInspection[]
+}
+
+model JobAssignment {
+  id          String    @id @default(cuid())
+  jobId       String
+  userId      String
+  workstation String    // "Carpentry & Framing", "Upholstery Workshop", "Stitching Unit", "Finishing & QC"
+  assignedAt  DateTime  @default(now())
+
+  job         ManufacturingJob @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  user        User             @relation(fields: [userId], references: [id])
+}
+
+model JobTask {
+  id          String    @id @default(cuid())
+  jobId       String
+  stageName   String
+  stageNumber Int
+  status      String    @default("PENDING") // PENDING, IN_PROGRESS, COMPLETED, BLOCKED
+  startedAt   DateTime?
+  completedAt DateTime?
+  remarks     String?
+
+  job         ManufacturingJob @relation(fields: [jobId], references: [id], onDelete: Cascade)
+}
+
+model BillOfMaterials {
+  id          String    @id @default(cuid())
+  jobId       String    @unique
+  totalCost   Float     @default(0.0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  job         ManufacturingJob @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  items       BOMItem[]
+}
+
+model BOMItem {
+  id              String          @id @default(cuid())
+  bomId           String
+  materialCategory String         // Wood, Foam, Fabric, Springs, Screws/Fittings, Adhesive
+  description     String
+  requiredQty     Float
+  unit            String          // Meters, Planks, Sheets, Pcs
+  unitEstimatedCost Float
+  totalEstimatedCost Float
+  isReserved      Boolean         @default(false)
+  actualUsedQty   Float?
+
+  bom             BillOfMaterials @relation(fields: [bomId], references: [id], onDelete: Cascade)
+}
+
+model QualityInspection {
+  id                  String    @id @default(cuid())
+  jobId               String
+  inspectorId         String
+  inspectionDate      DateTime  @default(now())
+  result              String    // "PASS", "REWORK_REQUIRED", "REJECTED"
+  dimensionCheck      Boolean   @default(true)
+  frameStabilityCheck Boolean   @default(true)
+  stitchingCheck      Boolean   @default(true)
+  foamComfortCheck    Boolean   @default(true)
+  finishAlignmentCheck Boolean  @default(true)
+  inspectionNotes     String?
+  defectDescription   String?
+  correctiveAction    String?
+  photoUrl            String?
+
+  job                 ManufacturingJob @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  inspector           User             @relation(fields: [inspectorId], references: [id])
+}
+
+// -------------------------------------------------------------
+// INVENTORY & SUPPLIERS (SECTION 14)
+// -------------------------------------------------------------
+model Supplier {
+  id          String    @id @default(cuid())
+  name        String
+  contactName String?
+  phone       String?
+  email       String?
+  city        String?
+  category    String    // "FABRIC_MILLS", "TIMBER_SUPPLIERS", "HARDWARE_METALS", "FOAM_MANUFACTURERS"
+  leadTimeDays Int      @default(7)
+  isActive    Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  inventoryItems InventoryItem[]
+}
+
+model InventoryItem {
+  id            String    @id @default(cuid())
+  itemCode      String    @unique
+  name          String
+  category      String    // "WOOD", "FOAM", "FABRIC", "SPRINGS_WEBBING", "LEGS_HARDWARE"
+  unit          String    // "METERS", "SHEETS", "CUBIC_FT", "PCS"
+  currentStock  Float     @default(0)
+  reservedStock Float     @default(0)
+  minimumLevel  Float     @default(10)
+  supplierId    String?
+  unitCost      Float     @default(0)
+  locationBin   String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  supplier      Supplier? @relation(fields: [supplierId], references: [id])
+  movements     InventoryMovement[]
+}
+
+model InventoryMovement {
+  id              String    @id @default(cuid())
+  inventoryItemId String
+  movementType    String    // "INWARD_PURCHASE", "OUTWARD_JOB_ISSUE", "ADJUSTMENT_AUDIT", "RETURN"
+  quantity        Float
+  referenceCode   String?   // Job card number or PO number
+  remarks         String?
+  createdAt       DateTime  @default(now())
+
+  inventoryItem   InventoryItem @relation(fields: [inventoryItemId], references: [id], onDelete: Cascade)
+}
+
+// -------------------------------------------------------------
+// CMS, PORTFOLIO & AUDIT (SECTIONS 15, 16, 23)
+// -------------------------------------------------------------
+model ProjectPortfolio {
+  id              String    @id @default(cuid())
+  slug            String    @unique
+  title           String
+  clientType      String    // "Luxury Penthouse", "Boutique Hotel", "Heritage Villa", "Private Lounge"
+  location        String    // "Agra", "New Delhi", "Jaipur", "Gurugram"
+  description     String
+  challengeAndWork String
+  furnitureSupplied String  // e.g. "Curved Sectional Velvet Sofa, 4 Tufted Armchairs"
+  coverImage      String
+  galleryImages   String?   // JSON array of strings
+  isPublished     Boolean   @default(true)
+  sortOrder       Int       @default(0)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+
+model Testimonial {
+  id              String    @id @default(cuid())
+  clientName      String
+  clientTitle     String    // "Interior Architect", "Homeowner", "Hospitality Director"
+  location        String
+  quote           String
+  projectRef      String?
+  rating          Int       @default(5)
+  isVerified      Boolean   @default(true)
+  isPublished     Boolean   @default(true)
+  createdAt       DateTime  @default(now())
+}
+
+model BusinessSettings {
+  id                  String   @id @default("singleton")
+  brandName           String   @default("Pradeep Furniture Atelier")
+  tagline             String   @default("Bespoke Sofas & Statement Fancy Chairs Handcrafted to Perfection")
+  phone               String   @default("+91 98970 00000")
+  whatsapp            String   @default("+91 98970 00000")
+  email               String   @default("atelier@pradeepfurniture.com")
+  factoryAddress      String   @default("Industrial Area, Foundry Nagar / Bodla, Agra, UP, India")
+  showroomAddress     String   @default("Civil Lines Luxury Gallery, Agra, UP, India")
+  businessHours       String   @default("Mon - Sat: 10:00 AM - 8:00 PM | Sun: By Appointment")
+  gstNumber           String   @default("09XXXXX0000X1Z5")
+  warrantyHighlight   String   @default("10-Year Solid Hardwood Structural Guarantee")
+  updatedAt           DateTime @updatedAt
+}
+
+model AuditLog {
+  id          String    @id @default(cuid())
+  userId      String?
+  action      String    // "CREATE_PRODUCT", "APPROVE_DESIGN", "GENERATE_QUOTE", "STATUS_CHANGE"
+  resource    String    // "Product", "DesignRequest", "Quotation", "ManufacturingJob"
+  resourceId  String?
+  details     String
+  ipAddress   String?
+  createdAt   DateTime  @default(now())
+
+  user        User?     @relation(fields: [userId], references: [id])
+}
