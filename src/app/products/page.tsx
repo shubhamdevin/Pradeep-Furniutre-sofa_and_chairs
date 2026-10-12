@@ -22,7 +22,6 @@ export default async function ProductsPage({
         images: true,
         category: true,
         collection: true,
-        threeDAsset: true,
         specifications: true,
       },
       orderBy: { createdAt: 'desc' },
@@ -31,7 +30,7 @@ export default async function ProductsPage({
       orderBy: { sortOrder: 'asc' },
     }),
     prisma.collection.findMany({
-      where: { isPublished: true },
+      where: { isPublished: true, products: { some: { isAvailable: true } } },
       orderBy: { sortOrder: 'asc' },
     }),
     prisma.fabricSwatch.findMany({

@@ -8,13 +8,13 @@
   --color-graphite-primary: #22272B;
   --color-deep-graphite: #15191C;
   --color-graphite-elevated: #2D353A;
-  --color-platinum-white: #F3F4F2;
+  --color-platinum-white: #F7F4EE;
   --color-pure-white: #FFFFFF;
-  --color-silver-slate: #8D979B;
+  --color-silver-slate: #958D80;
   --color-muted-olive: #768177;
-  --color-soft-platinum: #E8EBE9;
-  --color-dark-grey: #4D565B;
-  --color-light-border: #D7DCDA;
+  --color-soft-platinum: #EEE9E0;
+  --color-dark-grey: #535650;
+  --color-light-border: #DDD6CB;
   --color-dark-border: #414A50;
 
   /* Semantic Feedback Palette */
@@ -24,16 +24,16 @@
   --color-status-info: #315B75;
 
   /* Light Theme Semantic Tokens (Default) */
-  --bg-primary: #F3F4F2;
+  --bg-primary: #F7F4EE;
   --bg-secondary: #FFFFFF;
-  --bg-tertiary: #E8EBE9;
+  --bg-tertiary: #EEE9E0;
   --surface-card: #FFFFFF;
-  --surface-hover: #E2E6E3;
+  --surface-hover: #E8E0D5;
   --text-primary: #22272B;
-  --text-secondary: #4D565B;
-  --text-muted: #687276;
-  --border-default: #D7DCDA;
-  --border-light: #E8EBE9;
+  --text-secondary: #535650;
+  --text-muted: #77776F;
+  --border-default: #DDD6CB;
+  --border-light: #EEE9E0;
   --btn-primary: #22272B;
   --btn-primary-text: #FFFFFF;
   --btn-hover: #353D42;

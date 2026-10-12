@@ -1,6 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { MapPin, Phone, Mail, Clock, MessageCircle, Calendar } from 'lucide-react';
+import LocationIcon from '@/components/ui/LocationIcon';
 
 export default function ContactPage() {
   return (
@@ -19,31 +20,31 @@ export default function ContactPage() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* Civil Lines Showroom */}
+          {/* Main Atelier Workshop & Studio */}
           <div className="bg-white rounded-lg p-8 sm:p-10 border border-platinum-border shadow-sm space-y-5">
             <div className="inline-flex items-center space-x-2 text-slate-muted text-xs font-semibold uppercase tracking-wider">
-              <MapPin className="w-4 h-4 text-graphite" />
-              <span>Showroom Gallery</span>
+              <LocationIcon className="w-4 h-4 flex-shrink-0" />
+              <span>Atelier Workshop &amp; Gallery</span>
             </div>
 
             <h2 className="font-serif text-2xl font-medium text-graphite">
-              Civil Lines Design Gallery
+              Nagla Latoori Singh Studio
             </h2>
 
             <p className="text-xs sm:text-sm text-slate-dark leading-relaxed">
-              Experience finished sofas, inspect full swatch books, test cushion firmness, and sit down with our senior interior consultants.
+              Experience finished sofas and luxury chairs, inspect textile swatch books, discuss custom dimensions, and consult with our master artisans.
             </p>
 
             <div className="space-y-3 pt-3 border-t border-platinum-border text-xs text-slate-dark">
-              <p><strong className="text-graphite font-medium">Address:</strong> 18 Civil Lines, Heritage Boulevard, Agra, UP - 282002</p>
+              <p><strong className="text-graphite font-medium">Address:</strong> Nagla Latoori Singh, Deori Road, Agra, UP</p>
               <p><strong className="text-graphite font-medium">Hours:</strong> Mon - Sat: 10:00 AM - 8:00 PM | Sun: By Appointment</p>
-              <p><strong className="text-graphite font-medium">Phone:</strong> +91 98970 23456</p>
-              <p><strong className="text-graphite font-medium">Email:</strong> bespoke@pradeepfurniture.com</p>
+              <p><strong className="text-graphite font-medium">Phone:</strong> +91 8445553853</p>
+              <p><strong className="text-graphite font-medium">Email:</strong> pradeepfurniture2@gmail.com</p>
             </div>
 
             <div className="pt-2 flex gap-3">
               <a
-                href="https://wa.me/919897023456"
+                href="https://wa.me/918445553853"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="px-5 py-2.5 rounded-md bg-graphite hover:bg-graphite-hover text-white text-xs font-medium transition-colors flex items-center space-x-1.5 shadow-sm"
@@ -62,26 +63,26 @@ export default function ContactPage() {
             </div>
           </div>
 
-          {/* Bodla Workshop Compound */}
+          {/* Manufacturing & Craftsmanship Unit */}
           <div className="bg-white rounded-lg p-8 sm:p-10 border border-platinum-border shadow-sm space-y-5">
             <div className="inline-flex items-center space-x-2 text-slate-muted text-xs font-semibold uppercase tracking-wider">
-              <MapPin className="w-4 h-4 text-graphite" />
-              <span>Manufacturing Works</span>
+              <LocationIcon className="w-4 h-4 flex-shrink-0" />
+              <span>Direct Manufacturing Works</span>
             </div>
 
             <h2 className="font-serif text-2xl font-medium text-graphite">
-              Bodla Factory &amp; Carpentry Works
+              Carpentry &amp; Upholstery Works
             </h2>
 
             <p className="text-xs sm:text-sm text-slate-dark leading-relaxed">
-              Our 15,000 sq ft production unit where raw teak timber is milled, mortise joinery is fitted, and custom upholstery is hand-tufted.
+              Our dedicated manufacturing unit where seasoned hardwood frames are constructed, mortise joinery is hand-fitted, and bespoke upholstery is tailored.
             </p>
 
             <div className="space-y-3 pt-3 border-t border-platinum-border text-xs text-slate-dark">
-              <p><strong className="text-graphite font-medium">Address:</strong> Plot 42-44, Bodla Industrial Zone, Agra, UP - 282007</p>
-              <p><strong className="text-graphite font-medium">Hours:</strong> Mon - Sat: 9:00 AM - 6:30 PM (Prior Appointment Recommended)</p>
-              <p><strong className="text-graphite font-medium">Direct Workshop Line:</strong> +91 98970 23457</p>
-              <p><strong className="text-graphite font-medium">GSTIN:</strong> 09AABCP1234F1Z9</p>
+              <p><strong className="text-graphite font-medium">Location:</strong> Deori Road Works, Agra, UP</p>
+              <p><strong className="text-graphite font-medium">Hours:</strong> Mon - Sat: 9:00 AM - 6:30 PM (Prior Appointment)</p>
+              <p><strong className="text-graphite font-medium">Direct Line:</strong> +91 8445553853</p>
+              <p><strong className="text-graphite font-medium">Inquiries:</strong> pradeepfurniture2@gmail.com</p>
             </div>
 
             <div className="pt-2 flex gap-3">
@@ -89,14 +90,14 @@ export default function ContactPage() {
                 href="/manufacturing"
                 className="px-5 py-2.5 rounded-md bg-platinum hover:bg-platinum-soft text-graphite border border-platinum-border text-xs font-medium transition-colors"
               >
-                Learn Factory Process
+                Factory Process
               </Link>
 
               <Link
                 href="/consultation"
                 className="px-5 py-2.5 rounded-md bg-graphite hover:bg-graphite-hover text-white text-xs font-medium transition-colors shadow-sm"
               >
-                Tour Workshop
+                Schedule Visit
               </Link>
             </div>
           </div>

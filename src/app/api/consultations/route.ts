@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { validateVerificationToken } from '@/lib/otp-store';
+import { sendSubmissionConfirmationEmail } from '@/lib/email';
 
 export async function POST(req: NextRequest) {
   try {
@@ -9,6 +11,7 @@ export async function POST(req: NextRequest) {
       phone,
       whatsapp,
       email,
+      verificationToken,
       city = 'Agra',
       address,
       preferredDate,
@@ -22,6 +25,17 @@ export async function POST(req: NextRequest) {
         { error: 'Name, Phone number, and Preferred Date are required.' },
         { status: 400 }
       );
+    }
+
+    // Email OTP Verification Check
+    if (email) {
+      const isVerified = validateVerificationToken(email, verificationToken);
+      if (!isVerified) {
+        return NextResponse.json(
+          { error: 'Email verification required. Please complete OTP verification to prevent spam submissions.' },
+          { status: 403 }
+        );
+      }
     }
 
     // Find or create customer
@@ -40,6 +54,11 @@ export async function POST(req: NextRequest) {
           address: address || null,
           customerType: 'RESIDENTIAL',
         },
+      });
+    } else if (email && !customer.email) {
+      customer = await prisma.customer.update({
+        where: { id: customer.id },
+        data: { email },
       });
     }
 
@@ -76,6 +95,17 @@ export async function POST(req: NextRequest) {
         details: `Customer booked ${consultationType} for ${preferredDate} (${preferredTime}). Notes: ${message || 'None'}`,
       },
     });
+
+    // Send confirmation email asynchronously if email was provided
+    if (email) {
+      sendSubmissionConfirmationEmail({
+        to: email,
+        customerName: name,
+        referenceCode: `BOOK-${booking.id.slice(-6).toUpperCase()}`,
+        requestType: `Private Atelier Consultation (${consultationType})`,
+        summary: `Appointment requested for ${new Date(preferredDate).toLocaleDateString()} (${preferredTime}). Format: ${consultationType}`,
+      }).catch((err) => console.error('Failed to send confirmation email:', err));
+    }
 
     return NextResponse.json({
       success: true,

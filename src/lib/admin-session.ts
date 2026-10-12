@@ -1,0 +1,4 @@
+import { ADMIN_AUTH_REQUIRED } from './admin-access';
+const encoder=new TextEncoder();
+export async function signature(value:string){const secret=process.env.ADMIN_SESSION_SECRET;if(!secret)throw new Error('Admin session secret missing.');const key=await crypto.subtle.importKey('raw',encoder.encode(secret),{name:'HMAC',hash:'SHA-256'},false,['sign']);return Array.from(new Uint8Array(await crypto.subtle.sign('HMAC',key,encoder.encode(value)))).map(b=>b.toString(16).padStart(2,'0')).join('');}
+export async function validSession(token?:string){if(!ADMIN_AUTH_REQUIRED)return true;if(!token||!process.env.ADMIN_SESSION_SECRET)return false;const [expires,mac]=token.split('.');if(!expires||!mac||Number(expires)<Date.now())return false;const expected=await signature(expires);if(expected.length!==mac.length)return false;let different=0;for(let i=0;i<expected.length;i++)different|=expected.charCodeAt(i)^mac.charCodeAt(i);return different===0;}

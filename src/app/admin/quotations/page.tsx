@@ -43,6 +43,8 @@ export default async function AdminQuotationsPage({
         initialQuotations={quotations}
         customers={customers}
         leads={leads}
+        initialLeadId={typeof searchParams.leadId === 'string' ? searchParams.leadId : undefined}
+        initialCustomerId={typeof searchParams.customerId === 'string' ? searchParams.customerId : undefined}
       />
     </div>
   );

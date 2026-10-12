@@ -2,10 +2,8 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import InteractiveFurnitureViewer from '@/components/three-d/InteractiveFurnitureViewer';
 import LuxuryProductCard from '@/components/furniture/LuxuryProductCard';
 import { 
-  Camera, 
   ShieldCheck, 
   Layers, 
   Ruler, 
@@ -14,33 +12,34 @@ import {
   MessageCircle, 
   Sliders, 
   CheckCircle2, 
-  Info, 
   Calendar,
   X,
   Send,
   ArrowRight,
-  Box
+  Heart,
 } from 'lucide-react';
+import { useWishlist } from '@/components/furniture/WishlistProvider';
+import { useToast } from '@/components/ui/ToastProvider';
+import OtpVerificationModal from '@/components/ui/OtpVerificationModal';
 
 interface Props {
   product: any;
   relatedProducts: any[];
   fabricSwatches: any[];
-  threeDAsset: any;
 }
 
 export default function ProductDetailClient({
   product,
   relatedProducts,
   fabricSwatches,
-  threeDAsset,
 }: Props) {
-  // Active Media View: Photography vs. 3D Viewer
-  const [activeMediaTab, setActiveMediaTab] = useState<'photos' | '3d'>('photos');
+  const { error: toastError, success: toastSuccess } = useToast();
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [selectedSwatch, setSelectedSwatch] = useState<string | null>(fabricSwatches[0]?.name || null);
   const [showQuoteModal, setShowQuoteModal] = useState(false);
   const [showSpecSheetModal, setShowSpecSheetModal] = useState(false);
+  const { isWishlisted, toggleWishlist } = useWishlist();
+  const saved = isWishlisted(product.id);
 
   // Quote Form State
   const [quoteForm, setQuoteForm] = useState({
@@ -53,14 +52,29 @@ export default function ProductDetailClient({
     notes: '',
   });
   const [submittingQuote, setSubmittingQuote] = useState(false);
+  const [showOtpModal, setShowOtpModal] = useState(false);
   const [quoteSuccess, setQuoteSuccess] = useState<string | null>(null);
 
   const images = product.images.length > 0 ? product.images : [
-    { id: '1', url: '/images/models/sofa_03_primary.png', viewAngle: 'Hero Front' }
+    { id: '1', url: '/images/atelier/ivory-curved-sofa.webp', viewAngle: 'Hero Front' }
   ];
 
-  const handleQuoteSubmit = async (e: React.FormEvent) => {
+  const handleQuoteSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!quoteForm.name || !quoteForm.phone) {
+      toastError('Details Required', 'Please provide your full name and phone number.');
+      return;
+    }
+    if (!quoteForm.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(quoteForm.email.trim())) {
+      toastError('Valid Email Required', 'Please provide a valid email address for OTP verification.');
+      return;
+    }
+
+    setShowOtpModal(true);
+  };
+
+  const handleOtpVerified = async (verificationToken: string, verifiedEmail: string) => {
+    setShowOtpModal(false);
     setSubmittingQuote(true);
 
     try {
@@ -73,7 +87,8 @@ export default function ProductDetailClient({
           productTitle: product.name,
           customerName: quoteForm.name,
           customerPhone: quoteForm.phone,
-          customerEmail: quoteForm.email,
+          customerEmail: verifiedEmail,
+          verificationToken,
           city: quoteForm.city,
           notes: `Quotation requested for ${product.name} (${product.sku}). Custom dimensions: ${quoteForm.dimensionsNote || 'Standard'}. Preferred Fabric: ${quoteForm.fabricPreference}. Client notes: ${quoteForm.notes}`,
         }),
@@ -82,12 +97,13 @@ export default function ProductDetailClient({
       const data = await res.json();
       if (res.ok) {
         setQuoteSuccess(data.leadCode || 'LEAD-CONFIRMED');
+        toastSuccess('Quote Request Verified & Received', `Confirmation code: ${data.leadCode || 'CONFIRMED'}`);
       } else {
-        alert(data.error || 'Failed to submit enquiry. Please try again or reach via WhatsApp.');
+        toastError('Enquiry Error', data.error || 'Failed to submit enquiry. Please try again.');
       }
     } catch (err) {
       console.error(err);
-      alert('Network error. Please call our atelier directly.');
+      toastError('Network Error', 'Please contact our atelier directly at +91 8445553853.');
     } finally {
       setSubmittingQuote(false);
     }
@@ -114,51 +130,8 @@ export default function ProductDetailClient({
 
       {/* Main Two-Column Product Stage */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
-        {/* Left Column: Visual Stage (Photography vs. 3D Model) */}
+        {/* Left Column: Product Photography */}
         <div className="lg:col-span-7 space-y-3.5">
-          {/* Media Mode Tabs */}
-          <div className="flex items-center space-x-1.5 bg-platinum-soft p-1 rounded-md w-fit border border-platinum-border">
-            <button
-              onClick={() => setActiveMediaTab('photos')}
-              className={`flex items-center space-x-1.5 px-3.5 py-1.5 rounded text-xs font-semibold transition-all ${
-                activeMediaTab === 'photos'
-                  ? 'bg-graphite text-white shadow-subtle'
-                  : 'text-slate-dark hover:text-graphite'
-              }`}
-            >
-              <Camera className="w-3.5 h-3.5" />
-              <span>Photography Gallery ({images.length})</span>
-            </button>
-
-            {threeDAsset && (
-              <button
-                onClick={() => setActiveMediaTab('3d')}
-                className={`flex items-center space-x-1.5 px-3.5 py-1.5 rounded text-xs font-semibold transition-all ${
-                  activeMediaTab === '3d'
-                    ? 'bg-graphite text-white shadow-subtle'
-                    : 'text-slate-dark hover:text-graphite'
-                }`}
-              >
-                <Box className="w-3.5 h-3.5" />
-                <span>Interactive 360° Studio</span>
-              </button>
-            )}
-          </div>
-
-          {/* Media Viewport */}
-          {activeMediaTab === '3d' && threeDAsset ? (
-            <div className="space-y-2">
-              <InteractiveFurnitureViewer
-                asset={threeDAsset}
-                productTitle={product.name}
-                initialHeight="h-[480px] sm:h-[560px]"
-              />
-              <div className="text-[11px] text-slate-muted text-center flex items-center justify-center space-x-2 pt-1">
-                <Info className="w-3 h-3 text-slate-dark" />
-                <span>Drag to rotate 360° • Scroll wheel to zoom contours • Verified 1:1 workshop model</span>
-              </div>
-            </div>
-          ) : (
             <div className="space-y-3">
               {/* Primary High-Resolution Display */}
               <div className="relative aspect-[4/3] rounded-lg overflow-hidden bg-white border border-platinum-border shadow-card">
@@ -194,7 +167,6 @@ export default function ProductDetailClient({
                 </div>
               )}
             </div>
-          )}
         </div>
 
         {/* Right Column: Specification & Customization Actions */}
@@ -214,6 +186,17 @@ export default function ProductDetailClient({
             <h1 className="font-serif text-3xl sm:text-4xl text-graphite font-medium">
               {product.name}
             </h1>
+
+            <button
+              type="button"
+              onClick={() => toggleWishlist(product.id)}
+              aria-pressed={saved}
+              aria-label={saved ? `Remove ${product.name} from wishlist` : `Save ${product.name} to wishlist`}
+              className={`product-detail-wishlist${saved ? ' is-selected' : ''}`}
+            >
+              <Heart size={17} fill={saved ? 'currentColor' : 'none'} />
+              <span>{saved ? 'Saved to wishlist' : 'Save to wishlist'}</span>
+            </button>
 
             {product.tagline && (
               <p className="text-xs font-sans text-slate-dark font-medium">
@@ -290,7 +273,7 @@ export default function ProductDetailClient({
               </Link>
 
               <a
-                href={`https://wa.me/919897023456?text=${whatsappMessage}`}
+                href={`https://wa.me/918445553853?text=${whatsappMessage}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="py-2.5 px-3 rounded-md bg-white hover:bg-platinum-soft text-graphite text-xs font-semibold uppercase tracking-wider text-center transition-colors border border-platinum-border flex items-center justify-center space-x-1.5"
@@ -421,9 +404,10 @@ export default function ProductDetailClient({
           <div className="bg-white max-w-lg w-full rounded-lg p-6 shadow-elevated border border-platinum-border text-graphite relative">
             <div className="flex items-start justify-between pb-3 border-b border-platinum-border">
               <div>
-                <span className="text-[10px] uppercase font-bold tracking-wider text-slate-dark">Official Atelier Request</span>
-                <h3 className="font-serif text-xl font-medium mt-0.5">Request Custom Quotation</h3>
+                <span className="text-[10px] uppercase font-bold tracking-wider text-slate-dark">Quick enquiry</span>
+                <h3 className="font-serif text-xl font-medium mt-0.5">Ask about this design</h3>
                 <p className="text-xs text-slate-dark mt-0.5">{product.name} ({product.sku})</p>
+                <p className="text-xs text-slate-muted mt-1">Share your contact details. We’ll call you to discuss price and options.</p>
               </div>
               <button onClick={() => { setShowQuoteModal(false); setQuoteSuccess(null); }} className="text-slate-muted hover:text-graphite">
                 <X className="w-5 h-5" />
@@ -431,104 +415,173 @@ export default function ProductDetailClient({
             </div>
 
             {quoteSuccess ? (
-              <div className="py-8 text-center space-y-3">
-                <div className="w-10 h-10 rounded-full bg-platinum-soft text-status-success flex items-center justify-center mx-auto border border-platinum-border">
-                  <CheckCircle2 className="w-5 h-5" />
+              <div className="py-6 text-center space-y-4">
+                <div className="w-12 h-12 rounded-full bg-emerald-50 text-emerald-800 flex items-center justify-center mx-auto border border-emerald-200">
+                  <CheckCircle2 className="w-6 h-6 text-emerald-700" />
                 </div>
-                <h4 className="font-serif text-xl font-medium">Quotation Request Received!</h4>
-                <p className="text-xs text-slate-dark max-w-xs mx-auto">
-                  Our atelier design consultant will review your specifications and contact you with custom drawings and offline pricing schedule.
-                </p>
-                <div className="bg-platinum-soft p-2.5 rounded border border-platinum-border text-xs font-mono font-semibold">
-                  Reference: {quoteSuccess}
+                <div className="space-y-1">
+                  <h4 className="font-serif text-xl font-medium text-graphite">Quotation Request Received!</h4>
+                  <p className="text-xs text-slate-dark max-w-sm mx-auto leading-relaxed">
+                    Our atelier design consultant will review your specifications and contact you with custom drawings and offline pricing schedule.
+                  </p>
                 </div>
+
+                <div className="bg-platinum-soft p-3 rounded-lg border border-platinum-border text-xs font-mono font-semibold text-graphite flex justify-between items-center max-w-sm mx-auto">
+                  <span className="text-slate-dark font-sans text-[11px] font-normal">Reference ID:</span>
+                  <span>{quoteSuccess}</span>
+                </div>
+
+                {/* Terms & Conditions Block */}
+                <div className="text-left bg-[#faf9f5] border border-[#e4dfd5] rounded-lg p-3.5 space-y-2 max-w-md mx-auto">
+                  <div className="flex items-center gap-1.5 pb-1 border-b border-[#e4dfd5]">
+                    <ShieldCheck className="w-3.5 h-3.5 text-[#a7864e]" />
+                    <span className="font-serif font-bold text-[11px] text-[#222823] tracking-wide uppercase">
+                      Inquiry Terms &amp; Commercial Conditions
+                    </span>
+                  </div>
+                  <ul className="text-[11px] text-[#555d56] space-y-1.5 list-disc list-inside leading-relaxed">
+                    <li><strong>No Online Payment:</strong> All quotations, revisions, and milestone agreements are settled strictly offline via official bank transfer or atelier receipt.</li>
+                    <li><strong>Production Lead Time:</strong> Handcrafted bespoke production requires 3 to 5 weeks from final CAD blueprint approval and deposit confirmation.</li>
+                    <li><strong>Material Veracity:</strong> Seasoned kiln-dried hardwood frames and contract-grade certified fabrics are guaranteed under our 10-year structural warranty.</li>
+                    <li><strong>Dimensional Variance:</strong> Being artisanal handcrafted furniture, a standard ±0.5 inch master upholstery tolerance applies.</li>
+                  </ul>
+                  <p className="text-[10px] text-[#788079] pt-1 border-t border-[#e4dfd5]">
+                    For revisions or immediate inquiries, contact: <strong>+91 8445553853</strong> | <strong>pradeepfurniture2@gmail.com</strong>
+                  </p>
+                </div>
+
                 <button
                   onClick={() => { setShowQuoteModal(false); setQuoteSuccess(null); }}
-                  className="px-6 py-2 bg-graphite text-white rounded text-xs font-semibold uppercase tracking-wider"
+                  className="px-6 py-2.5 bg-graphite hover:bg-graphite-hover text-white rounded-md text-xs font-semibold uppercase tracking-wider transition-colors shadow-sm"
                 >
                   Done
                 </button>
               </div>
             ) : (
-              <form onSubmit={handleQuoteSubmit} className="mt-4 space-y-3 text-xs">
+              <form onSubmit={handleQuoteSubmit} className="mt-4 space-y-3 text-sm">
                 <div>
-                  <label className="block text-slate-dark font-medium mb-1">Your Full Name *</label>
+                  <label className="block text-slate-dark font-medium mb-1">Your name *</label>
                   <input
                     type="text"
                     required
+                    autoComplete="name"
                     value={quoteForm.name}
                     onChange={(e) => setQuoteForm({ ...quoteForm, name: e.target.value })}
-                    className="w-full px-3 py-2 rounded-md bg-platinum-soft border border-platinum-border text-graphite focus:outline-none focus:border-graphite"
-                    placeholder="e.g. Radhika Sharma"
+                    className="w-full min-h-11 px-3 py-2.5 rounded-md bg-platinum-soft border border-platinum-border text-graphite focus:outline-none focus:border-graphite"
+                    placeholder="Enter your name"
                   />
                 </div>
 
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-slate-dark font-medium mb-1">Phone Number *</label>
+                    <label className="block text-slate-dark font-medium mb-1">Mobile number *</label>
                     <input
                       type="tel"
                       required
+                      autoComplete="tel"
+                      inputMode="tel"
                       value={quoteForm.phone}
                       onChange={(e) => setQuoteForm({ ...quoteForm, phone: e.target.value })}
-                      className="w-full px-3 py-2 rounded-md bg-platinum-soft border border-platinum-border text-graphite focus:outline-none focus:border-graphite"
-                      placeholder="+91 98970 00000"
+                      className="w-full min-h-11 px-3 py-2.5 rounded-md bg-platinum-soft border border-platinum-border text-graphite focus:outline-none focus:border-graphite"
+                      placeholder="Your 10-digit mobile number"
                     />
+                    <p className="mt-1 text-[11px] text-slate-muted">We’ll call you on this number.</p>
                   </div>
                   <div>
-                    <label className="block text-slate-dark font-medium mb-1">Delivery City</label>
+                    <label className="block text-slate-dark font-medium mb-1">Your city (optional)</label>
                     <input
                       type="text"
+                      autoComplete="address-level2"
                       value={quoteForm.city}
                       onChange={(e) => setQuoteForm({ ...quoteForm, city: e.target.value })}
-                      className="w-full px-3 py-2 rounded-md bg-platinum-soft border border-platinum-border text-graphite focus:outline-none focus:border-graphite"
+                      className="w-full min-h-11 px-3 py-2.5 rounded-md bg-platinum-soft border border-platinum-border text-graphite focus:outline-none focus:border-graphite"
+                      placeholder="e.g. Agra"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-slate-dark font-medium mb-1">Custom Dimensions or Modifications</label>
+                  <label className="block text-slate-dark font-medium mb-1">Email address *</label>
                   <input
-                    type="text"
-                    value={quoteForm.dimensionsNote}
-                    onChange={(e) => setQuoteForm({ ...quoteForm, dimensionsNote: e.target.value })}
-                    className="w-full px-3 py-2 rounded-md bg-platinum-soft border border-platinum-border text-graphite focus:outline-none focus:border-graphite"
-                    placeholder="e.g. Standard 88-inch or 10-foot bay window customization"
+                    type="email"
+                    required
+                    autoComplete="email"
+                    value={quoteForm.email}
+                    onChange={(e) => setQuoteForm({ ...quoteForm, email: e.target.value })}
+                    className="w-full min-h-11 px-3 py-2.5 rounded-md bg-platinum-soft border border-platinum-border text-graphite focus:outline-none focus:border-graphite"
+                    placeholder="name@example.com"
                   />
+                  <p className="mt-1 text-[11px] text-slate-muted">We’ll send a 6-digit code here to confirm your enquiry and share updates.</p>
                 </div>
 
-                <div>
-                  <label className="block text-slate-dark font-medium mb-1">Preferred Fabric &amp; Colour</label>
-                  <input
-                    type="text"
-                    value={quoteForm.fabricPreference}
-                    onChange={(e) => setQuoteForm({ ...quoteForm, fabricPreference: e.target.value })}
-                    className="w-full px-3 py-2 rounded-md bg-platinum-soft border border-platinum-border text-graphite focus:outline-none focus:border-graphite"
-                  />
-                </div>
+                <details className="group rounded-md border border-platinum-border bg-white px-3 py-2.5">
+                  <summary className="cursor-pointer font-medium text-slate-dark">Want to add a colour, size, or message? (Optional)</summary>
+                  <p className="mt-2 text-[11px] text-slate-muted">No need to know exact measurements—we can help with that.</p>
+                  <div className="mt-3 space-y-3">
+                    <div>
+                      <label className="block text-slate-dark font-medium mb-1">Size or changes you want</label>
+                      <input
+                        type="text"
+                        value={quoteForm.dimensionsNote}
+                        onChange={(e) => setQuoteForm({ ...quoteForm, dimensionsNote: e.target.value })}
+                        className="w-full min-h-11 px-3 py-2.5 rounded-md bg-platinum-soft border border-platinum-border text-graphite focus:outline-none focus:border-graphite"
+                        placeholder="You can leave this blank"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-slate-dark font-medium mb-1">Colour or fabric you like</label>
+                      <input
+                        type="text"
+                        value={quoteForm.fabricPreference}
+                        onChange={(e) => setQuoteForm({ ...quoteForm, fabricPreference: e.target.value })}
+                        className="w-full min-h-11 px-3 py-2.5 rounded-md bg-platinum-soft border border-platinum-border text-graphite focus:outline-none focus:border-graphite"
+                        placeholder="e.g. cream, green, or easy-to-clean fabric"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-slate-dark font-medium mb-1">Anything else? (Optional)</label>
+                      <textarea
+                        rows={2}
+                        value={quoteForm.notes}
+                        onChange={(e) => setQuoteForm({ ...quoteForm, notes: e.target.value })}
+                        className="w-full px-3 py-2 rounded-md bg-platinum-soft border border-platinum-border text-graphite focus:outline-none focus:border-graphite"
+                        placeholder="Tell us anything else you need."
+                      />
+                    </div>
+                  </div>
+                </details>
 
-                <div>
-                  <label className="block text-slate-dark font-medium mb-1">Additional Project Notes</label>
-                  <textarea
-                    rows={2}
-                    value={quoteForm.notes}
-                    onChange={(e) => setQuoteForm({ ...quoteForm, notes: e.target.value })}
-                    className="w-full px-3 py-1.5 rounded-md bg-platinum-soft border border-platinum-border text-graphite focus:outline-none focus:border-graphite"
-                    placeholder="Floor details, timeline, or matching armchairs..."
-                  />
-                </div>
+                <div className="pt-2 border-t border-platinum-border space-y-3">
+                  <label className="flex items-start gap-2.5 cursor-pointer select-none">
+                    <input
+                      type="checkbox"
+                      required
+                      defaultChecked
+                      className="mt-0.5 w-4 h-4 rounded border-slate-300 text-graphite focus:ring-graphite"
+                    />
+                    <span className="text-[11px] text-slate-dark leading-tight">
+                      I agree to the{' '}
+                      <Link
+                        href="/terms"
+                        target="_blank"
+                        className="text-graphite font-bold underline hover:text-black"
+                      >
+                        Terms &amp; Conditions
+                      </Link>{' '}
+                      (Offline payments, 3–5 week lead time, &amp; 10-year structural warranty).
+                    </span>
+                  </label>
 
-                <div className="pt-2 border-t border-platinum-border">
                   <button
                     type="submit"
                     disabled={submittingQuote}
-                    className="w-full py-3 bg-graphite hover:bg-graphite-hover text-white font-semibold rounded-md text-xs uppercase tracking-wider transition-colors flex items-center justify-center space-x-2"
+                    className="w-full py-3 bg-graphite hover:bg-graphite-hover text-white font-semibold rounded-md text-xs uppercase tracking-wider transition-colors flex items-center justify-center space-x-2 shadow-sm"
                   >
                     <Send className="w-3.5 h-3.5 text-slate-silver" />
-                    <span>{submittingQuote ? 'Submitting...' : 'Submit Quotation Request'}</span>
+                    <span>{submittingQuote ? 'Sending enquiry…' : 'Send my enquiry'}</span>
                   </button>
-                  <p className="text-[10px] text-slate-muted text-center mt-1.5">
-                    No online checkout. Formal quotation &amp; CAD blueprints delivered offline.
+                  <p className="text-[10px] text-slate-muted text-center mt-1">
+                    No payment is needed now. We’ll contact you about the price.
                   </p>
                 </div>
               </form>
@@ -566,7 +619,7 @@ export default function ProductDetailClient({
                 <div>
                   <h3 className="font-serif text-2xl font-bold uppercase tracking-tight text-graphite">PRADEEP FURNITURE ATELIER</h3>
                   <p className="text-slate-dark text-[11px] font-medium">Architectural Upholstered Seating &amp; Contract Manufacturing</p>
-                  <p className="text-slate-muted text-[10px] mt-0.5">Bodla Industrial Compound &amp; Civil Lines Gallery, Agra, UP</p>
+                  <p className="text-slate-muted text-[10px] mt-0.5">Nagla Latoori Singh, Deori Road, Agra, UP | Phone: +91 8445553853</p>
                 </div>
                 <div className="text-right">
                   <span className="font-mono text-xs font-bold block">{product.sku}</span>
@@ -618,6 +671,17 @@ export default function ProductDetailClient({
           </div>
         </div>
       )}
+
+      {/* OTP Verification Modal */}
+      <OtpVerificationModal
+        isOpen={showOtpModal}
+        email={quoteForm.email}
+        customerName={quoteForm.name}
+        purpose={`quotation enquiry for ${product.name}`}
+        onClose={() => setShowOtpModal(false)}
+        onVerified={handleOtpVerified}
+        onEmailChange={(newEmail) => setQuoteForm((prev) => ({ ...prev, email: newEmail }))}
+      />
     </div>
   );
 }

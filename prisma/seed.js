@@ -102,8 +102,8 @@ async function main() {
   for (const cat of categories) {
     await prisma.category.upsert({
       where: { slug: cat.slug },
-      update: {},
-      create: { ...cat, isFeatured: true, imageUrl: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=800&q=80' },
+      update: { imageUrl: '/images/atelier/ivory-curved-sofa.webp' },
+      create: { ...cat, isFeatured: true, imageUrl: '/images/atelier/ivory-curved-sofa.webp' },
     });
   }
 
@@ -115,7 +115,7 @@ async function main() {
       slug: 'milano-opulence',
       tagline: 'Italian Haute Couture Living',
       description: 'Low-slung minimalist profiles with fluted details, boucle textures, and brushed champagne gold metal accents.',
-      heroImage: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1200&q=80',
+      heroImage: '/images/atelier/hero-living.webp',
     },
     {
       id: 'col-royal',
@@ -123,7 +123,7 @@ async function main() {
       slug: 'royal-heritage',
       tagline: 'Aristocratic Tufting & Hand-Carved Teak',
       description: 'Timeless Chesterfield deep-buttoning, heavy jewel-toned velvets, and hand-turned solid walnut legs.',
-      heroImage: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=1200&q=80',
+      heroImage: '/images/atelier/chesterfield-loveseat.webp',
     },
     {
       id: 'col-scandi',
@@ -131,7 +131,7 @@ async function main() {
       slug: 'scandinavian-serenity',
       tagline: 'Organic Curves & Warm Natural Wood',
       description: 'Gentle cocoon-like curves, textured natural linen, and exposed oiled oak timber joinery.',
-      heroImage: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1200&q=80',
+      heroImage: '/images/atelier/residence-living.webp',
     },
     {
       id: 'col-artdeco',
@@ -139,14 +139,14 @@ async function main() {
       slug: 'art-deco-atelier',
       tagline: 'Geometric Glamour & Fluted Paneling',
       description: 'Scalloped backrests, rich emerald and amber velvets, and precision handcrafted brass ferrules.',
-      heroImage: 'https://images.unsplash.com/photo-1567016432779-094069958ea5?auto=format&fit=crop&w=1200&q=80',
+      heroImage: '/images/atelier/emerald-accent-chair.webp',
     },
   ];
 
   for (const col of collections) {
     await prisma.collection.upsert({
       where: { slug: col.slug },
-      update: {},
+      update: { heroImage: col.heroImage },
       create: col,
     });
   }
@@ -248,91 +248,6 @@ async function main() {
     });
   }
 
-  // 6. 3D Model Registry (Section 7 Compliant)
-  const assetModels = [
-    {
-      id: 'asset-3d-sofa-03',
-      name: 'Poly Haven Sofa 03 (Hosted Interactive 3D GLTF)',
-      provider: 'POLY_HAVEN',
-      embedMode: 'HOSTED_GLB',
-      modelUrl: '/models/sofa_03/sofa_03_1k.gltf',
-      author: 'Poly Haven Contributors (Dmitry Tretyakov & Rob Tuytel)',
-      licence: 'CC0 1.0 Universal Public Domain',
-      attributionUrl: 'https://polyhaven.com/a/sofa_03',
-      posterImageUrl: '/images/models/sofa_03_primary.png',
-      fileFormat: 'gltf',
-      loadingStatus: 'VERIFIED',
-      isAccurateRep: true,
-      disclaimer: 'Third-party 3D model from Poly Haven with exact 1:1 geometry match to workshop prototype specifications.',
-      initialCameraPos: '0, 1.4, 3.2',
-      isEnabled: true,
-    },
-    {
-      id: 'asset-3d-mid-century-chair',
-      name: 'Poly Haven Mid Century Lounge Chair (Hosted Interactive 3D GLTF)',
-      provider: 'POLY_HAVEN',
-      embedMode: 'HOSTED_GLB',
-      modelUrl: '/models/mid_century_lounge_chair/mid_century_lounge_chair_1k.gltf',
-      author: 'Poly Haven Contributors (Dmitry Tretyakov)',
-      licence: 'CC0 1.0 Universal Public Domain',
-      attributionUrl: 'https://polyhaven.com/a/mid_century_lounge_chair',
-      posterImageUrl: '/images/models/mid_century_lounge_chair_primary.png',
-      fileFormat: 'gltf',
-      loadingStatus: 'VERIFIED',
-      isAccurateRep: true,
-      disclaimer: 'Third-party 3D model from Poly Haven with exact 1:1 geometry match to workshop sculpted timber framework.',
-      initialCameraPos: '0, 1.1, 2.4',
-      isEnabled: true,
-    },
-    {
-      id: 'asset-3d-sofa-3-sketchfab',
-      name: 'Sofa 3 by 3dx (Official Sketchfab Embed)',
-      provider: 'SKETCHFAB',
-      embedMode: 'SKETCHFAB_EMBED',
-      modelUrl: 'https://sketchfab.com/models/1d09094be7fc4e809841992d8801f217/embed?autostart=1&ui_controls=1&ui_infos=0&ui_watermark=1',
-      sketchfabUid: '1d09094be7fc4e809841992d8801f217',
-      author: '3dx',
-      licence: 'Creative Commons Attribution (CC-BY 4.0)',
-      attributionUrl: 'https://sketchfab.com/3d-models/sofa-3-3dx-1d09094be7fc4e809841992d8801f217',
-      posterImageUrl: '/images/models/sofa_3_sketchfab.jpeg',
-      fileFormat: 'embed',
-      loadingStatus: 'VERIFIED',
-      isAccurateRep: true,
-      disclaimer: 'Third-party 3D model from 3dx embedded via Sketchfab with exact 1:1 visual match to model geometry.',
-      initialCameraPos: '0, 1.5, 3.0',
-      isEnabled: true,
-    },
-    {
-      id: 'asset-3d-wingback-sketchfab',
-      name: 'Modern Wingback Accent Chair by dynamic_digital (Official Sketchfab Embed)',
-      provider: 'SKETCHFAB',
-      embedMode: 'SKETCHFAB_EMBED',
-      modelUrl: 'https://sketchfab.com/models/4b053c1851784878a0add9973b89d823/embed?autostart=1&ui_controls=1&ui_infos=0&ui_watermark=1',
-      sketchfabUid: '4b053c1851784878a0add9973b89d823',
-      author: 'dynamic_digital',
-      licence: 'Creative Commons Attribution (CC-BY 4.0)',
-      attributionUrl: 'https://sketchfab.com/3d-models/modern-wingback-accent-chair-4b053c1851784878a0add9973b89d823',
-      posterImageUrl: '/images/models/wingback_chair_sketchfab.jpeg',
-      fileFormat: 'embed',
-      loadingStatus: 'VERIFIED',
-      isAccurateRep: true,
-      disclaimer: 'Third-party 3D model from dynamic_digital embedded via Sketchfab with exact 1:1 visual match to model geometry.',
-      initialCameraPos: '0, 1.2, 2.2',
-      isEnabled: true,
-    },
-  ];
-
-  for (const asset of assetModels) {
-    await prisma.threeDAsset.upsert({
-      where: { id: asset.id },
-      update: {
-        posterImageUrl: asset.posterImageUrl,
-        isAccurateRep: true,
-      },
-      create: asset,
-    });
-  }
-
   // 7. Products Catalogue (12 Luxury Products)
   const products = [
     {
@@ -340,8 +255,8 @@ async function main() {
       sku: 'ATELIER-SOF-001',
       name: 'The Aurelia Atelier 3-Seater Sofa',
       slug: 'the-aurelia-italian-curved-sectional',
-      tagline: 'Timeless Contemporary Silhouette with Matching 3D Geometry',
-      description: 'An architectural living room statement sofa with deep ergonomic seating, soft plush cushions, and solid hardwood internal skeleton. The photographic card preview is a 100% exact 1:1 rendering of the interactive 3D model.',
+      tagline: 'Timeless Contemporary Silhouette',
+      description: 'An architectural living room statement sofa with deep ergonomic seating, soft plush cushions, and solid hardwood internal skeleton.',
       categoryId: 'cat-3seater',
       collectionId: 'col-milano',
       furnitureType: 'SOFA',
@@ -360,10 +275,9 @@ async function main() {
       isCustomizable: true,
       isFeatured: true,
       indicativePriceRange: 'Custom Manufacturing Quotation on Request',
-      assetId: 'asset-3d-sofa-03', // Linked 3D
       images: [
-        { url: '/images/models/sofa_03_primary.png', viewAngle: 'Hero 3D Perspective (Exact Match)', isPrimary: true },
-        { url: '/images/models/sofa_03_primary.png', viewAngle: 'Front Elevation', isPrimary: false },
+        { url: '/images/atelier/ivory-curved-sofa.webp', viewAngle: 'Atelier Product Photograph', isPrimary: true },
+        { url: '/images/atelier/hero-living.webp', viewAngle: 'Styled Living Room', isPrimary: false },
       ],
       specs: [
         { group: 'Dimensions', label: 'Overall Dimensions', value: '132" W x 58" D x 31" H' },
@@ -403,10 +317,9 @@ async function main() {
       isCustomizable: true,
       isFeatured: true,
       indicativePriceRange: 'Custom Manufacturing Quotation on Request',
-      assetId: 'asset-3d-mid-century-chair', // Linked 3D
       images: [
-        { url: '/images/models/mid_century_lounge_chair_primary.png', viewAngle: 'Hero 3D Perspective (Exact Match)', isPrimary: true },
-        { url: '/images/models/mid_century_lounge_chair_primary.png', viewAngle: 'Side Sculpted Timber View', isPrimary: false },
+        { url: '/images/atelier/emerald-accent-chair.webp', viewAngle: 'Atelier Product Photograph', isPrimary: true },
+        { url: '/images/atelier/leather-wingback-chair.webp', viewAngle: 'Heritage Chair Detail', isPrimary: false },
       ],
       specs: [
         { group: 'Dimensions', label: 'Overall Dimensions', value: '31" W x 34" D x 33" H' },
@@ -423,7 +336,7 @@ async function main() {
       name: 'The Buckingham Grand Chesterfield 3-Seater',
       slug: 'the-buckingham-grand-chesterfield-3-seater',
       tagline: 'Deep Diamond Tufted Heritage Masterpiece',
-      description: 'The pinnacle of classic British atelier upholstery. Features hand-folded deep diamond tufting with individual fabric buttons, rolled shelter arms, and solid turned bun feet fitted with brass castors. The card photo is a 100% exact rendering of the interactive 3D model geometry.',
+      description: 'The pinnacle of classic British atelier upholstery. Features hand-folded deep diamond tufting with individual fabric buttons, rolled shelter arms, and solid turned bun feet fitted with brass castors.',
       categoryId: 'cat-chesterfield',
       collectionId: 'col-royal',
       furnitureType: 'SOFA',
@@ -442,10 +355,9 @@ async function main() {
       isCustomizable: true,
       isFeatured: true,
       indicativePriceRange: 'Custom Manufacturing Quotation on Request',
-      assetId: 'asset-3d-sofa-3-sketchfab', // Linked 3D
       images: [
-        { url: '/images/models/sofa_3_sketchfab.jpeg', viewAngle: 'Hero 3D Perspective (Exact Match)', isPrimary: true },
-        { url: '/images/models/sofa_3_sketchfab.jpeg', viewAngle: 'Armrest Scroll Detail', isPrimary: false },
+        { url: '/images/atelier/chesterfield-loveseat.webp', viewAngle: 'Atelier Product Photograph', isPrimary: true },
+        { url: '/images/atelier/chesterfield-loveseat.webp', viewAngle: 'Leather & Tufting Detail', isPrimary: false },
       ],
       specs: [
         { group: 'Dimensions', label: 'Overall Dimensions', value: '96" W x 39" D x 31" H' },
@@ -460,7 +372,7 @@ async function main() {
       name: 'The Sovereign High-Back Wing Chair',
       slug: 'the-sovereign-high-back-wing-chair',
       tagline: 'Regal Cocoon with Fluted Lumbar Wings',
-      description: 'A modern revival of the aristocratic fireside wingback chair. Tall sculpted ear-wings provide privacy and acoustic tranquility, while slim tapered brass-capped legs add contemporary grace. The card photo is a 100% exact rendering of the interactive 3D model geometry.',
+      description: 'A modern revival of the aristocratic fireside wingback chair. Tall sculpted ear-wings provide privacy and acoustic tranquility, while slim tapered brass-capped legs add contemporary grace.',
       categoryId: 'cat-wingback',
       collectionId: 'col-artdeco',
       furnitureType: 'CHAIR',
@@ -479,10 +391,9 @@ async function main() {
       isCustomizable: true,
       isFeatured: true,
       indicativePriceRange: 'Custom Manufacturing Quotation on Request',
-      assetId: 'asset-3d-wingback-sketchfab', // Linked 3D
       images: [
-        { url: '/images/models/wingback_chair_sketchfab.jpeg', viewAngle: 'Hero 3D Perspective (Exact Match)', isPrimary: true },
-        { url: '/images/models/wingback_chair_sketchfab.jpeg', viewAngle: 'Wing Detail Angle', isPrimary: false },
+        { url: '/images/atelier/leather-wingback-chair.webp', viewAngle: 'Atelier Product Photograph', isPrimary: true },
+        { url: '/images/atelier/leather-wingback-chair.webp', viewAngle: 'Wing & Tufting Detail', isPrimary: false },
       ],
       specs: [
         { group: 'Dimensions', label: 'Overall Dimensions', value: '34" W x 35" D x 44" H' },
@@ -516,7 +427,7 @@ async function main() {
       isFeatured: true,
       indicativePriceRange: 'Custom Manufacturing Quotation on Request',
       images: [
-        { url: 'https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?auto=format&fit=crop&w=1200&q=80', viewAngle: 'Living Room Setting', isPrimary: true },
+        { url: '/images/atelier/residence-living.webp', viewAngle: 'Living Room Setting', isPrimary: true },
       ],
       specs: [
         { group: 'Dimensions', label: 'Overall Dimensions', value: '144" W x 108" D x 32" H' },
@@ -549,7 +460,7 @@ async function main() {
       isFeatured: true,
       indicativePriceRange: 'Custom Manufacturing Quotation on Request',
       images: [
-        { url: 'https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?auto=format&fit=crop&w=1200&q=80', viewAngle: 'Front Swivel Angle', isPrimary: true },
+        { url: '/images/atelier/emerald-accent-chair.webp', viewAngle: 'Front Swivel Angle', isPrimary: true },
       ],
       specs: [
         { group: 'Dimensions', label: 'Overall Dimensions', value: '32" W x 31" D x 29" H' },
@@ -582,7 +493,7 @@ async function main() {
       isFeatured: true,
       indicativePriceRange: 'Custom Manufacturing Quotation on Request',
       images: [
-        { url: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=1200&q=80', viewAngle: 'Front Carved Stature', isPrimary: true },
+        { url: '/images/atelier/leather-wingback-chair.webp', viewAngle: 'Front Carved Stature', isPrimary: true },
       ],
       specs: [
         { group: 'Dimensions', label: 'Overall Dimensions', value: '36" W x 34" D x 52" H' },
@@ -615,16 +526,247 @@ async function main() {
       isFeatured: false,
       indicativePriceRange: 'Custom Manufacturing Quotation on Request',
       images: [
-        { url: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1200&q=80', viewAngle: 'Hero 2 Seater', isPrimary: true },
+        { url: '/images/atelier/ivory-curved-sofa.webp', viewAngle: 'Hero 2 Seater', isPrimary: true },
       ],
       specs: [
         { group: 'Dimensions', label: 'Overall Dimensions', value: '68" W x 34" D x 32" H' },
       ],
     },
+    {
+      id: 'prod-ushape-imperial-09',
+      sku: 'ATELIER-SOF-009',
+      name: 'The Grand Imperial U-Shaped Suite',
+      slug: 'the-grand-imperial-u-shaped-suite',
+      tagline: 'Palatial Conversational Seating for Grand Living Rooms',
+      description: 'An expansive U-shaped modular lounger designed for formal receptions and large family gatherings. Hand-upholstered in stain-resistant velvet with high-density orthopaedic foam.',
+      categoryId: 'cat-ushape',
+      collectionId: 'col-royal',
+      furnitureType: 'SECTIONAL',
+      seatingCapacity: '8-10 Seater U-Sectional',
+      dimensionsSummary: '168"W x 120"D x 34"H',
+      widthCm: 426,
+      depthCm: 304,
+      heightCm: 86,
+      seatHeightCm: 45,
+      frameMaterial: 'Seasoned CP Teakwood Frame with Reinforced Corner Blocks',
+      upholsteryType: 'Belgian Plush Velvet & Brass Stud Trims',
+      foamDensity: '50D Ortho-Support HR Foam',
+      suspension: '8-Way Hand-Tied Coil Springs',
+      legFinish: 'Concealed Solid Teak Plinth Base',
+      warrantyYears: 10,
+      isCustomizable: true,
+      isFeatured: true,
+      indicativePriceRange: 'Custom Manufacturing Quotation on Request',
+      images: [
+        { url: '/images/atelier/hero-living.webp', viewAngle: 'Hero U-Shape View', isPrimary: true },
+      ],
+      specs: [
+        { group: 'Dimensions', label: 'Overall Dimensions', value: '168" W x 120" D x 34" H' },
+        { group: 'Frame', label: 'Timber Species', value: 'Solid Teak & Seasoned Hardwood' },
+      ],
+    },
+    {
+      id: 'prod-sectional-pantheon-10',
+      sku: 'ATELIER-SOF-010',
+      name: 'The Pantheon Modular Sectional',
+      slug: 'the-pantheon-modular-sectional',
+      tagline: 'Infinite Configurations for Modernist Open Floor Plans',
+      description: 'Versatile low-profile modular elements including corner units, armless central modules, and ottoman extensions. Wrapped in tactile cream bouclé fabric.',
+      categoryId: 'cat-sectional',
+      collectionId: 'col-scandi',
+      furnitureType: 'SECTIONAL',
+      seatingCapacity: '5-6 Seater Modular',
+      dimensionsSummary: '130"W x 95"D x 30"H',
+      widthCm: 330,
+      depthCm: 241,
+      heightCm: 76,
+      seatHeightCm: 42,
+      frameMaterial: 'Kiln-Dried Salwood Framework',
+      upholsteryType: 'Tactile Alabaster Bouclé',
+      foamDensity: '45D Multi-Layered HR Foam',
+      suspension: 'German Sinuous Steel Springs',
+      legFinish: 'Low-Profile Brushed Nickel Glides',
+      warrantyYears: 10,
+      isCustomizable: true,
+      isFeatured: true,
+      indicativePriceRange: 'Custom Manufacturing Quotation on Request',
+      images: [
+        { url: '/images/atelier/residence-living.webp', viewAngle: 'Sectional Lounge View', isPrimary: true },
+      ],
+      specs: [
+        { group: 'Dimensions', label: 'Overall Dimensions', value: '130" W x 95" D x 30" H' },
+        { group: 'Modularity', label: 'Connectors', value: 'Concealed Heavy-Duty Interlocking Clips' },
+      ],
+    },
+    {
+      id: 'prod-curved-serpentine-11',
+      sku: 'ATELIER-SOF-011',
+      name: 'The Serpentine Organic Curved Sofa',
+      slug: 'the-serpentine-organic-curved-sofa',
+      tagline: 'Milanese Architectural Silhouette with Fluid Contour lines',
+      description: 'Inspired by contemporary Italian salon architecture, featuring seamless flowing curves, a floating shadow-line base, and luxurious deep seat depth.',
+      categoryId: 'cat-curved',
+      collectionId: 'col-milano',
+      furnitureType: 'SOFA',
+      seatingCapacity: '4-5 Seater Curved Sofa',
+      dimensionsSummary: '118"W x 48"D x 31"H',
+      widthCm: 300,
+      depthCm: 122,
+      heightCm: 78,
+      seatHeightCm: 43,
+      frameMaterial: 'Steam-Bent Solid Timber Frame',
+      upholsteryType: 'Royal Emerald Luxe Velvet',
+      foamDensity: '45D Molded HR Foam Core',
+      suspension: 'Cross-Woven Elastic Webbing',
+      legFinish: 'Shadow-Line Brass Plinth Base',
+      warrantyYears: 10,
+      isCustomizable: true,
+      isFeatured: true,
+      indicativePriceRange: 'Custom Manufacturing Quotation on Request',
+      images: [
+        { url: '/images/atelier/ivory-curved-sofa.webp', viewAngle: 'Curved Front View', isPrimary: true },
+      ],
+      specs: [
+        { group: 'Dimensions', label: 'Overall Dimensions', value: '118" W x 48" D x 31" H' },
+        { group: 'Craftsmanship', label: 'Frame', value: 'Steam-Bent Solid Hardwood' },
+      ],
+    },
+    {
+      id: 'prod-luxury-palazzo-12',
+      sku: 'ATELIER-SOF-012',
+      name: 'The Palazzo Gold-Leaf Atelier Sofa',
+      slug: 'the-palazzo-gold-leaf-atelier-sofa',
+      tagline: 'Ultra-Exclusive Masterpiece with Gilded Wood Trims',
+      description: 'Hand-carved solid teak framing adorned with 24k gold leaf gilding, plush velvet cushions, and intricate crest detailing crafted for high-end luxury interiors.',
+      categoryId: 'cat-luxury',
+      collectionId: 'col-royal',
+      furnitureType: 'SOFA',
+      seatingCapacity: '3-4 Seater Atelier Sofa',
+      dimensionsSummary: '98"W x 38"D x 35"H',
+      widthCm: 248,
+      depthCm: 96,
+      heightCm: 88,
+      seatHeightCm: 46,
+      frameMaterial: '100% Solid Seasoned Teak Wood with Gold Gilding',
+      upholsteryType: 'Imported Belgian Velvet & Hand-Applied Piping',
+      foamDensity: '50D Ortho-Support Foam + Down Feather Crown',
+      suspension: 'Hand-Tied Coil Spring System',
+      legFinish: 'Hand-Gilded Gold Leaf Teak Feet',
+      warrantyYears: 15,
+      isCustomizable: true,
+      isFeatured: true,
+      indicativePriceRange: 'Custom Manufacturing Quotation on Request',
+      images: [
+        { url: '/images/atelier/hero-living.webp', viewAngle: 'Luxury Atelier View', isPrimary: true },
+      ],
+      specs: [
+        { group: 'Dimensions', label: 'Overall Dimensions', value: '98" W x 38" D x 35" H' },
+        { group: 'Finish', label: 'Gilding', value: '24k Gold Leaf Artisanal Lacquer Finish' },
+      ],
+    },
+    {
+      id: 'prod-fancy-shell-13',
+      sku: 'ATELIER-CHR-013',
+      name: 'The Abstract Shell Sculptural Chair',
+      slug: 'the-abstract-shell-sculptural-chair',
+      tagline: 'Artisanal Statement Silhouette for Avant-Garde Interiors',
+      description: 'Featuring a scalloped seashell channel backrest supported by tapered champagne brass stiletto legs. Perfectly balances sculpture and ergonomic seating.',
+      categoryId: 'cat-fancy',
+      collectionId: 'col-artdeco',
+      furnitureType: 'CHAIR',
+      seatingCapacity: '1 Seater Statement Chair',
+      dimensionsSummary: '33"W x 32"D x 33"H',
+      widthCm: 84,
+      depthCm: 81,
+      heightCm: 84,
+      seatHeightCm: 44,
+      frameMaterial: 'Contoured Molded Hardwood Core',
+      upholsteryType: 'Soft Rosewater Velvet',
+      foamDensity: '45D Molded HR Foam',
+      suspension: 'High-Tensile Webbing',
+      legFinish: 'Champagne Brass Stiletto Legs',
+      warrantyYears: 10,
+      isCustomizable: true,
+      isFeatured: true,
+      indicativePriceRange: 'Custom Manufacturing Quotation on Request',
+      images: [
+        { url: '/images/atelier/emerald-accent-chair.webp', viewAngle: 'Sculptural Angle', isPrimary: true },
+      ],
+      specs: [
+        { group: 'Dimensions', label: 'Overall Dimensions', value: '33" W x 32" D x 33" H' },
+        { group: 'Design', label: 'Backrest', value: 'Hand-Pleated Channel Shell Motif' },
+      ],
+    },
+    {
+      id: 'prod-accent-bellini-14',
+      sku: 'ATELIER-CHR-014',
+      name: 'The Bellini Brass & Velvet Accent Chair',
+      slug: 'the-bellini-brass-velvet-accent-chair',
+      tagline: 'Sleek Geometric Metal & Rich Cushioning',
+      description: 'An architectural accent chair featuring a solid stainless steel frame finished in brushed antique brass with plush deep-seated velvet upholstery.',
+      categoryId: 'cat-accent',
+      collectionId: 'col-artdeco',
+      furnitureType: 'CHAIR',
+      seatingCapacity: '1 Seater Accent Chair',
+      dimensionsSummary: '30"W x 31"D x 30"H',
+      widthCm: 76,
+      depthCm: 78,
+      heightCm: 76,
+      seatHeightCm: 43,
+      frameMaterial: 'Stainless Steel with PVD Brass Finish',
+      upholsteryType: 'Midnight Sapphire Luxe Velvet',
+      foamDensity: '45D High Density PU Foam',
+      suspension: 'Rigid Sub-Frame Reinforcement',
+      legFinish: 'Brushed PVD Brass Frame',
+      warrantyYears: 10,
+      isCustomizable: true,
+      isFeatured: true,
+      indicativePriceRange: 'Custom Manufacturing Quotation on Request',
+      images: [
+        { url: '/images/atelier/emerald-accent-chair.webp', viewAngle: 'Hero Accent View', isPrimary: true },
+      ],
+      specs: [
+        { group: 'Dimensions', label: 'Overall Dimensions', value: '30" W x 31" D x 30" H' },
+        { group: 'Metalwork', label: 'Frame', value: 'Precision Arc-Welded PVD Stainless Steel' },
+      ],
+    },
+    {
+      id: 'prod-custom-salon-15',
+      sku: 'ATELIER-CUS-015',
+      name: 'Bespoke Architectural Salon Suite',
+      slug: 'bespoke-architectural-salon-suite',
+      tagline: 'Custom Blueprint Seating Tailored to Site CAD Plans',
+      description: 'Designed and manufactured to match exact architect blueprints. Integrates custom curved radius frames, client-selected fabric grades, and built-in oak side elements.',
+      categoryId: 'cat-custom',
+      collectionId: 'col-milano',
+      furnitureType: 'SOFA',
+      seatingCapacity: 'Bespoke Tailored Seating',
+      dimensionsSummary: 'Custom Dimensions as per Client Floorplan',
+      widthCm: 320,
+      depthCm: 110,
+      heightCm: 80,
+      seatHeightCm: 44,
+      frameMaterial: 'Solid Kiln-Dried Teak / Steel Framework',
+      upholsteryType: 'Client Choice (Velvet, Leather, Bouclé)',
+      foamDensity: 'Custom Dual-Density HR Foam System',
+      suspension: 'Custom Engineered Suspension',
+      legFinish: 'Tailored Plinth or Ferrules',
+      warrantyYears: 10,
+      isCustomizable: true,
+      isFeatured: true,
+      indicativePriceRange: 'Custom Manufacturing Quotation on Request',
+      images: [
+        { url: '/images/atelier/residence-living.webp', viewAngle: 'Bespoke Salon Setting', isPrimary: true },
+      ],
+      specs: [
+        { group: 'Customization', label: 'Scale & Radius', value: '100% Tailored to Architect CAD Blueprints' },
+        { group: 'Service', label: 'Atelier Consultation', value: 'Includes Site Measurement & Prototype Review' },
+      ],
+    },
   ];
 
   for (const prod of products) {
-    const { images, specs, assetId, ...prodData } = prod;
+    const { images, specs, ...prodData } = prod;
     const createdProduct = await prisma.product.upsert({
       where: { slug: prodData.slug },
       update: {
@@ -632,14 +774,6 @@ async function main() {
       },
       create: prodData,
     });
-
-    // Attach 3D asset if provided
-    if (assetId) {
-      await prisma.threeDAsset.update({
-        where: { id: assetId },
-        data: { productId: createdProduct.id },
-      });
-    }
 
     // Clean old images & specs before re-attaching
     await prisma.productImage.deleteMany({ where: { productId: createdProduct.id } });
@@ -750,15 +884,15 @@ async function main() {
     data: [
       {
         designRequestId: designReq1.id,
-        fileUrl: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=800&q=80',
-        fileName: 'Customer_Pinterest_Reference_Living_Room.jpg',
+        fileUrl: '/images/atelier/ivory-curved-sofa.webp',
+        fileName: 'Customer_Pinterest_Reference_Living_Room.webp',
         fileType: 'CUSTOMER_REFERENCE',
         notes: 'Original reference photo uploaded by Dr. Mehra',
       },
       {
         designRequestId: designReq1.id,
-        fileUrl: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=800&q=80',
-        fileName: 'Site_Bay_Window_Measurements_Photo.jpg',
+        fileUrl: '/images/atelier/hero-living.webp',
+        fileName: 'Site_Bay_Window_Measurements_Photo.webp',
         fileType: 'ROOM_PHOTO',
         notes: 'Living room curved window space',
       },
@@ -784,7 +918,7 @@ async function main() {
       revisionCode: 'REV-02',
       versionNumber: 2,
       designerId: 'user-designer-1',
-      proposedCadUrl: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=800&q=80',
+      proposedCadUrl: '/images/atelier/chesterfield-loveseat.webp',
       specifications: 'Final Frozen Specs: 144"W x 42"D x 30"H. Kiln-dried CP Teak structural frame, 45D HR foam core with 70/30 feather-down topper envelope. Imperial Emerald 65k Martindale velvet. Recessed 2" brushed brass plinth.',
       designerNotes: 'Approved in private atelier design meeting with client on Oct 6, 2026. Ready for job release.',
       isFrozenForJob: true,
@@ -1008,7 +1142,7 @@ async function main() {
       description: 'A 5,000 sq ft private residence overlooking the historical horizon. Handcrafted curved velvet sectionals, sculptural accent seating, and fluted cocktail tub chairs.',
       challengeAndWork: 'Designing seamless curved seating that matched the 18ft radial bay window without visible seams while maintaining supreme comfort.',
       furnitureSupplied: '1 x 144" Curved Sectional in Emerald Velvet, 2 x Sovereign High-Back Wing Chairs, 1 x Fluted Swivel Tub Chair',
-      coverImage: 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1200&q=80',
+      coverImage: '/images/atelier/hero-living.webp',
     },
     {
       slug: 'the-haveli-heritage-resort',
@@ -1018,7 +1152,7 @@ async function main() {
       description: 'Restoration and bespoke seating for 12 royal luxury suites blending royal carved teakwood with modern fire-retardant plush velvet.',
       challengeAndWork: 'Replicating historical Mughal and British colonial turnings with heavy kiln-dried teakwood frames built to sustain commercial hospitality wear.',
       furnitureSupplied: '12 x Hand-Tufted Chesterfield Sofas, 24 x Carved Teak Armchairs, 12 x Bedroom Benches',
-      coverImage: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=1200&q=80',
+      coverImage: '/images/atelier/chesterfield-loveseat.webp',
     },
     {
       slug: 'skyline-villa-gurugram',
@@ -1028,14 +1162,14 @@ async function main() {
       description: 'Clean Scandinavian lines with low-profile Italian modular seating wrapped in tactile ivory bouclé and solid walnut trims.',
       challengeAndWork: 'Achieved an ultra-low 14-inch architectural plinth profile without compromising on 45-density multi-spring cushioning support.',
       furnitureSupplied: '1 x 156" U-Shaped Sectional Suite, 4 x Regent Mid-Century Teak Lounge Chairs',
-      coverImage: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1200&q=80',
+      coverImage: '/images/atelier/residence-living.webp',
     },
   ];
 
   for (const p of projects) {
     await prisma.projectPortfolio.upsert({
       where: { slug: p.slug },
-      update: {},
+      update: { coverImage: p.coverImage },
       create: p,
     });
   }
@@ -1069,7 +1203,10 @@ async function main() {
     await prisma.testimonial.create({ data: t });
   }
 
-  console.log('Seeding completed successfully with all rich atelier data, 3D assets, products, CRM leads, and factory jobs!');
+  await require('../scripts/catalogue/install').installCatalogue(prisma);
+  await require('../scripts/catalogue/install-expansion').installExpansion(prisma);
+
+  console.log('Seeding completed successfully with all rich atelier data, products, CRM leads, and factory jobs!');
 }
 
 main()

@@ -21,11 +21,10 @@ export default async function ProductDetailPage({
       specifications: {
         orderBy: { sortOrder: 'asc' },
       },
-      threeDAsset: true,
     },
   });
 
-  if (!product) {
+  if (!product || !product.isAvailable) {
     notFound();
   }
 
@@ -39,7 +38,6 @@ export default async function ProductDetailPage({
     include: {
       images: true,
       category: true,
-      threeDAsset: true,
     },
     take: 4,
   });
@@ -52,15 +50,6 @@ export default async function ProductDetailPage({
     },
   });
 
-  // Format 3D asset if available
-  const formatted3D = product.threeDAsset
-    ? {
-        ...product.threeDAsset,
-        productSlug: product.slug,
-        productTitle: product.name,
-      }
-    : null;
-
   return (
     <div className="min-h-screen bg-platinum py-10 md:py-16 font-sans text-graphite">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -68,7 +57,6 @@ export default async function ProductDetailPage({
           product={product}
           relatedProducts={relatedProducts}
           fabricSwatches={fabricSwatches}
-          threeDAsset={formatted3D}
         />
       </div>
     </div>

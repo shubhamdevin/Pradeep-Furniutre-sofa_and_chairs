@@ -1,9 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { sendCustomerStatusUpdateEmail } from '@/lib/email';
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
+    const result = await prisma.$transaction(async (tx) => {
     const {
       customerId,
       quotationId,
@@ -27,12 +29,18 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const count = await prisma.manufacturingJob.count();
-    const jobCardNumber = `JOB-2026-${String(count + 1).padStart(4, '0')}`;
+    if (quotationId) {
+      const quote = await tx.quotation.findUnique({where:{id:quotationId},include:{manufacturingJobs:true}});
+      if (!quote || quote.customerId !== customerId) return NextResponse.json({error:'Quotation does not match this customer.'},{status:400});
+      if (quote.status !== 'ACCEPTED') return NextResponse.json({error:'Accept the quotation before releasing a factory job.'},{status:400});
+      if (quote.manufacturingJobs.length) return NextResponse.json({error:'A factory job already exists for this quotation.'},{status:409});
+    }
+    if (!Number.isInteger(Number(quantity)) || Number(quantity)<1 || !Number.isFinite(Number(targetCompletionWeeks)) || Number(targetCompletionWeeks)<=0) return NextResponse.json({error:'Enter valid quantity and delivery weeks.'},{status:400});
+    const jobCardNumber = `JOB-${new Date().getFullYear()}-${crypto.randomUUID().slice(0,8).toUpperCase()}`;
 
     const targetCompletionDate = new Date(Date.now() + targetCompletionWeeks * 7 * 24 * 60 * 60 * 1000);
 
-    const job = await prisma.manufacturingJob.create({
+    const job = await tx.manufacturingJob.create({
       data: {
         jobCardNumber,
         customerId,
@@ -50,6 +58,7 @@ export async function POST(req: NextRequest) {
         targetCompletionDate,
         notes: notes || null,
       },
+      include: { customer: true },
     });
 
     // Initialize 15 standard stages tasks
@@ -72,7 +81,7 @@ export async function POST(req: NextRequest) {
     ];
 
     for (const st of stages) {
-      await prisma.jobTask.create({
+      await tx.jobTask.create({
         data: {
           jobId: job.id,
           stageName: st.name,
@@ -82,11 +91,29 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    return NextResponse.json({
+    return {
       success: true,
       jobCardNumber,
       jobId: job.id,
       message: 'Manufacturing Job Card created successfully.',
+      job,
+    };
+    });
+    if (result instanceof NextResponse) return result;
+    const email = await sendCustomerStatusUpdateEmail({
+      to: result.job.customer.email,
+      customerName: result.job.customer.fullName,
+      referenceCode: result.jobCardNumber,
+      recordType: 'Manufacturing order',
+      status: result.job.currentStage,
+      details: `Product: ${result.job.productTitle}. Quantity: ${result.job.quantity}. Your furniture has been released to our Agra workshop.`,
+    });
+    return NextResponse.json({
+      success: result.success,
+      jobCardNumber: result.jobCardNumber,
+      jobId: result.jobId,
+      message: result.message,
+      emailNotification: email.sent ? 'sent' : email.reason,
     });
   } catch (err: any) {
     console.error('Error creating job card:', err);

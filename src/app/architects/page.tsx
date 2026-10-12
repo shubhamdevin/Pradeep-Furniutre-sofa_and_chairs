@@ -26,7 +26,7 @@ export default function ArchitectsPage() {
             </div>
             <h3 className="font-serif text-xl font-medium text-graphite">CAD &amp; Millimeter Prototyping</h3>
             <p className="text-xs sm:text-sm text-slate-dark leading-relaxed">
-              Send us your AutoCAD plans, 3D SketchUp models, or PDF elevations. Our in-house draftsmen verify frame ergonomics, generate joinery cut sheets, and build physical prototypes before batch production.
+              Send us your AutoCAD plans, furniture sketches, or PDF elevations. Our in-house draftsmen verify frame ergonomics, generate joinery cut sheets, and build physical prototypes before batch production.
             </p>
           </div>
 

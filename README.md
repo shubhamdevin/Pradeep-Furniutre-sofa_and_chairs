@@ -1,5 +1,5 @@
 # Pradeep Furniture Atelier
-## Premium 3D Luxury Sofa & Fancy Chairs Manufacturing Website + Factory Management ERP
+## Premium Luxury Sofa & Fancy Chairs Manufacturing Website + Factory Management ERP
 ### Bespoke Digital Showroom • Custom Furniture Studio • CRM • Production ERP
 
 Designed and developed as a complete, production-oriented digital platform for **Pradeep Furniture Atelier** (Agra, Uttar Pradesh, India) — manufacturers of bespoke luxury sofas, fancy chairs, curved sectionals, and custom upholstered seating.
@@ -20,7 +20,6 @@ In accordance with Section 1 of the Master Brief:
   - ❌ No Consumer eCommerce ordering or COD workflows
 
 - **Allowed & Fully Implemented Customer Features:**
-  -  Inspect 360° interactive 3D furniture models with mouse/touch rotation, zoom, wireframe inspection, and camera angle presets.
   -  Filter, search, compare, and shortlist furniture designs.
   -  Interactive **Smart Customization Studio** with live dimension calculators and compatibility rules.
   -  **8-Step Custom Furniture Request System**: upload external reference images (Pinterest, Google, Instagram, sketches) to commission custom pieces.
@@ -49,47 +48,13 @@ In accordance with Section 1 of the Master Brief:
 
 ---
 
-## 3. Real 360° 3D Furniture Models (Section 7 Compliance)
-
-The platform supports genuine interactive 3D geometry with zero fake 360° CSS transforms.
-
-### Sourced & Legally Verified 3D Assets:
-1. **Asset A — Poly Haven Sofa 03 (Hosted GLTF/Three.js)**
-   - Provider: Poly Haven
-   - Format: Hosted GLTF (`/models/sofa_03/sofa_03_1k.gltf`) with relative textures & bin
-   - Licence: CC0 1.0 Universal Public Domain
-   - Author: Dmitry Tretyakov & Rob Tuytel
-   - Attribution: [https://polyhaven.com/a/sofa_03](https://polyhaven.com/a/sofa_03)
-2. **Asset B — Poly Haven Mid Century Lounge Chair (Hosted GLTF/Three.js)**
-   - Provider: Poly Haven
-   - Format: Hosted GLTF (`/models/mid_century_lounge_chair/mid_century_lounge_chair_1k.gltf`)
-   - Licence: CC0 1.0 Universal Public Domain
-   - Author: Dmitry Tretyakov
-   - Attribution: [https://polyhaven.com/a/mid_century_lounge_chair](https://polyhaven.com/a/mid_century_lounge_chair)
-3. **Asset C — Sofa 3 by 3dx (Official Sketchfab Embed)**
-   - Provider: Sketchfab (UID: `1d09094be7fc4e809841992d8801f217`)
-   - Licence: Creative Commons Attribution (CC-BY 4.0)
-   - Author: 3dx
-   - Attribution: [https://sketchfab.com/3d-models/sofa-3-3dx-1d09094be7fc4e809841992d8801f217](https://sketchfab.com/3d-models/sofa-3-3dx-1d09094be7fc4e809841992d8801f217)
-4. **Asset D — Modern Wingback Accent Chair by dynamic_digital (Official Sketchfab Embed)**
-   - Provider: Sketchfab (UID: `4b053c1851784878a0add9973b89d823`)
-   - Licence: Creative Commons Attribution (CC-BY 4.0)
-   - Author: dynamic_digital
-   - Attribution: [https://sketchfab.com/3d-models/modern-wingback-accent-chair-4b053c1851784878a0add9973b89d823](https://sketchfab.com/3d-models/modern-wingback-accent-chair-4b053c1851784878a0add9973b89d823)
-
-### Interactive Viewer Capabilities:
-- Mouse drag rotation, touch orbit, zoom in/out, auto-rotation toggle, camera presets (Perspective, Front, Side, Top Plan), structural wireframe mesh inspector, fullscreen mode, progressive loading indicators, and in-viewer Legal Attribution Dialog.
-
----
-
 ## 4. Key Systems & Modules
 
 ### 4.1 Public Showroom & Catalogue
-- **Cinematic Hero**: "Furniture Beyond Ordinary" with interactive 3D highlight and atelier statistics.
+- **Cinematic Hero**: "Furniture Beyond Ordinary" with luxury furniture photography and atelier statistics.
 - **15 Furniture Categories**: 2-Seater, 3-Seater, L-Shaped, U-Shaped, Sectional, Chesterfield, Curved, Luxury Sofas, Fancy Chairs, Accent, Lounge, Wingback, Tub, Royal, and Custom Furniture.
 - **Product Details (`/products/[slug]`)**:
   - Image gallery with angles (Hero, Front, Side, Back, Texture)
-  - Interactive 3D 360° studio mode toggle
   - Complete specifications (Timber species, moisture control, foam density, suspension, leg finishes)
   - Recommended fabric swatches
   - Printable / Downloadable Architectural Specification Sheet
@@ -159,7 +124,6 @@ The platform supports genuine interactive 3D geometry with zero fake 360° CSS t
 
 - **Framework**: Next.js 14.2 (App Router, Server & Client Components)
 - **Frontend / Styling**: React 18, TypeScript, Tailwind CSS, Lucide Icons
-- **3D Graphics Engine**: Three.js, OrbitControls, GLTFLoader, Sketchfab Official API Embeds
 - **Database & ORM**: Prisma ORM with SQLite (default local zero-dependency out-of-the-box run) / PostgreSQL compatible
 - **Testing**: Custom automated end-to-end verification suite (`scripts/test-runner.js`)
 
@@ -188,7 +152,7 @@ The platform supports genuine interactive 3D geometry with zero fake 360° CSS t
    # Push schema to database and generate client
    npx prisma db push
 
-   # Seed database with rich atelier demo data (products, 3D assets, leads, jobs)
+   # Seed database with rich atelier demo data (products, leads, jobs)
    node prisma/seed.js
    ```
 
@@ -216,9 +180,9 @@ The platform supports genuine interactive 3D geometry with zero fake 360° CSS t
 
 | Route | Description |
 |---|---|
-| `/` | Luxury Homepage with 12 Sections & 3D Model Switcher Showcase |
+| `/` | Luxury Homepage with Furniture Collections and Craftsmanship |
 | `/products` | Furniture Catalogue with filters, search, and side-by-side comparison |
-| `/products/[slug]` | Product Details with photo gallery, 3D viewer, specs, and quote modal |
+| `/products/[slug]` | Product Details with photo gallery, specs, and quote modal |
 | `/collections` | Editorial Signature Collections (Milano, Royal Heritage, Scandi, Art Deco) |
 | `/custom-design` | 8-Step Custom Furniture Request Wizard with external photo upload |
 | `/studio` | Smart Customization Studio with live dimension calculations |
@@ -229,14 +193,12 @@ The platform supports genuine interactive 3D geometry with zero fake 360° CSS t
 | `/consultation` | Private showroom & workshop tour appointment booking |
 | `/about` | Generational atelier history and Agra craftsmanship philosophy |
 | `/contact` | Civil Lines gallery and Bodla workshop addresses |
-| `/licences` | Section 7 Compliance 3D Asset Registry & Legal Disclaimers |
 | `/admin` | Executive Command Center & Operations Dashboard |
 | `/admin/leads` | Sales CRM Pipeline with status updates and client history |
 | `/admin/custom-requests` | Custom requests review, CAD drafting, and design freeze |
 | `/admin/quotations` | Quotation generator, client PDF document, and factory conversion |
 | `/admin/manufacturing` | Factory job cards, 15-stage production stepper, and BOM/QC |
 | `/admin/inventory` | Raw timber, foam sheets, and fabric roll inventory tracking |
-| `/admin/3d-models` | 3D model library and licensing compliance management |
 | `/admin/products` | Catalogue CMS |
 
 ---
@@ -265,8 +227,6 @@ PRADEEP FURNITURE ATELIER - END-TO-END TEST SUITE (SECTION 25)
 [TEST E] Scenario E — Manufacturing Job Card, 15 Stages & QC Verification...
   ✔ Passed: Manufacturing job card issued, stage transitioned to WOOD_CUTTING, and 6-point QC passed.
 
-[TEST F] Scenario F — Real 3D Models Verification (Section 7 Compliance)...
-  ✔ Passed: Verified 4 real 3D models (2 hosted GLTF + 2 official Sketchfab embeds) with legally registered CC0/CC-BY licensing.
 
 [TEST G] Scenario G — Non-E-Commerce Compliance Audit (Section 1 Strict Prohibition)...
   ✔ Passed: Codebase 100% compliant with Non-E-Commerce policy. Zero shopping carts, zero Buy Now buttons, zero online checkouts.
@@ -290,3 +250,11 @@ ALL TESTS PASSED: 8 / 8 (100% SUCCESS)
 - **Email**: `bespoke@pradeepfurniture.com`
 - **GSTIN**: 09AABCP1234F1Z9
 - **Guarantee**: 10-Year Solid Hardwood Structural Guarantee
+
+## Admin operations
+
+Open `/admin/login`. The local admin password is stored as `ADMIN_PASSWORD` in `.env.local`; `ADMIN_SESSION_SECRET` signs the eight-hour, HTTP-only admin session. Keep both values private and configure them in the hosting environment when deploying. The local environment file is excluded from Git.
+
+The admin panel supports product creation/editing and publishing, featured selections, persistent lead stages and staff follow-ups, custom request status, quotation approval, factory job creation and sequential stage updates, inventory adjustments with movement history, supplier editing, and consultation status. Accept a quote before releasing its job. Existing jobs cannot be duplicated from the same quote. Print the customer quotation through its preview.
+
+Public pages use scroll reveals and subtle hover/hero animation. Reduced-motion preferences disable animation.

@@ -1,20 +1,19 @@
 import React from 'react';
 import Link from 'next/link';
 import { prisma } from '@/lib/prisma';
-import { Box, ArrowRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 
 export const revalidate = 60;
 
 export default async function CollectionsPage() {
   const collections = await prisma.collection.findMany({
-    where: { isPublished: true },
+    where: { isPublished: true, products: { some: { isAvailable: true } } },
     include: {
       products: {
         where: { isAvailable: true },
         include: {
           images: true,
           category: true,
-          threeDAsset: true,
         },
       },
     },
@@ -22,10 +21,10 @@ export default async function CollectionsPage() {
   });
 
   return (
-    <div className="min-h-screen bg-platinum py-16 md:py-24 text-graphite font-sans">
+    <div className="collection-page min-h-screen bg-platinum py-16 md:py-24 text-graphite font-sans">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-20">
         {/* Header */}
-        <div className="max-w-3xl mx-auto text-center space-y-3">
+        <div className="collection-page__intro max-w-3xl mx-auto text-center space-y-3">
           <span className="text-xs uppercase font-bold tracking-widest text-slate-muted">
             Atelier Design Directions
           </span>
@@ -38,17 +37,17 @@ export default async function CollectionsPage() {
         </div>
 
         {/* Collections Editorial List */}
-        <div className="space-y-24">
+        <div className="collection-page__list space-y-24">
           {collections.map((col) => (
-            <div key={col.id} id={col.slug} className="space-y-8 scroll-mt-24">
+            <div key={col.id} id={col.slug} className="collection-page__section space-y-8 scroll-mt-24">
               {/* Collection Header Banner */}
-              <div className="relative rounded-lg overflow-hidden bg-graphite-deep aspect-[21/9] min-h-[300px] border border-slate-border shadow-sm">
+              <div className="collection-page__banner relative rounded-lg overflow-hidden bg-graphite-deep aspect-[21/9] min-h-[300px] border border-slate-border shadow-sm">
                 <img
-                  src={col.heroImage || 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1400&q=80'}
+                  src={col.heroImage || '/images/atelier/hero-living.webp'}
                   alt={col.name}
                   className="w-full h-full object-cover opacity-60"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-graphite-deep via-graphite-deep/40 to-transparent p-8 sm:p-12 flex flex-col justify-end">
+                <div className="collection-page__banner-copy absolute inset-0 bg-gradient-to-t from-graphite-deep via-graphite-deep/40 to-transparent p-8 sm:p-12 flex flex-col justify-end">
                   <span className="text-xs font-bold uppercase tracking-widest text-slate-silver mb-1">{col.tagline}</span>
                   <h2 className="font-serif text-3xl sm:text-4xl text-white font-medium mb-2">{col.name}</h2>
                   <p className="text-xs sm:text-sm text-platinum-soft max-w-2xl leading-relaxed">{col.description}</p>
@@ -56,22 +55,16 @@ export default async function CollectionsPage() {
               </div>
 
               {/* Products in Collection */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="collection-page__products grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {col.products.map((prod) => {
-                  const primaryImg = prod.images[0]?.url || 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=800&q=80';
+                  const primaryImg = prod.images[0]?.url || '/images/atelier/ivory-curved-sofa.webp';
                   return (
                     <div
                       key={prod.id}
-                      className="bg-white rounded-lg overflow-hidden border border-platinum-border shadow-sm hover:border-graphite transition-colors flex flex-col justify-between group p-5 space-y-3"
+                      className="collection-page__card bg-white rounded-lg overflow-hidden border border-platinum-border shadow-sm hover:border-graphite transition-colors flex flex-col justify-between group p-5 space-y-3"
                     >
                       <div className="aspect-[4/3] rounded overflow-hidden bg-platinum-soft relative">
                         <img src={primaryImg} alt={prod.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
-                        {prod.threeDAsset && (
-                          <span className="absolute bottom-2 right-2 px-2 py-0.5 bg-graphite text-white text-[10px] font-medium rounded flex items-center space-x-1 shadow-sm">
-                            <Box className="w-3 h-3 text-slate-silver" />
-                            <span>3D</span>
-                          </span>
-                        )}
                       </div>
 
                       <div>

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { sendCustomerStatusUpdateEmail } from '@/lib/email';
 
 export async function POST(
   req: NextRequest,
@@ -45,11 +46,24 @@ export async function POST(
     });
 
     // Update request status
+    let emailNotification: string | undefined;
     if (approvalStatus === 'APPROVED') {
-      await prisma.designRequest.update({
+      const updatedRequest = await prisma.designRequest.update({
         where: { id: request.id },
         data: { status: 'DESIGN_APPROVED' },
+        include: { customer: true },
       });
+      if (request.status !== 'DESIGN_APPROVED') {
+        const email = await sendCustomerStatusUpdateEmail({
+          to: updatedRequest.customer.email,
+          customerName: updatedRequest.customer.fullName,
+          referenceCode: updatedRequest.referenceNumber,
+          recordType: 'Design request',
+          status: updatedRequest.status,
+          details: `Revision ${revisionCode} has been approved by our atelier design team.`,
+        });
+        emailNotification = email.sent ? 'sent' : email.reason;
+      }
     }
 
     return NextResponse.json({
@@ -57,6 +71,7 @@ export async function POST(
       revisionCode,
       versionNumber,
       message: `Revision ${revisionCode} created successfully.`,
+      emailNotification,
     });
   } catch (err: any) {
     console.error('Error creating design revision:', err);

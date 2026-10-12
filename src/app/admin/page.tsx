@@ -2,16 +2,18 @@ import React from 'react';
 import Link from 'next/link';
 import { prisma } from '@/lib/prisma';
 import { 
-  Users, 
-  Sliders, 
+  UsersRound, 
+  PencilRuler, 
   FileText, 
-  Wrench, 
+  Factory, 
   ArrowUpRight, 
   AlertTriangle,
   TrendingUp
 } from 'lucide-react';
 
-export const revalidate = 0; // Always fresh for admin operations
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+export const fetchCache = 'force-no-store';
 
 export default async function AdminDashboardPage() {
   const [
@@ -19,19 +21,18 @@ export default async function AdminDashboardPage() {
     customRequestsCount,
     quotesCount,
     jobsCount,
-    inventoryItems,
+    allInventoryItems,
     recentLeads,
+    recentCustomRequests,
     activeJobs,
   ] = await Promise.all([
     prisma.lead.count(),
     prisma.designRequest.count(),
     prisma.quotation.count(),
     prisma.manufacturingJob.count(),
-    prisma.inventoryItem.findMany({
-      where: { currentStock: { lte: 40 } },
-    }),
+    prisma.inventoryItem.findMany(),
     prisma.lead.findMany({
-      take: 5,
+      take: 6,
       orderBy: { createdAt: 'desc' },
       include: {
         customer: true,
@@ -39,24 +40,34 @@ export default async function AdminDashboardPage() {
         designRequest: true,
       },
     }),
+    prisma.designRequest.findMany({
+      take: 6,
+      orderBy: { createdAt: 'desc' },
+      include: {
+        customer: true,
+        product: true,
+      },
+    }),
     prisma.manufacturingJob.findMany({
+      where: { currentStage: { not: 'CLOSED_INTERNALLY' } },
       take: 4,
       orderBy: { createdAt: 'desc' },
       include: {
         customer: true,
       },
     }),
-    prisma.threeDAsset.count(),
   ]);
+
+  const inventoryItems=allInventoryItems.filter(item=>item.currentStock<=item.minimumLevel);
 
   return (
     <div className="space-y-8 font-sans">
       {/* Top Banner */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-platinum-border pb-6">
         <div>
-          <span className="text-xs uppercase font-bold tracking-widest text-slate-muted">Executive Command Center</span>
-          <h1 className="font-serif text-3xl font-medium text-graphite mt-0.5">Atelier Operations Overview</h1>
-          <p className="text-xs text-slate-dark mt-1">Live tracking of leads, CAD design commissions, formal quotations, and Bodla manufacturing jobs.</p>
+          <span className="text-xs uppercase font-bold tracking-widest text-slate-muted">BUSINESS OVERVIEW</span>
+          <h1 className="font-serif text-3xl font-medium text-graphite mt-0.5">Your workspace, at a glance</h1>
+          <p className="text-xs text-slate-dark mt-1">Manage customer enquiries, design requests and workshop production in one place.</p>
         </div>
 
         <div className="flex items-center space-x-3">
@@ -80,9 +91,9 @@ export default async function AdminDashboardPage() {
         {/* Leads */}
         <div className="bg-white p-6 rounded-md border border-platinum-border shadow-sm space-y-2">
           <div className="flex items-center justify-between">
-            <span className="text-xs uppercase font-bold tracking-wider text-slate-muted">Active CRM Leads</span>
+            <span className="text-xs uppercase font-bold tracking-wider text-slate-muted">Customer enquiries</span>
             <div className="w-8 h-8 rounded bg-platinum-soft text-slate-dark flex items-center justify-center border border-platinum-border">
-              <Users className="w-4 h-4" />
+              <UsersRound className="w-4 h-4" />
             </div>
           </div>
           <div className="text-3xl font-semibold text-graphite">{leadsCount}</div>
@@ -95,9 +106,9 @@ export default async function AdminDashboardPage() {
         {/* Custom Design Requests */}
         <div className="bg-white p-6 rounded-md border border-platinum-border shadow-sm space-y-2">
           <div className="flex items-center justify-between">
-            <span className="text-xs uppercase font-bold tracking-wider text-slate-muted">Design Commissions</span>
+            <span className="text-xs uppercase font-bold tracking-wider text-slate-muted">Design requests</span>
             <div className="w-8 h-8 rounded bg-platinum-soft text-slate-dark flex items-center justify-center border border-platinum-border">
-              <Sliders className="w-4 h-4" />
+              <PencilRuler className="w-4 h-4" />
             </div>
           </div>
           <div className="text-3xl font-semibold text-graphite">{customRequestsCount}</div>
@@ -109,7 +120,7 @@ export default async function AdminDashboardPage() {
         {/* Quotations */}
         <div className="bg-white p-6 rounded-md border border-platinum-border shadow-sm space-y-2">
           <div className="flex items-center justify-between">
-            <span className="text-xs uppercase font-bold tracking-wider text-slate-muted">Issued Quotations</span>
+            <span className="text-xs uppercase font-bold tracking-wider text-slate-muted">Quotations</span>
             <div className="w-8 h-8 rounded bg-platinum-soft text-slate-dark flex items-center justify-center border border-platinum-border">
               <FileText className="w-4 h-4" />
             </div>
@@ -123,9 +134,9 @@ export default async function AdminDashboardPage() {
         {/* Factory Jobs */}
         <div className="bg-white p-6 rounded-md border border-platinum-border shadow-sm space-y-2">
           <div className="flex items-center justify-between">
-            <span className="text-xs uppercase font-bold tracking-wider text-slate-muted">Workshop Job Cards</span>
+            <span className="text-xs uppercase font-bold tracking-wider text-slate-muted">Production jobs</span>
             <div className="w-8 h-8 rounded bg-platinum-soft text-slate-dark flex items-center justify-center border border-platinum-border">
-              <Wrench className="w-4 h-4" />
+              <Factory className="w-4 h-4" />
             </div>
           </div>
           <div className="text-3xl font-semibold text-graphite">{jobsCount}</div>
@@ -135,17 +146,67 @@ export default async function AdminDashboardPage() {
         </div>
       </div>
 
-      {/* Main Section: Recent CRM Leads & Active Factory Jobs */}
+      {/* Main Section: Recent Custom Requests & CRM Leads */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        {/* Recent Leads (Left 7 Cols) */}
-        <div className="lg:col-span-7 bg-white rounded-md p-6 border border-platinum-border shadow-sm space-y-4">
+        {/* Recent Custom Design Requests (Left 6 Cols) */}
+        <div className="lg:col-span-6 bg-white rounded-md p-6 border border-platinum-border shadow-sm space-y-4">
           <div className="flex items-center justify-between border-b border-platinum-border pb-3">
             <div>
-              <h3 className="font-serif text-lg font-medium text-graphite">Recent Leads &amp; Inquiries</h3>
-              <p className="text-xs text-slate-dark">Direct customer inquiries awaiting specification</p>
+              <div className="flex items-center space-x-2">
+                <PencilRuler className="w-4 h-4 text-slate-dark" />
+                <h3 className="font-serif text-lg font-medium text-graphite">Custom furniture requests</h3>
+              </div>
+              <p className="text-xs text-slate-dark">Bespoke commissions &amp; reference uploads</p>
+            </div>
+            <Link href="/admin/custom-requests" className="text-xs font-medium text-graphite hover:underline flex items-center space-x-1">
+              <span>View All ({customRequestsCount})</span>
+              <ArrowUpRight className="w-3.5 h-3.5 text-slate-muted" />
+            </Link>
+          </div>
+
+          <div className="divide-y divide-platinum-border">
+            {recentCustomRequests.length === 0 ? (
+              <p className="text-xs text-slate-muted py-4">No custom requests registered yet.</p>
+            ) : (
+              recentCustomRequests.map((req) => (
+                <div key={req.id} className="py-3.5 flex items-center justify-between text-xs">
+                  <div>
+                    <div className="flex items-center space-x-2">
+                      <span className="font-mono font-medium text-graphite">{req.referenceNumber}</span>
+                      <span className="px-2 py-0.5 rounded text-[10px] font-medium uppercase bg-status-info/10 text-status-info border border-status-info/20">
+                        {req.furnitureType}
+                      </span>
+                    </div>
+                    <h4 className="font-medium text-graphite mt-1">{req.customer.fullName}</h4>
+                    <p className="text-slate-dark text-[11px]">{req.deliveryCity || 'Agra'} • {req.customer.phone}</p>
+                  </div>
+
+                  <div className="text-right space-y-1">
+                    <span className="inline-block px-2 py-0.5 rounded text-[10px] font-medium uppercase bg-status-warning/10 text-status-warning">
+                      {req.status.replace(/_/g, ' ')}
+                    </span>
+                    <span className="block text-[10px] text-slate-muted">
+                      {new Date(req.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}, {new Date(req.createdAt).toLocaleDateString()}
+                    </span>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+
+        {/* Recent CRM Leads & Enquiries (Right 6 Cols) */}
+        <div className="lg:col-span-6 bg-white rounded-md p-6 border border-platinum-border shadow-sm space-y-4">
+          <div className="flex items-center justify-between border-b border-platinum-border pb-3">
+            <div>
+              <div className="flex items-center space-x-2">
+                <UsersRound className="w-4 h-4 text-slate-dark" />
+                <h3 className="font-serif text-lg font-medium text-graphite">Customer enquiries</h3>
+              </div>
+              <p className="text-xs text-slate-dark">Catalogue enquiries &amp; quotation requests</p>
             </div>
             <Link href="/admin/leads" className="text-xs font-medium text-graphite hover:underline flex items-center space-x-1">
-              <span>View All Pipeline</span>
+              <span>View All ({leadsCount})</span>
               <ArrowUpRight className="w-3.5 h-3.5 text-slate-muted" />
             </Link>
           </div>
@@ -173,19 +234,22 @@ export default async function AdminDashboardPage() {
                     {lead.stage}
                   </span>
                   <span className="block text-[10px] text-slate-muted">
-                    {new Date(lead.createdAt).toLocaleDateString()}
+                    {new Date(lead.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}, {new Date(lead.createdAt).toLocaleDateString()}
                   </span>
                 </div>
               </div>
             ))}
           </div>
         </div>
+      </div>
 
-        {/* Factory Jobs Progress (Right 5 Cols) */}
-        <div className="lg:col-span-5 bg-white rounded-md p-6 border border-platinum-border shadow-sm space-y-4">
+      {/* Secondary Section: Workshop Activity & Inventory Alerts */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        {/* Factory Jobs Progress */}
+        <div className="lg:col-span-8 bg-white rounded-md p-6 border border-platinum-border shadow-sm space-y-4">
           <div className="flex items-center justify-between border-b border-platinum-border pb-3">
             <div>
-              <h3 className="font-serif text-lg font-medium text-graphite">Active Workshop Jobs</h3>
+              <h3 className="font-serif text-lg font-medium text-graphite">Workshop activity</h3>
               <p className="text-xs text-slate-dark">Manufacturing shop floor progress</p>
             </div>
             <Link href="/admin/manufacturing" className="text-xs font-medium text-graphite hover:underline flex items-center space-x-1">
@@ -214,21 +278,26 @@ export default async function AdminDashboardPage() {
               </div>
             ))}
           </div>
+        </div>
 
-          {/* Raw Material Alert Widget */}
-          {inventoryItems.length > 0 && (
-            <div className="mt-4 pt-3 border-t border-platinum-border bg-amber-50/70 p-3.5 rounded-md border border-amber-200 text-xs">
+        {/* Raw Material Alert Widget */}
+        <div className="lg:col-span-4 bg-white rounded-md p-6 border border-platinum-border shadow-sm space-y-4">
+          <h3 className="font-serif text-lg font-medium text-graphite border-b border-platinum-border pb-3">Stock &amp; Inventory</h3>
+          {inventoryItems.length > 0 ? (
+            <div className="bg-amber-50/70 p-3.5 rounded-md border border-amber-200 text-xs">
               <div className="flex items-center space-x-1.5 text-amber-800 font-medium mb-1">
                 <AlertTriangle className="w-4 h-4 text-amber-600" />
-                <span>Raw Material Reorder Notice</span>
+                <span>Stock needs attention</span>
               </div>
               <p className="text-[11px] text-amber-900">
                 {inventoryItems.length} inventory item(s) near reorder threshold (e.g. {inventoryItems[0]?.name}).
               </p>
-              <Link href="/admin/inventory" className="text-xs font-medium text-amber-900 underline block mt-1">
+              <Link href="/admin/inventory" className="text-xs font-medium text-amber-900 underline block mt-2">
                 Review Timber &amp; Fabric Stock →
               </Link>
             </div>
+          ) : (
+            <p className="text-xs text-slate-dark">All raw materials and timber above safe inventory levels.</p>
           )}
         </div>
       </div>

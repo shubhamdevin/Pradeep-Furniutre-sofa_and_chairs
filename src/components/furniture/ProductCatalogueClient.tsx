@@ -1,20 +1,21 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
 import { 
   Search, 
-  Grid, 
+  LayoutGrid, 
   List, 
   Heart, 
   ArrowRight, 
   X, 
-  Scale, 
-  Sliders,
-  Box
+  GitCompareArrows, 
+  SlidersHorizontal
 } from 'lucide-react';
 import { ProductItem, CategoryItem, CollectionItem } from '@/lib/types';
 import LuxuryProductCard from '@/components/furniture/LuxuryProductCard';
+import { useWishlist } from '@/components/furniture/WishlistProvider';
+import { useToast } from '@/components/ui/ToastProvider';
 
 interface CatalogueProps {
   products: any[];
@@ -35,27 +36,22 @@ export default function ProductCatalogueClient({
   initialType = '',
   initialCollection = '',
 }: CatalogueProps) {
+  const { info: toastInfo } = useToast();
   // Search & Filter State
   const [search, setSearch] = useState(initialSearch);
   const [selectedCategory, setSelectedCategory] = useState(initialCategory);
   const [selectedType, setSelectedType] = useState(initialType);
   const [selectedCollection, setSelectedCollection] = useState(initialCollection);
-  const [only3D, setOnly3D] = useState(false);
   const [onlyCustomizable, setOnlyCustomizable] = useState(false);
   const [sortBy, setSortBy] = useState<'featured' | 'name-asc' | 'capacity'>('featured');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
 
+  useEffect(() => { setSearch(initialSearch); setSelectedCategory(initialCategory); setSelectedType(initialType); setSelectedCollection(initialCollection); }, [initialSearch, initialCategory, initialType, initialCollection]);
+
   // Shortlist and Compare State
-  const [shortlist, setShortlist] = useState<string[]>([]);
+  const { productIds: wishlistIds, toggleWishlist } = useWishlist();
   const [compareList, setCompareList] = useState<string[]>([]);
   const [showCompareModal, setShowCompareModal] = useState(false);
-
-  // Toggle Shortlist
-  const toggleShortlist = (productId: string) => {
-    setShortlist((prev) =>
-      prev.includes(productId) ? prev.filter((id) => id !== productId) : [...prev, productId]
-    );
-  };
 
   // Toggle Compare
   const toggleCompare = (productId: string) => {
@@ -64,7 +60,7 @@ export default function ProductCatalogueClient({
         return prev.filter((id) => id !== productId);
       }
       if (prev.length >= 3) {
-        alert('You can compare a maximum of 3 furniture designs simultaneously.');
+        toastInfo('Comparison Limit', 'You can compare a maximum of 3 furniture designs simultaneously.');
         return prev;
       }
       return [...prev, productId];
@@ -86,22 +82,17 @@ export default function ProductCatalogueClient({
         }
 
         // Category
-        if (selectedCategory && p.category?.slug !== selectedCategory) {
+        if (selectedCategory && !(selectedCategory === 'fancy-chairs' && p.furnitureType === 'CHAIR') && !(selectedCategory === 'luxury-sofas' && p.furnitureType === 'SOFA') && p.category?.slug !== selectedCategory) {
           return false;
         }
 
         // Furniture Type
-        if (selectedType && p.furnitureType !== selectedType) {
+        if (selectedType && !(selectedType === 'SECTIONAL' && p.category?.slug === 'sectional-sofas') && !(selectedType === 'LOUNGE' && p.category?.slug === 'lounge-chairs') && p.furnitureType !== selectedType) {
           return false;
         }
 
         // Collection
         if (selectedCollection && p.collection?.slug !== selectedCollection) {
-          return false;
-        }
-
-        // Only 3D Models
-        if (only3D && !p.threeDAsset) {
           return false;
         }
 
@@ -117,7 +108,7 @@ export default function ProductCatalogueClient({
         if (sortBy === 'capacity') return (b.seatingCapacity || '').localeCompare(a.seatingCapacity || '');
         return (b.isFeatured ? 1 : 0) - (a.isFeatured ? 1 : 0);
       });
-  }, [products, search, selectedCategory, selectedType, selectedCollection, only3D, onlyCustomizable, sortBy]);
+  }, [products, search, selectedCategory, selectedType, selectedCollection, onlyCustomizable, sortBy]);
 
   // Compared products data
   const comparedProducts = useMemo(() => {
@@ -130,13 +121,13 @@ export default function ProductCatalogueClient({
     setSelectedCategory('');
     setSelectedType('');
     setSelectedCollection('');
-    setOnly3D(false);
     setOnlyCustomizable(false);
     setSortBy('featured');
   };
 
   return (
     <div className="space-y-6">
+      <div className="catalogue-type-tabs" aria-label="Furniture collections">{[{value:'',label:'All designs'},{value:'SOFA',label:'Luxury & fancy sofas'},{value:'CHAIR',label:'Fancy chairs'}].map(tab=><button key={tab.value} aria-pressed={selectedType===tab.value&&!selectedCategory&&!selectedCollection} onClick={()=>{setSelectedType(tab.value);setSelectedCategory('');setSelectedCollection('');setSearch('')}}><span>{tab.label}</span><b>{products.filter(p=>!tab.value||p.furnitureType===tab.value).length}</b></button>)}</div>
       {/* Top Filter & Search Bar */}
       <div className="bg-white rounded-lg p-5 border border-platinum-border shadow-subtle space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-3.5 items-center">
@@ -209,9 +200,9 @@ export default function ProductCatalogueClient({
             <button
               onClick={() => setViewMode('grid')}
               className={`p-2 rounded-md ${viewMode === 'grid' ? 'bg-graphite text-white' : 'text-slate-dark hover:bg-platinum-soft'}`}
-              title="Grid View"
+              title="LayoutGrid View"
             >
-              <Grid className="w-4 h-4" />
+              <LayoutGrid className="w-4 h-4" />
             </button>
             <button
               onClick={() => setViewMode('list')}
@@ -226,18 +217,6 @@ export default function ProductCatalogueClient({
         {/* Filter Checkbox Chips & Reset */}
         <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-platinum-border text-xs">
           <div className="flex flex-wrap items-center gap-3">
-            <label className="flex items-center space-x-2 cursor-pointer bg-platinum-soft px-3 py-1.5 rounded-md border border-platinum-border hover:border-slate-silver">
-              <input
-                type="checkbox"
-                checked={only3D}
-                onChange={(e) => setOnly3D(e.target.checked)}
-                className="rounded text-graphite focus:ring-0"
-              />
-              <span className="flex items-center space-x-1 font-medium text-graphite">
-                <Box className="w-3.5 h-3.5 text-slate-dark" />
-                <span>Interactive 3D Model</span>
-              </span>
-            </label>
 
             <label className="flex items-center space-x-2 cursor-pointer bg-platinum-soft px-3 py-1.5 rounded-md border border-platinum-border hover:border-slate-silver">
               <input
@@ -249,7 +228,7 @@ export default function ProductCatalogueClient({
               <span className="font-medium text-graphite">Customizable Only</span>
             </label>
 
-            {(search || selectedCategory || selectedType || selectedCollection || only3D || onlyCustomizable) && (
+            {(search || selectedCategory || selectedType || selectedCollection || onlyCustomizable) && (
               <button
                 onClick={clearFilters}
                 className="text-graphite hover:underline font-semibold px-2 py-1"
@@ -265,7 +244,7 @@ export default function ProductCatalogueClient({
         </div>
       </div>
 
-      {/* Product Grid / List Results */}
+      {/* Product LayoutGrid / List Results */}
       {filteredProducts.length === 0 ? (
         <div className="bg-white rounded-lg p-12 text-center border border-platinum-border space-y-4">
           <div className="w-12 h-12 rounded bg-platinum-soft flex items-center justify-center text-slate-dark mx-auto">
@@ -273,7 +252,7 @@ export default function ProductCatalogueClient({
           </div>
           <h3 className="font-serif text-xl text-graphite font-medium">No matching designs found</h3>
           <p className="text-xs text-slate-dark max-w-md mx-auto">
-            We can manufacture any custom silhouette from your reference photos. Use our 3D Studio or upload your Pinterest design inspiration.
+            We can manufacture any custom silhouette from your reference photos. Use our customization studio or upload your Pinterest design inspiration.
           </p>
           <div className="pt-2">
             <Link
@@ -287,14 +266,14 @@ export default function ProductCatalogueClient({
         </div>
       ) : viewMode === 'grid' ? (
         /* GRID VIEW */
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
           {filteredProducts.map((prod) => (
             <LuxuryProductCard
               key={prod.id}
               product={prod}
-              isShortlisted={shortlist.includes(prod.id)}
+              isShortlisted={wishlistIds.includes(prod.id)}
               isCompared={compareList.includes(prod.id)}
-              onToggleShortlist={toggleShortlist}
+              onToggleShortlist={toggleWishlist}
               onToggleCompare={toggleCompare}
               showQuickActions={true}
             />
@@ -303,75 +282,11 @@ export default function ProductCatalogueClient({
       ) : (
         /* LIST VIEW */
         <div className="space-y-4">
-          {filteredProducts.map((prod) => {
-            const primaryImg =
-              prod.images.find((i: any) => i.isPrimary)?.url ||
-              prod.images[0]?.url ||
-              '/images/models/sofa_03_primary.png';
-
-            return (
-              <div
-                key={prod.id}
-                className="bg-white rounded-lg p-5 border border-platinum-border shadow-subtle hover:border-slate-silver transition-all flex flex-col md:flex-row items-center gap-6"
-              >
-                <div className="w-full md:w-56 aspect-[4/3] rounded overflow-hidden bg-platinum-soft shrink-0 relative border border-platinum-border">
-                  <img src={primaryImg} alt={prod.name} className="w-full h-full object-cover" />
-                  {prod.threeDAsset && (
-                    <span className="absolute bottom-2 right-2 px-2 py-0.5 bg-graphite-deep text-platinum text-[10px] font-semibold rounded flex items-center space-x-1 shadow-subtle border border-graphite-border">
-                      <Box className="w-3 h-3 text-slate-silver" />
-                      <span>3D</span>
-                    </span>
-                  )}
-                </div>
-
-                <div className="flex-grow space-y-2 text-center md:text-left">
-                  <div className="flex flex-wrap items-center justify-center md:justify-start gap-2">
-                    <span className="text-xs font-mono font-semibold text-graphite bg-platinum-soft px-2 py-0.5 rounded border border-platinum-border">
-                      {prod.sku}
-                    </span>
-                    <span className="text-xs font-bold uppercase tracking-wider text-slate-dark">
-                      {prod.category?.name}
-                    </span>
-                    {prod.threeDAsset && (
-                      <span className="text-[10px] bg-white text-status-success border border-platinum-border px-2 py-0.5 rounded font-medium">
-                        ✓ 1:1 Photo &amp; 3D Match
-                      </span>
-                    )}
-                  </div>
-
-                  <h3 className="font-serif text-xl font-medium text-graphite">{prod.name}</h3>
-                  <p className="text-xs text-slate-dark line-clamp-2 leading-relaxed max-w-2xl">{prod.description}</p>
-
-                  <div className="flex flex-wrap gap-4 text-xs text-slate-dark pt-1">
-                    <span><strong>Capacity:</strong> {prod.seatingCapacity}</span>
-                    <span><strong>Dimensions:</strong> {prod.dimensionsSummary}</span>
-                    <span><strong>Frame:</strong> {prod.frameMaterial}</span>
-                  </div>
-                </div>
-
-                <div className="shrink-0 flex flex-col sm:flex-row md:flex-col gap-2 w-full md:w-44">
-                  <Link
-                    href={`/products/${prod.slug}`}
-                    className="px-4 py-2.5 text-center rounded-md bg-white hover:bg-platinum-soft text-graphite text-xs font-semibold transition-colors border border-graphite"
-                  >
-                    View Details
-                  </Link>
-                  <Link
-                    href={`/studio?baseProduct=${prod.id}`}
-                    className="px-4 py-2.5 text-center rounded-md bg-platinum-soft hover:bg-platinum text-graphite text-xs font-semibold transition-colors border border-platinum-border"
-                  >
-                    Customize Studio
-                  </Link>
-                  <Link
-                    href={`/custom-design?product=${prod.id}`}
-                    className="px-4 py-2.5 text-center rounded-md bg-graphite hover:bg-graphite-hover text-white text-xs font-semibold uppercase tracking-wider transition-colors"
-                  >
-                    Request Quote
-                  </Link>
-                </div>
-              </div>
-            );
-          })}
+          {filteredProducts.map((prod) => (
+            <div className="premium-product-list-row" key={prod.id}>
+              <LuxuryProductCard product={prod} isShortlisted={wishlistIds.includes(prod.id)} isCompared={compareList.includes(prod.id)} onToggleShortlist={toggleWishlist} onToggleCompare={toggleCompare} />
+            </div>
+          ))}
         </div>
       )}
 
@@ -379,7 +294,7 @@ export default function ProductCatalogueClient({
       {compareList.length > 0 && (
         <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 bg-graphite text-white px-5 py-3 rounded-md shadow-elevated border border-graphite-border flex items-center space-x-6">
           <div className="flex items-center space-x-2">
-            <Scale className="w-4 h-4 text-slate-silver" />
+            <GitCompareArrows className="w-4 h-4 text-slate-silver" />
             <span className="text-xs font-semibold uppercase tracking-wider">
               Comparing {compareList.length} of 3 Designs
             </span>
@@ -461,18 +376,6 @@ export default function ProductCatalogueClient({
                     <td className="p-3 bg-platinum-soft font-semibold text-slate-dark">Upholstery Spec</td>
                     {comparedProducts.map((p) => (
                       <td key={p.id} className="p-3">{p.upholsteryType || 'Belgian Weave / Velvet'}</td>
-                    ))}
-                  </tr>
-                  <tr>
-                    <td className="p-3 bg-platinum-soft font-semibold text-slate-dark">Interactive 3D</td>
-                    {comparedProducts.map((p) => (
-                      <td key={p.id} className="p-3">
-                        {p.threeDAsset ? (
-                          <span className="text-status-success font-semibold">Available (360° Rotate)</span>
-                        ) : (
-                          <span className="text-slate-muted">High-Res Render</span>
-                        )}
-                      </td>
                     ))}
                   </tr>
                   <tr>

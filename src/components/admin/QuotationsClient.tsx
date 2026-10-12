@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import RecordEditor from './RecordEditor';
 import { 
   FileText, 
   Printer, 
@@ -15,26 +16,31 @@ import {
   ArrowRight,
   Send
 } from 'lucide-react';
+import { useToast } from '@/components/ui/ToastProvider';
 
 interface Props {
   initialQuotations: any[];
   customers: any[];
   leads: any[];
+  initialLeadId?: string;
+  initialCustomerId?: string;
 }
 
-export default function QuotationsClient({ initialQuotations, customers, leads }: Props) {
+export default function QuotationsClient({ initialQuotations, customers, leads, initialLeadId, initialCustomerId }: Props) {
+  const { error: toastError, success: toastSuccess } = useToast();
   const [quotations, setQuotations] = useState(initialQuotations);
   const [selectedQuote, setSelectedQuote] = useState<any | null>(initialQuotations[0] || null);
 
   // Modals
   const [showPdfModal, setShowPdfModal] = useState(false);
-  const [showNewQuoteModal, setShowNewQuoteModal] = useState(false);
+  const [showNewQuoteModal, setShowNewQuoteModal] = useState(Boolean(initialLeadId));
+  const [creatingQuote,setCreatingQuote] = useState(false);
   const [convertingJob, setConvertingJob] = useState(false);
 
   // New Quote Form
   const [newQuote, setNewQuote] = useState({
-    customerId: customers[0]?.id || '',
-    leadId: leads[0]?.id || '',
+    customerId: initialCustomerId || customers[0]?.id || '',
+    leadId: initialLeadId || '',
     itemDescription: 'Bespoke 3-Seater Sofa in Velvet',
     dimensions: '96"W x 38"D x 32"H',
     upholsterySpec: 'Belgian Luxe Velvet (V-EMR-01)',
@@ -47,6 +53,8 @@ export default function QuotationsClient({ initialQuotations, customers, leads }
 
   const handleCreateQuote = async (e: React.FormEvent) => {
     e.preventDefault();
+    if(creatingQuote)return;
+    setCreatingQuote(true);
     try {
       const res = await fetch('/api/quotations', {
         method: 'POST',
@@ -76,15 +84,15 @@ export default function QuotationsClient({ initialQuotations, customers, leads }
 
       const data = await res.json();
       if (res.ok) {
-        alert(`Quotation ${data.quoteNumber} created successfully!`);
+        toastSuccess('Quotation Generated', `Quotation ${data.quoteNumber} created successfully!`);
         window.location.reload();
       } else {
-        alert(data.error || 'Failed to create quotation.');
+        toastError('Quotation Error', data.error || 'Failed to create quotation.');
       }
     } catch (err) {
       console.error(err);
-      alert('Error creating quotation.');
-    }
+      toastError('System Error', 'Error creating quotation.');
+    } finally {setCreatingQuote(false);}
   };
 
   // Convert Quotation into Factory Manufacturing Job Card
@@ -100,26 +108,26 @@ export default function QuotationsClient({ initialQuotations, customers, leads }
         body: JSON.stringify({
           quotationId: selectedQuote.id,
           customerId: selectedQuote.customerId,
-          productTitle: firstItem.itemDescription || 'Bespoke Manufactured Furniture',
-          quantity: firstItem.quantity || 1,
-          targetCompletionDate: new Date(Date.now() + (selectedQuote.deliveryLeadWeeks || 4) * 7 * 24 * 3600 * 1000).toISOString(),
-          timberSpecification: firstItem.frameSpec || 'Solid Kiln-Dried CP Teakwood',
+          productTitle: selectedQuote.items.map((i:any)=>i.itemDescription).join('; ') || 'Bespoke Furniture',
+          quantity: selectedQuote.items.reduce((sum:number,i:any)=>sum+i.quantity,0) || 1,
+          targetCompletionWeeks: selectedQuote.deliveryLeadWeeks || 4,
+          frameInstructions: selectedQuote.items.map((i:any)=>i.frameSpec).filter(Boolean).join('; ') || 'Solid Kiln-Dried CP Teakwood',
           foamSpecification: '45D High-Resilience PU Core with Down Quilt',
-          fabricSpecification: firstItem.upholsterySpec || 'Belgian Luxe Velvet',
-          finalDimensions: firstItem.dimensions || 'Custom Dimensions',
+          fabricCodeAndColor: selectedQuote.items.map((i:any)=>i.upholsterySpec).filter(Boolean).join('; ') || 'Belgian Luxe Velvet',
+          exactDimensions: selectedQuote.items.map((i:any)=>i.itemDescription+': '+(i.dimensions||'Confirm with client')).join('; '),
         }),
       });
 
       const data = await res.json();
       if (res.ok) {
-        alert(`Quotation converted to Manufacturing Job ${data.jobCardNumber}!`);
+        toastSuccess('Job Card Issued', `Quotation converted to Manufacturing Job ${data.jobCardNumber}!`);
         window.location.reload();
       } else {
-        alert(data.error || 'Failed to convert to factory job.');
+        toastError('Factory Conversion Failed', data.error || 'Failed to convert to factory job.');
       }
     } catch (err) {
       console.error(err);
-      alert('Error converting to factory job.');
+      toastError('System Error', 'Error converting to factory job.');
     } finally {
       setConvertingJob(false);
     }
@@ -127,6 +135,7 @@ export default function QuotationsClient({ initialQuotations, customers, leads }
 
   return (
     <div className="space-y-6 font-sans">
+      {selectedQuote && <RecordEditor key={selectedQuote.id} kind="quotations" record={selectedQuote} label="Update quotation status" onSaved={()=>window.location.reload()} fields={[{key:'status',label:'Status (accept before factory release)',options:['DRAFT','UNDER_REVIEW','SENT','REVISION_REQUESTED','ACCEPTED','REJECTED','EXPIRED'].map(value=>({value,label:value.replaceAll('_',' ')}))}]}/>}
       {/* Top Action Bar */}
       <div className="flex justify-between items-center bg-white p-4 rounded-md border border-platinum-border shadow-sm">
         <span className="text-xs font-medium text-graphite">
@@ -210,7 +219,7 @@ export default function QuotationsClient({ initialQuotations, customers, leads }
 
                 <button
                   onClick={handleConvertToJob}
-                  disabled={convertingJob}
+                  disabled={convertingJob || selectedQuote.status !== 'ACCEPTED'}
                   className="px-4 py-2 bg-graphite hover:bg-graphite-hover text-white rounded-md text-xs font-medium flex items-center space-x-1.5 transition-colors shadow-sm"
                   title="Release to Bodla workshop floor"
                 >
@@ -303,8 +312,8 @@ export default function QuotationsClient({ initialQuotations, customers, leads }
 
       {/* Customer Printable PDF View Modal */}
       {showPdfModal && selectedQuote && (
-        <div className="fixed inset-0 z-50 bg-graphite-deep/80 backdrop-blur-sm p-4 md:p-8 flex items-center justify-center overflow-y-auto">
-          <div className="bg-white max-w-3xl w-full rounded-md p-8 shadow-2xl border border-platinum-border text-graphite relative max-h-[90vh] overflow-y-auto print:m-0 print:p-0">
+        <div className="quotation-print-overlay fixed inset-0 z-50 bg-graphite-deep/80 backdrop-blur-sm p-4 md:p-8 flex items-center justify-center overflow-y-auto">
+          <div className="quotation-print-sheet bg-white max-w-3xl w-full rounded-md p-8 shadow-2xl border border-platinum-border text-graphite relative max-h-[90vh] overflow-y-auto print:m-0 print:p-0">
             <div className="flex items-center justify-between pb-4 border-b border-platinum-border mb-6 print:hidden">
               <span className="font-serif text-lg font-medium text-graphite">Official Customer Quotation PDF Preview</span>
               <div className="flex items-center space-x-2">
@@ -327,7 +336,7 @@ export default function QuotationsClient({ initialQuotations, customers, leads }
                 <div>
                   <h2 className="font-serif text-2xl font-bold uppercase tracking-tight text-graphite">PRADEEP FURNITURE ATELIER</h2>
                   <p className="text-slate-dark text-[11px] font-medium">Bespoke Luxury Seating &amp; Fancy Chairs Manufacturer</p>
-                  <p className="text-slate-muted text-[10px] mt-0.5">Plot 42-44 Bodla Industrial Zone &amp; 18 Civil Lines, Agra, UP | GSTIN: 09AABCP1234F1Z9</p>
+                  <p className="text-slate-muted text-[10px] mt-0.5">Nagla Latoori Singh, Deori Road, Agra, UP | Phone: +91 8445553853 | Email: pradeepfurniture2@gmail.com</p>
                 </div>
                 <div className="text-right">
                   <span className="font-mono text-sm font-bold block text-graphite">{selectedQuote.quoteNumber}</span>
@@ -432,7 +441,7 @@ export default function QuotationsClient({ initialQuotations, customers, leads }
                 <label className="block text-slate-dark font-medium mb-1">Customer *</label>
                 <select
                   value={newQuote.customerId}
-                  onChange={(e) => setNewQuote({ ...newQuote, customerId: e.target.value })}
+                  onChange={(e) => setNewQuote({ ...newQuote, customerId: e.target.value, leadId: '' })}
                   className="w-full p-2.5 rounded-md bg-platinum-soft border border-platinum-border text-graphite focus:outline-none focus:border-graphite"
                 >
                   {customers.map((c) => (
@@ -505,7 +514,7 @@ export default function QuotationsClient({ initialQuotations, customers, leads }
                   Cancel
                 </button>
                 <button
-                  type="submit"
+                  type="submit" disabled={creatingQuote}
                   className="px-5 py-2 bg-graphite hover:bg-graphite-hover text-white rounded-md font-medium"
                 >
                   Save Quotation

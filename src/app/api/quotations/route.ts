@@ -1,9 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { sendCustomerStatusUpdateEmail } from '@/lib/email';
 
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
+    const result = await prisma.$transaction(async (tx) => {
     const {
       customerId,
       leadId,
@@ -27,17 +29,19 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const count = await prisma.quotation.count();
-    const quoteNumber = `QTE-2026-${String(count + 1).padStart(4, '0')}`;
+    if (!Array.isArray(items) || items.some((item:any)=>!String(item.itemDescription||'').trim() || !Number.isInteger(Number(item.quantity)) || Number(item.quantity)<1 || !Number.isFinite(Number(item.unitEstimate)) || Number(item.unitEstimate)<0) || !Number.isFinite(Number(taxPercent)) || Number(taxPercent)<0 || Number(taxPercent)>100 || !Number.isFinite(Number(shippingCost)) || Number(shippingCost)<0) return NextResponse.json({error:'Enter valid line items, quantities, prices and tax.'},{status:400});
+    const leadForNotification=leadId?await tx.lead.findUnique({where:{id:leadId},include:{customer:true,product:true}}):null;
+    if(leadId&&(!leadForNotification||leadForNotification.customerId!==customerId))return NextResponse.json({error:'Select a lead belonging to the chosen customer.'},{status:400});
+    const quoteNumber = `QTE-${new Date().getFullYear()}-${crypto.randomUUID().slice(0,8).toUpperCase()}`;
 
-    const computedSubtotal = Number(subtotal) || items.reduce((acc: number, item: any) => acc + (Number(item.totalLineAmount) || 0), 0);
+    const computedSubtotal = items.reduce((acc: number, item: any) => acc + Number(item.unitEstimate) * Number(item.quantity), 0);
     const taxAmount = (computedSubtotal * Number(taxPercent)) / 100;
     const totalEstimate = computedSubtotal + taxAmount + (Number(shippingCost) || 0);
 
     // Get default admin user
-    const defaultUser = await prisma.user.findFirst();
+    const defaultUser = await tx.user.findFirst({where:{role:'SUPER_ADMIN',isActive:true}});
 
-    const quotation = await prisma.quotation.create({
+    const quotation = await tx.quotation.create({
       data: {
         quoteNumber,
         revisionCode: 'REV-01',
@@ -45,7 +49,7 @@ export async function POST(req: NextRequest) {
         leadId: leadId || null,
         designRevisionId: designRevisionId || null,
         createdById: defaultUser?.id || 'user-admin-1',
-        status: 'SENT',
+        status: 'DRAFT',
         subtotal: computedSubtotal,
         taxPercent: Number(taxPercent),
         taxAmount,
@@ -63,7 +67,7 @@ export async function POST(req: NextRequest) {
 
     // Create line items
     for (const item of items) {
-      await prisma.quotationItem.create({
+      await tx.quotationItem.create({
         data: {
           quotationId: quotation.id,
           itemDescription: item.itemDescription,
@@ -72,32 +76,50 @@ export async function POST(req: NextRequest) {
           frameSpec: item.frameSpec || null,
           quantity: Number(item.quantity) || 1,
           unitEstimate: Number(item.unitEstimate) || 0,
-          totalLineAmount: Number(item.totalLineAmount) || (Number(item.unitEstimate) * Number(item.quantity)),
+          totalLineAmount: Number(item.unitEstimate) * Number(item.quantity),
         },
       });
     }
 
     // Update lead stage if leadId present
     if (leadId) {
-      await prisma.lead.update({
+      await tx.lead.update({
         where: { id: leadId },
-        data: { stage: 'QUOTATION_SENT' },
+        data: { stage: 'NEGOTIATION' },
       });
-      await prisma.leadActivity.create({
+      await tx.leadActivity.create({
         data: {
           leadId,
-          action: 'QUOTE_SENT',
+          action: 'QUOTE_GENERATED',
           details: `Quotation ${quoteNumber} generated for amount ₹${totalEstimate.toLocaleString('en-IN')}`,
         },
       });
     }
 
-    return NextResponse.json({
+    return {
       success: true,
       quoteNumber,
       quotationId: quotation.id,
       message: 'Quotation generated successfully.',
+      leadForNotification,
+    };
     });
+    if (!(result instanceof NextResponse) && result.leadForNotification?.stage !== 'NEGOTIATION') {
+      const lead = result.leadForNotification;
+      if (lead) {
+        const email = await sendCustomerStatusUpdateEmail({
+          to: lead.customer.email,
+          customerName: lead.customer.fullName,
+          referenceCode: lead.leadCode,
+          recordType: 'Enquiry',
+          status: 'NEGOTIATION',
+          details: `A quotation (${result.quoteNumber}) has been prepared for your furniture enquiry${lead.product?.name ? ` about ${lead.product.name}` : ''}.`,
+        });
+        return NextResponse.json({ ...result, leadForNotification: undefined, emailNotification: email.sent ? 'sent' : email.reason });
+      }
+    }
+    if (result instanceof NextResponse) return result;
+    return NextResponse.json({ ...result, leadForNotification: undefined });
   } catch (err: any) {
     console.error('Error generating quotation:', err);
     return NextResponse.json({ error: err.message }, { status: 500 });

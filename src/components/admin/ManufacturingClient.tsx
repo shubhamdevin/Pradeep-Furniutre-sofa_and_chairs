@@ -12,6 +12,7 @@ import {
   Package, 
   ArrowRight
 } from 'lucide-react';
+import { useToast } from '@/components/ui/ToastProvider';
 
 interface Props {
   initialJobs: any[];
@@ -36,6 +37,7 @@ const STAGE_ORDER = [
 ];
 
 export default function ManufacturingClient({ initialJobs }: Props) {
+  const { error: toastError, success: toastSuccess, info: toastInfo } = useToast();
   const [jobs, setJobs] = useState(initialJobs);
   const [selectedJob, setSelectedJob] = useState<any | null>(initialJobs[0] || null);
   const [advancing, setAdvancing] = useState(false);
@@ -45,7 +47,7 @@ export default function ManufacturingClient({ initialJobs }: Props) {
     if (!selectedJob) return;
     const currentIdx = STAGE_ORDER.indexOf(selectedJob.currentStage);
     if (currentIdx >= STAGE_ORDER.length - 1) {
-      alert('This job is already at the final stage (Closed Internally).');
+      toastInfo('Job Completed', 'This job is already at the final stage (Closed Internally).');
       return;
     }
 
@@ -66,17 +68,24 @@ export default function ManufacturingClient({ initialJobs }: Props) {
       if (res.ok) {
         setSelectedJob((prev: any) => ({
           ...prev,
-          currentStage: nextStage,
+          currentStage: data.currentStage,
+          tasks: data.tasks,
         }));
         setJobs((prev) =>
-          prev.map((j) => (j.id === selectedJob.id ? { ...j, currentStage: nextStage } : j))
+          prev.map((j) => (j.id === selectedJob.id ? { ...j, currentStage: data.currentStage, tasks: data.tasks } : j))
         );
+        const emailNote = data.emailNotification === 'sent'
+          ? ' Customer email sent.'
+          : data.emailNotification === 'missing_email'
+            ? ' Customer has no email address on file.'
+            : ' Customer email was not sent; check SMTP configuration and server logs.';
+        toastSuccess('Stage Updated', `Job transitioned to ${data.currentStage}.${emailNote}`);
       } else {
-        alert(data.error || 'Failed to advance stage.');
+        toastError('Stage Update Failed', data.error || 'Failed to advance stage.');
       }
     } catch (err) {
       console.error(err);
-      alert('Error advancing stage.');
+      toastError('System Error', 'Error advancing stage.');
     } finally {
       setAdvancing(false);
     }
@@ -135,7 +144,7 @@ export default function ManufacturingClient({ initialJobs }: Props) {
 
             <button
               onClick={handleAdvanceStage}
-              disabled={advancing}
+              disabled={advancing || selectedJob.currentStage === 'CLOSED_INTERNALLY'}
               className="px-4 py-2 bg-graphite hover:bg-graphite-hover text-white rounded-md text-xs font-medium flex items-center space-x-1.5 transition-colors shadow-sm"
             >
               <CheckCircle2 className="w-3.5 h-3.5 text-slate-silver" />

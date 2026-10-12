@@ -1,5 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { validateVerificationToken } from '@/lib/otp-store';
+import { sendSubmissionConfirmationEmail } from '@/lib/email';
+
+export const dynamic = 'force-dynamic';
 
 export async function POST(req: NextRequest) {
   try {
@@ -32,6 +36,7 @@ export async function POST(req: NextRequest) {
       customerPhone,
       customerWhatsapp,
       customerEmail,
+      verificationToken,
       referenceImages = [],
       referenceLinks,
       roomPhotos = [],
@@ -43,6 +48,17 @@ export async function POST(req: NextRequest) {
         { error: 'Customer Name, Phone number, and Furniture Type are required.' },
         { status: 400 }
       );
+    }
+
+    // Email OTP Verification Check
+    if (customerEmail) {
+      const isVerified = validateVerificationToken(customerEmail, verificationToken);
+      if (!isVerified) {
+        return NextResponse.json(
+          { error: 'Email verification required. Please complete OTP verification to prevent spam submissions.' },
+          { status: 403 }
+        );
+      }
     }
 
     // 1. Generate unique Reference ID (e.g. CFR-2026-XXXX)
@@ -139,7 +155,7 @@ export async function POST(req: NextRequest) {
     const lead = await prisma.lead.create({
       data: {
         leadCode,
-        source: referenceType === 'EXISTING_PRODUCT' ? 'PRODUCT_ENQUIRY' : 'EXTERNAL_REFERENCE',
+        source: 'CUSTOM_COMMISSION',
         stage: 'NEW',
         priority: 'HIGH',
         customerId: customer.id,
@@ -158,6 +174,17 @@ export async function POST(req: NextRequest) {
         details: `Customer submitted custom design request ${referenceNumber} with ${attachmentsToCreate.length} uploaded files.`,
       },
     });
+
+    // Send confirmation email asynchronously if customer email was provided
+    if (customerEmail) {
+      sendSubmissionConfirmationEmail({
+        to: customerEmail,
+        customerName,
+        referenceCode: referenceNumber,
+        requestType: `Bespoke ${furnitureType} Commission`,
+        summary: `${furnitureType} (${quantity} unit) for ${deliveryCity || 'Agra'}. Dimensions: ${dimensionsSummary}`,
+      }).catch((err) => console.error('Failed to send confirmation email:', err));
+    }
 
     return NextResponse.json({
       success: true,

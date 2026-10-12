@@ -1,122 +1,148 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { 
   Menu, 
   X, 
   Search, 
-  ChevronDown, 
-  Phone, 
+  ChevronDown,
+  ChevronRight,
   ArrowRight,
-  Sliders,
+  House,
   Layers,
-  FileText
+  Sparkles,
+  Heart,
+  MapPin,
 } from 'lucide-react';
+import LocationIcon from '@/components/ui/LocationIcon';
+import { useWishlist } from '@/components/furniture/WishlistProvider';
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [megaMenuOpen, setMegaMenuOpen] = useState<string | null>(null);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [isHidden, setIsHidden] = useState(false);
+  const headerRef = useRef<HTMLElement>(null);
   const pathname = usePathname();
+  const { productIds } = useWishlist();
 
   useEffect(() => {
+    let previousY = Math.max(0, window.scrollY);
+    let frame = 0;
+    setIsHidden(false);
+    setIsScrolled(previousY > 20);
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
+      if (frame) return;
+      frame = window.requestAnimationFrame(() => {
+        frame = 0;
+        // Clamp overscroll so a bounce at either edge cannot reverse direction.
+        const maxY = Math.max(0, document.documentElement.scrollHeight - window.innerHeight);
+        const currentY = Math.max(0, Math.min(window.scrollY, maxY));
+        const delta = currentY - previousY;
+        setIsScrolled(currentY > 20);
+        if (currentY <= 20 || mobileMenuOpen || headerRef.current?.querySelector(':focus-visible')) {
+          setIsHidden(false);
+        } else if (delta < 0) {
+          setIsHidden(false);
+        } else if (delta > 0 && currentY > (headerRef.current?.offsetHeight ?? 80)) {
+          setIsHidden(true);
+          setMegaMenuOpen(null);
+        }
+        previousY = currentY;
+      });
     };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.cancelAnimationFrame(frame);
+    };
+  }, [mobileMenuOpen, pathname]);
 
-  // Close menus on route change
   useEffect(() => {
     setMobileMenuOpen(false);
     setMegaMenuOpen(null);
   }, [pathname]);
 
   const sofaCategories = [
-    { name: '2-Seater Sofas', slug: '2-seater-sofas', desc: 'Compact luxury for intimate spaces' },
-    { name: '3-Seater Sofas', slug: '3-seater-sofas', desc: 'Living room centerpiece seating' },
-    { name: 'L-Shaped Sofas', slug: 'l-shaped-sofas', desc: 'Panoramic corner loungers' },
-    { name: 'U-Shaped Sofas', slug: 'u-shaped-sofas', desc: 'Grand conversational suites' },
-    { name: 'Sectional Sofas', slug: 'sectional-sofas', desc: 'Modular architectural layouts' },
-    { name: 'Chesterfield Sofas', slug: 'chesterfield-sofas', desc: 'Hand-tufted heritage classics' },
-    { name: 'Curved Sofas', slug: 'curved-sofas', desc: 'Organic sculpted Milanese forms' },
-    { name: 'Luxury Sofas', slug: 'luxury-sofas', desc: 'Bespoke hand-tailored studio creations' },
+    { name: '2-Seater Sofas', slug: '2-seater-sofas' },
+    { name: '3-Seater Sofas', slug: '3-seater-sofas' },
+    { name: 'L-Shaped Sofas', slug: 'l-shaped-sofas' },
+    { name: 'U-Shaped Sofas', slug: 'u-shaped-sofas' },
+    { name: 'Sectional Sofas', slug: 'sectional-sofas' },
+    { name: 'Chesterfield Sofas', slug: 'chesterfield-sofas' },
+    { name: 'Curved Sofas', slug: 'curved-sofas' },
+    { name: 'Luxury Sofas', slug: 'luxury-sofas' },
   ];
 
   const chairCategories = [
-    { name: 'Fancy Chairs', slug: 'fancy-chairs', desc: 'Artisanal sculptural statements' },
-    { name: 'Accent Chairs', slug: 'accent-chairs', desc: 'Architectural focal points' },
-    { name: 'Lounge Chairs', slug: 'lounge-chairs', desc: 'Deep ergonomic relaxation' },
-    { name: 'Wingback Chairs', slug: 'wingback-chairs', desc: 'Regal acoustic shelter silhouettes' },
-    { name: 'Tub Chairs', slug: 'tub-chairs', desc: 'Enveloping barrel curved comfort' },
-    { name: 'Royal Chairs', slug: 'royal-chairs', desc: 'Hand-carved teak palatial heirlooms' },
-  ];
-
-  const signatureCollections = [
-    { name: 'Milano Opulence', slug: 'milano-opulence', tagline: 'Italian Haute Couture Living' },
-    { name: 'Royal Heritage', slug: 'royal-heritage', tagline: 'Chesterfield Tufting & Teak' },
-    { name: 'Scandinavian Serenity', slug: 'scandinavian-serenity', tagline: 'Organic Curves & Oak' },
-    { name: 'Art Deco Atelier', slug: 'art-deco-atelier', tagline: 'Geometric Precision & Brass' },
+    { name: 'Fancy Chairs', slug: 'fancy-chairs' },
+    { name: 'Accent Chairs', slug: 'accent-chairs' },
+    { name: 'Lounge Chairs', slug: 'lounge-chairs' },
+    { name: 'Wingback Chairs', slug: 'wingback-chairs' },
+    { name: 'Tub Chairs', slug: 'tub-chairs' },
+    { name: 'Royal Chairs', slug: 'royal-chairs' },
   ];
 
   return (
     <>
-      {/* Top Architectural Notice Bar */}
-      <div className="bg-graphite-deep text-platinum-soft text-xs py-2 px-4 border-b border-graphite-border">
+      {/* Top Announcement Bar matching mockup */}
+      <div className="bg-[#121417] text-[#D1D5DB] text-[11px] py-1.5 px-4 font-sans">
         <div className="max-w-site mx-auto flex items-center justify-between">
-          <div className="flex items-center space-x-4">
-            <span className="flex items-center space-x-1.5 text-platinum">
-              <span className="w-1.5 h-1.5 rounded-full bg-olive-muted" />
-              <span className="font-medium tracking-wide">Bespoke Manufacturing Atelier • Bodla &amp; Civil Lines, Agra</span>
+          <div className="flex items-center space-x-2">
+            <span className="font-semibold text-white tracking-wide">
+              Bespoke Sofas &amp; Designer Chairs
             </span>
-            <span className="hidden md:inline text-slate-silver">|</span>
-            <span className="hidden md:inline text-slate-silver">10-Year Solid Hardwood Structural Guarantee</span>
+            <span className="text-[#6B7280] hidden sm:inline">|</span>
+            <span className="text-[#9CA3AF] hidden sm:inline">Manufacturer Since 1999</span>
           </div>
-          <div className="flex items-center space-x-5">
-            <Link href="/consultation" className="hover:text-platinum transition-colors text-[11px] font-medium">
-              Book Private Consultation
+          <div className="flex items-center space-x-4 sm:space-x-6 text-[11px] text-[#9CA3AF]">
+            <Link href="/consultation" className="hidden sm:inline hover:text-white transition-colors">
+              Showroom
             </Link>
-            <Link href="/admin" className="hover:text-platinum transition-colors text-[11px] opacity-75 hover:opacity-100">
-              Staff Portal
+            <span className="hidden sm:inline">|</span>
+            <Link href="/manufacturing" className="hidden sm:inline hover:text-white transition-colors">
+              Factory Tour
             </Link>
+            <span className="hidden sm:inline">|</span>
+            <span className="inline-flex items-center gap-1.5 text-white font-medium">
+              <LocationIcon className="w-3.5 h-3.5 flex-shrink-0" />
+              <span>Agra, India</span>
+            </span>
           </div>
         </div>
       </div>
 
-      {/* Main Architectural Header */}
+      {/* Main Header Navbar matching mockup */}
       <header
-        className={`sticky top-0 z-50 transition-all duration-200 ${
+        ref={headerRef}
+        onFocusCapture={() => setIsHidden(false)}
+        className={`site-scroll-header sticky top-0 z-50 ${isHidden ? "is-scroll-hidden" : ""} ${
           isScrolled
-            ? 'bg-white/98 backdrop-blur shadow-subtle py-3 border-b border-platinum-border'
-            : 'bg-white py-4 border-b border-platinum-border'
+            ? 'bg-white shadow-sm py-3'
+            : 'bg-white py-3'
         }`}
       >
         <div className="max-w-site mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
-          {/* Left: Brand Logo */}
-          <Link href="/" className="group flex items-center space-x-3">
-            <div className="w-9 h-9 rounded bg-graphite flex items-center justify-center text-platinum font-serif font-bold text-lg group-hover:bg-graphite-hover transition-colors">
-              P
-            </div>
+
+          {/* Brand Logo matching Velora style in mockup */}
+          <Link href="/" className="group flex items-center space-x-2.5">
             <div>
-              <span className="block font-serif text-xl sm:text-2xl font-bold tracking-tight text-graphite leading-none">
+              <span className="block font-serif text-xl sm:text-2xl font-extrabold tracking-tight text-[#111417] leading-none">
                 PRADEEP
               </span>
-              <span className="block text-[10px] tracking-[0.2em] text-slate-dark uppercase font-semibold mt-0.5">
-                Furniture Atelier
+              <span className="block text-[8px] tracking-[0.25em] text-slate-500 uppercase font-bold mt-0.5">
+                FURNITURE MANUFACTURER
               </span>
             </div>
           </Link>
 
-          {/* Centre: Main Navigation Links */}
-          <nav className="hidden lg:flex items-center space-x-6 text-[13px] font-medium text-graphite">
+          {/* Centre Navigation Links matching mockup */}
+          <nav className="hidden lg:flex items-center space-x-7 text-[13px] font-medium text-[#111417]">
             <Link 
               href="/" 
-              className={`hover:text-graphite-hover transition-colors ${pathname === '/' ? 'font-semibold text-graphite' : 'text-slate-dark'}`}
+              className={`hover:text-black transition-colors ${pathname === '/' ? 'font-bold text-black border-b-2 border-black pb-0.5' : 'text-slate-700'}`}
             >
               Home
             </Link>
@@ -127,254 +153,228 @@ export default function Header() {
               onMouseEnter={() => setMegaMenuOpen('sofas')}
               onMouseLeave={() => setMegaMenuOpen(null)}
             >
-              <button 
-                className="flex items-center space-x-1 hover:text-graphite transition-colors py-2 text-slate-dark hover:text-graphite"
-              >
+              <button className="flex items-center space-x-1 text-slate-700 hover:text-black transition-colors py-1">
                 <span>Sofas</span>
-                <ChevronDown className="w-3.5 h-3.5 text-slate-dark" />
+                <ChevronDown className="w-3.5 h-3.5 text-slate-500" />
               </button>
-
               {megaMenuOpen === 'sofas' && (
-                <div className="absolute top-full -left-8 w-[520px] bg-white rounded-lg shadow-elevated border border-platinum-border p-6 grid grid-cols-2 gap-3 z-50 animate-in fade-in duration-150">
-                  <div className="col-span-2 pb-2 border-b border-platinum-border flex justify-between items-center">
-                    <span className="text-[11px] uppercase font-bold tracking-wider text-slate-dark">Sofa Architecture</span>
-                    <Link href="/products?type=SOFA" className="text-xs text-graphite hover:underline font-semibold flex items-center space-x-1">
-                      <span>View All Sofas</span>
-                      <ArrowRight className="w-3 h-3" />
-                    </Link>
-                  </div>
+                <div className="absolute top-full -left-4 w-60 bg-white rounded-lg shadow-xl border border-slate-200 p-3 grid grid-cols-1 gap-1 z-50 animate-in fade-in duration-150">
                   {sofaCategories.map((c) => (
                     <Link
                       key={c.slug}
                       href={`/products?category=${c.slug}`}
-                      className="p-2.5 rounded-md hover:bg-platinum-soft transition-colors block border border-transparent hover:border-platinum-border"
+                      className="p-2 rounded-md hover:bg-slate-100 text-xs font-medium text-slate-800 transition-colors"
                     >
-                      <span className="font-sans font-semibold text-graphite text-xs block">{c.name}</span>
-                      <span className="text-[11px] text-slate-muted block mt-0.5">{c.desc}</span>
+                      {c.name}
                     </Link>
                   ))}
                 </div>
               )}
             </div>
 
-            {/* Chairs Dropdown */}
+            {/* Fancy Chairs Dropdown */}
             <div
               className="relative"
               onMouseEnter={() => setMegaMenuOpen('chairs')}
               onMouseLeave={() => setMegaMenuOpen(null)}
             >
-              <button className="flex items-center space-x-1 hover:text-graphite transition-colors py-2 text-slate-dark hover:text-graphite">
+              <button className="flex items-center space-x-1 text-slate-700 hover:text-black transition-colors py-1">
                 <span>Fancy Chairs</span>
-                <ChevronDown className="w-3.5 h-3.5 text-slate-dark" />
+                <ChevronDown className="w-3.5 h-3.5 text-slate-500" />
               </button>
-
               {megaMenuOpen === 'chairs' && (
-                <div className="absolute top-full -left-8 w-[480px] bg-white rounded-lg shadow-elevated border border-platinum-border p-6 grid grid-cols-2 gap-3 z-50 animate-in fade-in duration-150">
-                  <div className="col-span-2 pb-2 border-b border-platinum-border flex justify-between items-center">
-                    <span className="text-[11px] uppercase font-bold tracking-wider text-slate-dark">Designer Chairs</span>
-                    <Link href="/products?type=CHAIR" className="text-xs text-graphite hover:underline font-semibold flex items-center space-x-1">
-                      <span>View All Chairs</span>
-                      <ArrowRight className="w-3 h-3" />
-                    </Link>
-                  </div>
+                <div className="absolute top-full -left-4 w-60 bg-white rounded-lg shadow-xl border border-slate-200 p-3 grid grid-cols-1 gap-1 z-50 animate-in fade-in duration-150">
                   {chairCategories.map((c) => (
                     <Link
                       key={c.slug}
                       href={`/products?category=${c.slug}`}
-                      className="p-2.5 rounded-md hover:bg-platinum-soft transition-colors block border border-transparent hover:border-platinum-border"
+                      className="p-2 rounded-md hover:bg-slate-100 text-xs font-medium text-slate-800 transition-colors"
                     >
-                      <span className="font-sans font-semibold text-graphite text-xs block">{c.name}</span>
-                      <span className="text-[11px] text-slate-muted block mt-0.5">{c.desc}</span>
+                      {c.name}
                     </Link>
                   ))}
                 </div>
               )}
             </div>
 
-            {/* Collections Dropdown */}
-            <div
-              className="relative"
-              onMouseEnter={() => setMegaMenuOpen('collections')}
-              onMouseLeave={() => setMegaMenuOpen(null)}
-            >
-              <button className="flex items-center space-x-1 hover:text-graphite transition-colors py-2 text-slate-dark hover:text-graphite">
-                <span>Collections</span>
-                <ChevronDown className="w-3.5 h-3.5 text-slate-dark" />
-              </button>
-
-              {megaMenuOpen === 'collections' && (
-                <div className="absolute top-full -left-4 w-[340px] bg-white rounded-lg shadow-elevated border border-platinum-border p-5 space-y-2.5 z-50 animate-in fade-in duration-150">
-                  <div className="pb-2 border-b border-platinum-border">
-                    <span className="text-[11px] uppercase font-bold tracking-wider text-slate-dark">Signature Lines</span>
-                  </div>
-                  {signatureCollections.map((col) => (
-                    <Link
-                      key={col.slug}
-                      href={`/collections#${col.slug}`}
-                      className="p-2 rounded-md hover:bg-platinum-soft transition-colors block"
-                    >
-                      <span className="font-sans font-semibold text-graphite text-xs block">{col.name}</span>
-                      <span className="text-[11px] text-slate-muted block mt-0.5">{col.tagline}</span>
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            <Link href="/studio" className="hover:text-graphite transition-colors text-slate-dark hover:text-graphite">
-              Customize Furniture
+            <Link href="/collections" className="text-slate-700 hover:text-black transition-colors">
+              Collections
             </Link>
 
-            <Link href="/manufacturing" className="hover:text-graphite transition-colors text-slate-dark hover:text-graphite">
+            <Link href="/custom-design" className="text-slate-700 hover:text-black transition-colors">
+              Customize
+            </Link>
+
+            <Link href="/manufacturing" className="text-slate-700 hover:text-black transition-colors">
               Manufacturing
             </Link>
 
-            <Link href="/projects" className="hover:text-graphite transition-colors text-slate-dark hover:text-graphite">
-              Our Projects
+            <Link href="/projects" className="text-slate-700 hover:text-black transition-colors">
+              Projects
             </Link>
 
-            <Link href="/about" className="hover:text-graphite transition-colors text-slate-dark hover:text-graphite">
+            <Link href="/about" className="text-slate-700 hover:text-black transition-colors">
               About
             </Link>
 
-            <Link href="/contact" className="hover:text-graphite transition-colors text-slate-dark hover:text-graphite">
+            <Link href="/contact" className="text-slate-700 hover:text-black transition-colors">
               Contact
             </Link>
           </nav>
 
-          {/* Right: Search, Contact & Request Quote CTA */}
-          <div className="hidden lg:flex items-center space-x-4">
-            <button
-              onClick={() => setSearchOpen(true)}
-              className="p-2 text-slate-dark hover:text-graphite transition-colors rounded-md hover:bg-platinum-soft"
-              title="Search catalogue"
+          {/* Right Action Buttons */}
+          <div className="flex items-center space-x-4">
+            <Link
+              href="/wishlist"
+              className="header-wishlist-link"
+              aria-label={`Saved designs${productIds.length ? `, ${productIds.length} saved` : ''}`}
+              title="Saved designs"
+            >
+              <Heart size={18} />
+              {productIds.length > 0 && <span>{productIds.length > 99 ? '99+' : productIds.length}</span>}
+            </Link>
+            <Link
+              href="/products"
+              className="p-2 text-slate-700 hover:text-black transition-colors rounded-full hover:bg-slate-100"
+              title="Search Catalogue"
             >
               <Search className="w-4 h-4" />
-            </button>
+            </Link>
 
             <Link
               href="/custom-design"
-              className="inline-flex items-center space-x-2 px-4 py-2 rounded-md bg-graphite text-white hover:bg-graphite-hover text-xs uppercase tracking-wider font-semibold transition-all shadow-subtle border border-graphite"
+              className="hidden sm:inline-flex items-center space-x-2 px-5 py-2.5 rounded-lg bg-[#111417] hover:bg-black text-white text-xs font-bold uppercase tracking-wider transition-all shadow-md"
             >
-              <span>Request Quote</span>
+              <span>Request a Quote</span>
+              <ArrowRight className="w-3.5 h-3.5" />
             </Link>
-          </div>
 
-          {/* Mobile Navigation Trigger */}
-          <div className="flex lg:hidden items-center space-x-2">
             <button
-              onClick={() => setSearchOpen(true)}
-              className="p-2 text-graphite rounded-md hover:bg-platinum-soft"
-              aria-label="Search"
-            >
-              <Search className="w-5 h-5" />
-            </button>
-            <button
+              type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 text-graphite rounded-md hover:bg-platinum-soft"
-              aria-label="Toggle Menu"
+              className={`mobile-hamburger lg:hidden ${mobileMenuOpen ? 'is-open' : ''}`}
+              aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
+              aria-expanded={mobileMenuOpen}
+              title={mobileMenuOpen ? 'Close menu' : 'Open navigation menu'}
             >
-              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              <span className="mobile-hamburger__line" />
+              <span className="mobile-hamburger__line" />
+              <span className="mobile-hamburger__line" />
             </button>
           </div>
         </div>
 
-        {/* Mobile Menu Overlay */}
-        {mobileMenuOpen && (
-          <div className="lg:hidden bg-white border-b border-platinum-border px-6 py-6 space-y-4 max-h-[82vh] overflow-y-auto">
-            <Link href="/" className="block py-2 font-medium text-graphite hover:text-graphite-hover">
-              Home
+        {/* Mobile Menu Drawer with Smooth Expand & Staggered Animation */}
+        <div className={`mobile-drawer-wrapper lg:hidden ${mobileMenuOpen ? 'is-open' : ''}`}>
+          <div className="mobile-drawer-inner px-4 pt-3 pb-6 space-y-2.5">
+            <Link
+              href="/"
+              onClick={() => setMobileMenuOpen(false)}
+              className="mobile-drawer-item flex items-center justify-between py-2.5 text-sm font-semibold text-slate-900 border-b border-slate-100 hover:text-black hover:pl-1 transition-all"
+            >
+              <span>Home</span>
+              <ChevronRight className="w-4 h-4 text-slate-400" />
+            </Link>
+            <Link
+              href="/products?type=SOFA"
+              onClick={() => setMobileMenuOpen(false)}
+              className="mobile-drawer-item flex items-center justify-between py-2.5 text-sm font-semibold text-slate-900 border-b border-slate-100 hover:text-black hover:pl-1 transition-all"
+            >
+              <span>Sofas</span>
+              <ChevronRight className="w-4 h-4 text-slate-400" />
+            </Link>
+            <Link
+              href="/products?category=fancy-chairs"
+              onClick={() => setMobileMenuOpen(false)}
+              className="mobile-drawer-item flex items-center justify-between py-2.5 text-sm font-semibold text-slate-900 border-b border-slate-100 hover:text-black hover:pl-1 transition-all"
+            >
+              <span>Fancy Chairs</span>
+              <ChevronRight className="w-4 h-4 text-slate-400" />
+            </Link>
+            <Link
+              href="/collections"
+              onClick={() => setMobileMenuOpen(false)}
+              className="mobile-drawer-item flex items-center justify-between py-2.5 text-sm font-semibold text-slate-900 border-b border-slate-100 hover:text-black hover:pl-1 transition-all"
+            >
+              <span>Collections</span>
+              <ChevronRight className="w-4 h-4 text-slate-400" />
+            </Link>
+            <Link
+              href="/custom-design"
+              onClick={() => setMobileMenuOpen(false)}
+              className="mobile-drawer-item flex items-center justify-between py-2.5 text-sm font-semibold text-slate-900 border-b border-slate-100 hover:text-black hover:pl-1 transition-all"
+            >
+              <span>Customize Furniture</span>
+              <ChevronRight className="w-4 h-4 text-slate-400" />
+            </Link>
+            <Link
+              href="/manufacturing"
+              onClick={() => setMobileMenuOpen(false)}
+              className="mobile-drawer-item flex items-center justify-between py-2.5 text-sm font-semibold text-slate-900 border-b border-slate-100 hover:text-black hover:pl-1 transition-all"
+            >
+              <span>Manufacturing</span>
+              <ChevronRight className="w-4 h-4 text-slate-400" />
+            </Link>
+            <Link
+              href="/projects"
+              onClick={() => setMobileMenuOpen(false)}
+              className="mobile-drawer-item flex items-center justify-between py-2.5 text-sm font-semibold text-slate-900 border-b border-slate-100 hover:text-black hover:pl-1 transition-all"
+            >
+              <span>Projects</span>
+              <ChevronRight className="w-4 h-4 text-slate-400" />
+            </Link>
+            <Link
+              href="/about"
+              onClick={() => setMobileMenuOpen(false)}
+              className="mobile-drawer-item flex items-center justify-between py-2.5 text-sm font-semibold text-slate-900 border-b border-slate-100 hover:text-black hover:pl-1 transition-all"
+            >
+              <span>About Us</span>
+              <ChevronRight className="w-4 h-4 text-slate-400" />
+            </Link>
+            <Link
+              href="/contact"
+              onClick={() => setMobileMenuOpen(false)}
+              className="mobile-drawer-item flex items-center justify-between py-2.5 text-sm font-semibold text-slate-900 border-b border-slate-100 hover:text-black hover:pl-1 transition-all"
+            >
+              <span>Contact</span>
+              <ChevronRight className="w-4 h-4 text-slate-400" />
             </Link>
 
-            <div className="border-t border-platinum-border pt-3">
-              <span className="text-[11px] uppercase font-bold text-slate-dark tracking-wider block mb-2">Sofas</span>
-              <div className="grid grid-cols-2 gap-2 text-xs">
-                {sofaCategories.map((c) => (
-                  <Link key={c.slug} href={`/products?category=${c.slug}`} className="py-1 text-slate-dark hover:text-graphite">
-                    {c.name}
-                  </Link>
-                ))}
-              </div>
-            </div>
-
-            <div className="border-t border-platinum-border pt-3">
-              <span className="text-[11px] uppercase font-bold text-slate-dark tracking-wider block mb-2">Fancy Chairs</span>
-              <div className="grid grid-cols-2 gap-2 text-xs">
-                {chairCategories.map((c) => (
-                  <Link key={c.slug} href={`/products?category=${c.slug}`} className="py-1 text-slate-dark hover:text-graphite">
-                    {c.name}
-                  </Link>
-                ))}
-              </div>
-            </div>
-
-            <div className="border-t border-platinum-border pt-3 space-y-2 text-sm font-medium">
-              <Link href="/collections" className="block text-graphite py-1">Collections</Link>
-              <Link href="/studio" className="block text-graphite py-1">Customize Furniture (3D Studio)</Link>
-              <Link href="/manufacturing" className="block text-graphite py-1">Our Manufacturing</Link>
-              <Link href="/projects" className="block text-graphite py-1">Our Projects</Link>
-              <Link href="/about" className="block text-graphite py-1">About Us</Link>
-              <Link href="/contact" className="block text-graphite py-1">Contact</Link>
-            </div>
-
-            <div className="pt-4 border-t border-platinum-border">
+            <div className="mobile-drawer-item pt-2">
               <Link
                 href="/custom-design"
-                className="w-full block py-3 text-center rounded-md bg-graphite text-white text-xs uppercase tracking-widest font-semibold"
+                onClick={() => setMobileMenuOpen(false)}
+                className="w-full text-center block py-3 rounded-lg bg-[#111417] text-white hover:bg-black text-xs font-bold uppercase tracking-wider shadow-sm transition-colors"
               >
-                Request Quotation
-              </Link>
-            </div>
-          </div>
-        )}
-      </header>
-
-      {/* Global Architectural Search Modal */}
-      {searchOpen && (
-        <div className="fixed inset-0 z-50 bg-graphite-deep/80 backdrop-blur-sm flex items-start justify-center pt-24 px-4 animate-in fade-in duration-150">
-          <div 
-            className="bg-white rounded-lg max-w-xl w-full p-6 shadow-elevated border border-platinum-border space-y-4"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-center justify-between border-b border-platinum-border pb-3">
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-dark">
-                Architectural Search
-              </span>
-              <button onClick={() => setSearchOpen(false)} className="text-slate-dark hover:text-graphite">
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="Search sofas, fancy chairs, materials, or SKU..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' && searchQuery) {
-                    window.location.href = `/products?search=${encodeURIComponent(searchQuery)}`;
-                  }
-                }}
-                className="w-full pl-10 pr-4 py-3 rounded-md bg-platinum-soft border border-platinum-border text-xs text-graphite focus:outline-none focus:border-graphite"
-                autoFocus
-              />
-              <Search className="w-4 h-4 text-slate-dark absolute left-3.5 top-3.5" />
-            </div>
-
-            <div className="pt-2 flex justify-between items-center text-xs text-slate-muted">
-              <span>Press <strong className="text-graphite">Enter</strong> to view matching catalogue items</span>
-              <Link
-                href={`/products?search=${encodeURIComponent(searchQuery)}`}
-                onClick={() => setSearchOpen(false)}
-                className="font-semibold text-graphite hover:underline"
-              >
-                Explore All →
+                Request a Quote →
               </Link>
             </div>
           </div>
         </div>
-      )}
+      </header>
+
+      <nav className="mobile-app-nav" aria-label="Mobile primary navigation">
+        <Link href="/" aria-current={pathname === '/' ? 'page' : undefined} className={`mobile-app-nav__link${pathname === '/' ? ' is-active' : ''}`}>
+          <House aria-hidden="true" />
+          <span>Home</span>
+        </Link>
+        <Link href="/products" aria-current={pathname.startsWith('/products') ? 'page' : undefined} className={`mobile-app-nav__link${pathname.startsWith('/products') ? ' is-active' : ''}`}>
+          <Search aria-hidden="true" />
+          <span>Explore</span>
+        </Link>
+        <Link href="/collections" aria-current={pathname.startsWith('/collections') ? 'page' : undefined} className={`mobile-app-nav__link${pathname.startsWith('/collections') ? ' is-active' : ''}`}>
+          <Layers aria-hidden="true" />
+          <span>Collections</span>
+        </Link>
+        <Link href="/wishlist" aria-current={pathname.startsWith('/wishlist') ? 'page' : undefined} className={`mobile-app-nav__link${pathname.startsWith('/wishlist') ? ' is-active' : ''}`}>
+          <span className="mobile-app-nav__icon-wrap"><Heart aria-hidden="true" />{productIds.length > 0 && <i>{productIds.length > 99 ? '99+' : productIds.length}</i>}</span>
+          <span>Saved</span>
+        </Link>
+        <Link href="/custom-design" aria-current={pathname.startsWith('/custom-design') || pathname.startsWith('/studio') ? 'page' : undefined} className={`mobile-app-nav__link${pathname.startsWith('/custom-design') || pathname.startsWith('/studio') ? ' is-active' : ''}`}>
+          <Sparkles aria-hidden="true" />
+          <span>Design</span>
+        </Link>
+      </nav>
     </>
   );
 }

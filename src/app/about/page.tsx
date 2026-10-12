@@ -48,7 +48,7 @@ export default function AboutPage() {
 
           <div className="relative aspect-[4/3] rounded-lg overflow-hidden shadow-sm bg-white border border-platinum-border">
             <img
-              src="https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=1200&q=80"
+              src="/images/atelier/atelier-craft.webp"
               alt="Artisan Timber Craftsmanship"
               className="w-full h-full object-cover"
             />

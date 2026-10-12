@@ -15,6 +15,8 @@ import {
   Sliders,
   Send
 } from 'lucide-react';
+import { useToast } from '@/components/ui/ToastProvider';
+import OtpVerificationModal from '@/components/ui/OtpVerificationModal';
 
 interface WizardProps {
   preselectedProduct?: any;
@@ -22,6 +24,7 @@ interface WizardProps {
 }
 
 export default function CustomDesignWizard({ preselectedProduct, allProducts }: WizardProps) {
+  const { error: toastError, success: toastSuccess, info: toastInfo } = useToast();
   const [step, setStep] = useState(1);
   const totalSteps = 8;
 
@@ -64,6 +67,7 @@ export default function CustomDesignWizard({ preselectedProduct, allProducts }: 
 
   const [imageInput, setImageInput] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showOtpModal, setShowOtpModal] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState<{ referenceNumber: string; leadCode: string } | null>(null);
 
   // Helper to handle image uploads / sample image additions
@@ -113,14 +117,40 @@ export default function CustomDesignWizard({ preselectedProduct, allProducts }: 
     });
   };
 
-  // Submit Handler
-  const handleSubmit = async () => {
+  // Trigger submission (checks email and opens OTP modal)
+  const handleSubmit = () => {
+    if (!formData.customerName || !formData.customerPhone) {
+      toastError('Contact Details Required', 'Please provide your full name and phone number in step 7.');
+      setStep(7);
+      return;
+    }
+
+    if (!formData.customerEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.customerEmail.trim())) {
+      toastError('Email Required for Verification', 'Please provide a valid email address so we can send your verification OTP.');
+      setStep(7);
+      return;
+    }
+
+    // Open OTP Verification Modal
+    setShowOtpModal(true);
+  };
+
+  // Called once customer enters correct OTP
+  const handleOtpVerified = async (verificationToken: string, verifiedEmail: string) => {
+    setShowOtpModal(false);
     setIsSubmitting(true);
+
     try {
+      const payload = {
+        ...formData,
+        customerEmail: verifiedEmail,
+        verificationToken,
+      };
+
       const res = await fetch('/api/custom-requests', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(payload),
       });
 
       const data = await res.json();
@@ -129,12 +159,13 @@ export default function CustomDesignWizard({ preselectedProduct, allProducts }: 
           referenceNumber: data.referenceNumber,
           leadCode: data.leadCode,
         });
+        toastSuccess('Commission Request Verified & Received', `Reference: ${data.referenceNumber || 'Submitted'}`);
       } else {
-        alert(data.error || 'Failed to submit custom request. Please try again.');
+        toastError('Submission Incomplete', data.error || 'Failed to submit custom request. Please try again.');
       }
     } catch (err) {
       console.error(err);
-      alert('Network error. Please try again.');
+      toastError('Network Error', 'Please check your connection or contact our atelier directly.');
     } finally {
       setIsSubmitting(false);
     }
@@ -185,10 +216,29 @@ export default function CustomDesignWizard({ preselectedProduct, allProducts }: 
               <span className="text-slate-dark font-medium">Client:</span>
               <span className="font-medium text-graphite">{formData.customerName}</span>
             </div>
-            <div className="flex justify-between">
+            <div className="flex justify-between border-b border-platinum-border pb-2">
               <span className="text-slate-dark font-medium">Commercial Protocol:</span>
               <span className="font-semibold text-graphite">Strictly Offline / Direct Bank Transfer</span>
             </div>
+          </div>
+
+          {/* Terms & Conditions Block */}
+          <div className="text-left bg-[#faf9f5] border border-[#e4dfd5] rounded-lg p-4 space-y-2.5 max-w-md mx-auto text-xs">
+            <div className="flex items-center gap-1.5 pb-1 border-b border-[#e4dfd5]">
+              <ShieldCheck className="w-4 h-4 text-[#a7864e]" />
+              <span className="font-serif font-bold text-xs text-[#222823] tracking-wide uppercase">
+                Bespoke Commission Terms &amp; Conditions
+              </span>
+            </div>
+            <ul className="text-[11px] text-[#555d56] space-y-1.5 list-disc list-inside leading-relaxed">
+              <li><strong>Zero Online Charges:</strong> Technical CAD review &amp; initial quote are complimentary. No online checkout occurs on this portal.</li>
+              <li><strong>Production Schedule:</strong> Custom fabrication requires 3-5 weeks after CAD sign-off and mutual deposit confirmation.</li>
+              <li><strong>Artisanal Tolerance:</strong> Hand-tufted architectural upholstery carries an industry standard ±0.5 inch dimensional variance.</li>
+              <li><strong>Structural Warranty:</strong> 10-year internal frame warranty covers seasoned CP teakwood frames and joint integrity.</li>
+            </ul>
+            <p className="text-[10px] text-[#788079] pt-1 border-t border-[#e4dfd5]">
+              Direct Inquiries &amp; Workshop Visits: <strong>Nagla Latoori Singh, Deori Road, Agra</strong> | <strong>+91 8445553853</strong> | <strong>pradeepfurniture2@gmail.com</strong>
+            </p>
           </div>
 
           <div className="pt-4 flex flex-col sm:flex-row justify-center gap-3">
@@ -732,7 +782,7 @@ export default function CustomDesignWizard({ preselectedProduct, allProducts }: 
                   <input
                     type="tel"
                     required
-                    placeholder="+91 98970 00000"
+                    placeholder="+91 8445553853"
                     value={formData.customerPhone}
                     onChange={(e) => setFormData({ ...formData, customerPhone: e.target.value })}
                     className="w-full p-3 rounded-md bg-platinum-soft border border-platinum-border text-graphite focus:outline-none focus:border-graphite"
@@ -743,7 +793,7 @@ export default function CustomDesignWizard({ preselectedProduct, allProducts }: 
                   <label className="block text-slate-dark font-medium mb-1">WhatsApp Number</label>
                   <input
                     type="tel"
-                    placeholder="+91 98970 00000 (if different)"
+                    placeholder="+91 8445553853 (if different)"
                     value={formData.customerWhatsapp}
                     onChange={(e) => setFormData({ ...formData, customerWhatsapp: e.target.value })}
                     className="w-full p-3 rounded-md bg-platinum-soft border border-platinum-border text-graphite focus:outline-none focus:border-graphite"
@@ -751,9 +801,12 @@ export default function CustomDesignWizard({ preselectedProduct, allProducts }: 
                 </div>
 
                 <div>
-                  <label className="block text-slate-dark font-medium mb-1">Email Address</label>
+                  <label className="block text-slate-dark font-medium mb-1">
+                    Email Address * <span className="text-[10px] text-slate-muted font-normal">(for OTP verification)</span>
+                  </label>
                   <input
                     type="email"
+                    required
                     placeholder="name@example.com"
                     value={formData.customerEmail}
                     onChange={(e) => setFormData({ ...formData, customerEmail: e.target.value })}
@@ -863,12 +916,34 @@ export default function CustomDesignWizard({ preselectedProduct, allProducts }: 
                 )}
               </div>
 
-              {/* Absolute Notice */}
-              <div className="p-4 rounded-md bg-platinum-soft border border-platinum-border text-xs text-graphite/80 flex items-start space-x-2.5">
-                <ShieldCheck className="w-4 h-4 text-slate-muted shrink-0 mt-0.5" />
-                <span>
-                  <strong>Atelier Policy:</strong> This submission initiates an offline technical review and personalized quotation. No online payment is requested or processed on this platform.
-                </span>
+              {/* Absolute Notice & Terms Agreement */}
+              <div className="space-y-3">
+                <div className="p-4 rounded-md bg-platinum-soft border border-platinum-border text-xs text-graphite/80 flex items-start space-x-2.5">
+                  <ShieldCheck className="w-4 h-4 text-slate-muted shrink-0 mt-0.5" />
+                  <span>
+                    <strong>Atelier Policy:</strong> This submission initiates an offline technical review and personalized quotation. No online payment is requested or processed on this platform.
+                  </span>
+                </div>
+
+                <label className="flex items-start gap-2.5 p-3 rounded-md bg-white border border-platinum-border cursor-pointer select-none">
+                  <input
+                    type="checkbox"
+                    required
+                    defaultChecked
+                    className="mt-0.5 w-4 h-4 rounded border-slate-300 text-graphite focus:ring-graphite"
+                  />
+                  <span className="text-xs text-slate-dark leading-relaxed">
+                    I acknowledge and agree to the{' '}
+                    <Link
+                      href="/terms"
+                      target="_blank"
+                      className="text-graphite font-bold underline hover:text-black"
+                    >
+                      Terms of Atelier Commission &amp; Conditions
+                    </Link>{' '}
+                    (Bespoke offline settlements, 3–5 week fabrication timeline, ±0.5" master tolerance, &amp; 10-year frame warranty).
+                  </span>
+                </label>
               </div>
             </div>
           )}
@@ -890,9 +965,15 @@ export default function CustomDesignWizard({ preselectedProduct, allProducts }: 
               <button
                 type="button"
                 onClick={() => {
-                  if (step === 7 && (!formData.customerName || !formData.customerPhone)) {
-                    alert('Please enter your name and phone number before proceeding to review.');
-                    return;
+                  if (step === 7) {
+                    if (!formData.customerName || !formData.customerPhone) {
+                      toastError('Contact Details Required', 'Please provide your name and phone number before proceeding.');
+                      return;
+                    }
+                    if (!formData.customerEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.customerEmail.trim())) {
+                      toastError('Email Required', 'Please enter a valid email address so we can send an OTP verification code.');
+                      return;
+                    }
                   }
                   setStep(step + 1);
                 }}
@@ -915,6 +996,17 @@ export default function CustomDesignWizard({ preselectedProduct, allProducts }: 
           </div>
         </div>
       )}
+
+      {/* OTP Verification Modal */}
+      <OtpVerificationModal
+        isOpen={showOtpModal}
+        email={formData.customerEmail}
+        customerName={formData.customerName}
+        purpose={`bespoke ${formData.furnitureType} custom design commission`}
+        onClose={() => setShowOtpModal(false)}
+        onVerified={handleOtpVerified}
+        onEmailChange={(newEmail) => setFormData((prev) => ({ ...prev, customerEmail: newEmail }))}
+      />
     </div>
   );
 }

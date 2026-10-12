@@ -18,16 +18,16 @@ module.exports = {
           border: '#414A50',  // Dark Border
         },
         platinum: {
-          DEFAULT: '#F3F4F2', // Platinum White
+          DEFAULT: '#F7F4EE', // Warm limestone white
           white: '#FFFFFF',   // Pure White
-          soft: '#E8EBE9',    // Soft Platinum
-          hover: '#E2E6E3',   // Surface hover
-          border: '#D7DCDA',  // Light Border
+          soft: '#EEE9E0',    // Soft limestone
+          hover: '#E8E0D5',   // Surface hover
+          border: '#DDD6CB',  // Warm light border
         },
         slate: {
-          silver: '#8D979B',  // Silver Slate (decorative accent)
-          dark: '#4D565B',    // Dark Grey (secondary light-theme text)
-          muted: '#687276',   // Text Muted
+          silver: '#958D80',  // Warm stone accent
+          dark: '#535650',    // Secondary light-theme text
+          muted: '#77776F',   // Text Muted
         },
         olive: {
           muted: '#768177',   // Muted Olive (rare organic accent)
@@ -42,12 +42,12 @@ module.exports = {
 
         // Legacy compatibility mappings remapped to Architectural Graphite + Platinum
         ivory: {
-          50: '#F8F9F8',
-          100: '#F3F4F2',
-          200: '#E8EBE9',
-          300: '#D7DCDA',
+          50: '#FBF9F5',
+          100: '#F7F4EE',
+          200: '#EEE9E0',
+          300: '#DDD6CB',
         },
-        cream: '#E8EBE9',
+        cream: '#EEE9E0',
         charcoal: {
           DEFAULT: '#22272B',
           light: '#353D42',
@@ -55,20 +55,20 @@ module.exports = {
           deep: '#15191C',
         },
         walnut: {
-          DEFAULT: '#4D565B',
-          light: '#687276',
-          dark: '#22272B',
+          DEFAULT: '#755F4B',
+          light: '#9B836A',
+          dark: '#44382D',
         },
         gold: {
-          DEFAULT: '#768177', // Remapped to Muted Olive (strictly NO gold luxury styling)
-          light: '#8D979B',   // Remapped to Silver Slate
-          dark: '#4D565B',
-          amber: '#768177',
+          DEFAULT: '#B28A53',
+          light: '#D3B47F',
+          dark: '#7C5B32',
+          amber: '#B28A53',
         },
       },
       fontFamily: {
-        sans: ['var(--font-sans)', 'Manrope', 'system-ui', '-apple-system', 'sans-serif'],
-        serif: ['var(--font-serif)', 'Instrument Serif', 'Cormorant Garamond', 'Georgia', 'serif'],
+        sans: ['var(--font-sans)', 'Plus Jakarta Sans', 'Inter', 'system-ui', '-apple-system', 'sans-serif'],
+        serif: ['var(--font-serif)', 'Playfair Display', 'Cormorant Garamond', 'Georgia', 'serif'],
       },
       boxShadow: {
         'subtle': '0 1px 3px rgba(34, 39, 43, 0.05), 0 1px 2px rgba(34, 39, 43, 0.03)',
@@ -87,6 +87,15 @@ module.exports = {
       maxWidth: {
         'site': '1440px',
         'reading': '760px',
+      },
+      keyframes: {
+        progress: {
+          '0%': { width: '0%' },
+          '100%': { width: '100%' },
+        },
+      },
+      animation: {
+        progress: 'progress 5.5s linear',
       },
     },
   },

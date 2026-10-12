@@ -2,7 +2,6 @@
 
 import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
-import InteractiveFurnitureViewer from '@/components/three-d/InteractiveFurnitureViewer';
 import { 
   Sparkles, 
   Sliders, 
@@ -16,6 +15,8 @@ import {
   Check,
   AlertTriangle
 } from 'lucide-react';
+import { useToast } from '@/components/ui/ToastProvider';
+import OtpVerificationModal from '@/components/ui/OtpVerificationModal';
 
 interface Props {
   products: any[];
@@ -28,6 +29,7 @@ export default function SmartStudioClient({
   fabricSwatches,
   initialProductId,
 }: Props) {
+  const { error: toastError, success: toastSuccess } = useToast();
   const [selectedProductId, setSelectedProductId] = useState<string>(
     initialProductId || products[0]?.id || ''
   );
@@ -47,6 +49,7 @@ export default function SmartStudioClient({
   const [configB, setConfigB] = useState<any | null>(null);
   const [showCompare, setShowCompare] = useState(false);
   const [showQuoteModal, setShowQuoteModal] = useState(false);
+  const [showOtpModal, setShowOtpModal] = useState(false);
 
   // Quote Form
   const [quoteForm, setQuoteForm] = useState({
@@ -111,8 +114,22 @@ export default function SmartStudioClient({
     setShowCompare(true);
   };
 
-  const handleQuoteSubmit = async (e: React.FormEvent) => {
+  const handleQuoteSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!quoteForm.name || !quoteForm.phone) {
+      toastError('Details Required', 'Please provide your full name and phone number.');
+      return;
+    }
+    if (!quoteForm.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(quoteForm.email.trim())) {
+      toastError('Valid Email Required', 'Please provide a valid email address for OTP verification.');
+      return;
+    }
+
+    setShowOtpModal(true);
+  };
+
+  const handleOtpVerified = async (verificationToken: string, verifiedEmail: string) => {
+    setShowOtpModal(false);
     setSubmittingQuote(true);
 
     try {
@@ -125,7 +142,8 @@ export default function SmartStudioClient({
           productTitle: currentProduct?.name,
           customerName: quoteForm.name,
           customerPhone: quoteForm.phone,
-          customerEmail: quoteForm.email,
+          customerEmail: verifiedEmail,
+          verificationToken,
           city: quoteForm.city,
           notes: `Custom Studio Configuration for ${currentProduct?.name}: Layout=${layout}, Seating=${seating}, Fabric=${selectedFabric}, Comfort=${comfort}, Armrests=${armrest}, Backrest=${backrest}, Base=${legFinish}. Dimensions=${estimatedDimensions}. Client Notes: ${quoteForm.notes}`,
         }),
@@ -134,12 +152,13 @@ export default function SmartStudioClient({
       const data = await res.json();
       if (res.ok) {
         setQuoteSuccess(data.leadCode || 'LEAD-CONFIRMED');
+        toastSuccess('Studio Design Saved & Verified', `Enquiry reference: ${data.leadCode || 'CONFIRMED'}`);
       } else {
-        alert(data.error || 'Failed to submit enquiry.');
+        toastError('Studio Enquiry Error', data.error || 'Failed to submit enquiry.');
       }
     } catch (err) {
       console.error(err);
-      alert('Network error. Please try again.');
+      toastError('Network Error', 'Please check your connection or contact our atelier directly at +91 8445553853.');
     } finally {
       setSubmittingQuote(false);
     }
@@ -185,20 +204,20 @@ export default function SmartStudioClient({
         </div>
       </div>
 
-      {/* Main Studio Workstation: 3D Stage + Configuration Controls */}
+      {/* Main Studio Workstation: Photo Preview + Configuration Controls */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        {/* Left Column: 3D Geometry Stage & Live Calculated Specs */}
+        {/* Left Column: Design Preview & Live Calculated Specs */}
         <div className="lg:col-span-7 space-y-6">
           <div className="bg-white rounded-lg p-6 border border-platinum-border shadow-sm space-y-4">
             <div className="flex items-center justify-between flex-wrap gap-2">
               <div>
-                <span className="text-[10px] uppercase font-bold tracking-widest text-slate-muted">3D Digital Mockup</span>
+                <span className="text-[10px] uppercase font-bold tracking-widest text-slate-muted">Selected Design</span>
                 <h3 className="font-serif text-2xl font-medium text-graphite">{currentProduct?.name}</h3>
               </div>
               <div className="flex items-center space-x-2">
                 <span className="text-[10px] bg-emerald-50 text-emerald-800 border border-emerald-200 px-2.5 py-1 rounded font-semibold flex items-center space-x-1">
                   <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
-                  <span>1:1 Photo &amp; 3D Match</span>
+                  <span>Design Reference</span>
                 </span>
                 <span className="text-xs font-mono bg-platinum-soft px-2.5 py-1 rounded text-graphite border border-platinum-border">
                   {currentProduct?.sku}
@@ -206,12 +225,9 @@ export default function SmartStudioClient({
               </div>
             </div>
 
-            {/* Interactive 3D Model Viewport */}
-            <InteractiveFurnitureViewer
-              asset={currentProduct?.threeDAsset}
-              productTitle={currentProduct?.name || 'Sofa'}
-              initialHeight="h-[460px] sm:h-[520px]"
-            />
+            <div className="aspect-[4/3] overflow-hidden rounded-md bg-platinum-soft">
+              <img src={currentProduct?.images?.[0]?.url || '/images/atelier/ivory-curved-sofa.webp'} alt={currentProduct?.name || 'Custom sofa design'} className="h-full w-full object-cover" />
+            </div>
 
             <div className="bg-platinum-soft/70 p-4 rounded-md border border-platinum-border text-xs space-y-2 text-graphite/90">
               <div className="flex justify-between items-center pb-1.5 border-b border-platinum-border">
@@ -227,7 +243,7 @@ export default function SmartStudioClient({
                 <span className="font-semibold text-graphite">{selectedFabric}</span>
               </div>
               <div className="text-[11px] text-slate-muted pt-1">
-                *Visual 3D model illustrates ergonomic volume. Physical carpentry in our Agra workshop executes exact tailored millimeters.
+                Photo shows the original design. Your selected dimensions, fabric and finishes are confirmed with our atelier before manufacturing.
               </div>
             </div>
           </div>
@@ -495,9 +511,10 @@ export default function SmartStudioClient({
           <div className="bg-white max-w-lg w-full rounded-lg p-6 sm:p-8 shadow-2xl border border-platinum-border text-graphite relative">
             <div className="flex items-start justify-between pb-3 border-b border-platinum-border">
               <div>
-                <span className="text-[10px] uppercase font-bold tracking-widest text-slate-muted">Direct Atelier RFQ</span>
-                <h3 className="font-serif text-2xl font-medium mt-0.5 text-graphite">Request Studio Quotation</h3>
+                <span className="text-[10px] uppercase font-bold tracking-widest text-slate-muted">Quick enquiry</span>
+                <h3 className="font-serif text-2xl font-medium mt-0.5 text-graphite">Ask about your design</h3>
                 <p className="text-xs text-slate-dark mt-0.5">{currentProduct?.name} ({estimatedDimensions})</p>
+                <p className="text-xs text-slate-muted mt-1">Share your contact details. We’ll call you to discuss price and options.</p>
               </div>
               <button
                 onClick={() => { setShowQuoteModal(false); setQuoteSuccess(null); }}
@@ -508,83 +525,146 @@ export default function SmartStudioClient({
             </div>
 
             {quoteSuccess ? (
-              <div className="py-8 text-center space-y-3">
+              <div className="py-6 text-center space-y-4">
                 <div className="w-12 h-12 rounded-full bg-emerald-50 text-emerald-800 flex items-center justify-center mx-auto border border-emerald-200">
                   <CheckCircle2 className="w-6 h-6 text-emerald-700" />
                 </div>
-                <h4 className="font-serif text-2xl font-medium text-graphite">Configuration Received</h4>
-                <p className="text-xs text-slate-dark max-w-xs mx-auto leading-relaxed">
-                  Our draftsmen will review the technical parameters, prepare the formal quotation schedule, and connect with you.
-                </p>
-                <div className="bg-platinum-soft p-3 rounded-md border border-platinum-border text-xs font-mono font-semibold text-graphite">
-                  Reference: {quoteSuccess}
+                <div className="space-y-1">
+                  <h4 className="font-serif text-2xl font-medium text-graphite">Configuration Received</h4>
+                  <p className="text-xs text-slate-dark max-w-sm mx-auto leading-relaxed">
+                    Our draftsmen will review the technical parameters, prepare the formal quotation schedule, and connect with you.
+                  </p>
                 </div>
+
+                <div className="bg-platinum-soft p-3 rounded-lg border border-platinum-border text-xs font-mono font-semibold text-graphite flex justify-between items-center max-w-sm mx-auto">
+                  <span className="text-slate-dark font-sans text-[11px] font-normal">Reference ID:</span>
+                  <span>{quoteSuccess}</span>
+                </div>
+
+                {/* Terms & Conditions Block */}
+                <div className="text-left bg-[#faf9f5] border border-[#e4dfd5] rounded-lg p-3.5 space-y-2 max-w-md mx-auto">
+                  <div className="flex items-center gap-1.5 pb-1 border-b border-[#e4dfd5]">
+                    <ShieldCheck className="w-3.5 h-3.5 text-[#a7864e]" />
+                    <span className="font-serif font-bold text-[11px] text-[#222823] tracking-wide uppercase">
+                      Studio Terms &amp; Commission Conditions
+                    </span>
+                  </div>
+                  <ul className="text-[11px] text-[#555d56] space-y-1.5 list-disc list-inside leading-relaxed">
+                    <li><strong>Offline Commercials:</strong> Technical quotation is issued free of charge. Fabrication commences upon mutual offline contract signing.</li>
+                    <li><strong>Custom Dimension Validation:</strong> Our engineering team conducts complimentary spatial / laser verification before frame cutting.</li>
+                    <li><strong>Heirloom Warranty:</strong> 10-year warranty on seasoned teak/hardwood internal frame structure and 5-year warranty on 45D resilience foam cores.</li>
+                  </ul>
+                  <p className="text-[10px] text-[#788079] pt-1 border-t border-[#e4dfd5]">
+                    Direct Atelier Helpline: <strong>+91 8445553853</strong> | <strong>pradeepfurniture2@gmail.com</strong>
+                  </p>
+                </div>
+
                 <button
                   onClick={() => { setShowQuoteModal(false); setQuoteSuccess(null); }}
-                  className="px-6 py-2.5 bg-graphite hover:bg-graphite-hover text-white rounded-md text-xs font-medium uppercase tracking-wider"
+                  className="px-6 py-2.5 bg-graphite hover:bg-graphite-hover text-white rounded-md text-xs font-medium uppercase tracking-wider transition-colors shadow-sm"
                 >
                   Close Window
                 </button>
               </div>
             ) : (
-              <form onSubmit={handleQuoteSubmit} className="mt-4 space-y-3.5 text-xs">
+              <form onSubmit={handleQuoteSubmit} className="mt-4 space-y-3.5 text-sm">
                 <div>
-                  <label className="block text-slate-dark font-medium mb-1">Full Name *</label>
+                  <label className="block text-slate-dark font-medium mb-1">Your name *</label>
                   <input
                     type="text"
                     required
+                    autoComplete="name"
                     value={quoteForm.name}
                     onChange={(e) => setQuoteForm({ ...quoteForm, name: e.target.value })}
-                    className="w-full px-3.5 py-2.5 rounded-md bg-platinum-soft border border-platinum-border text-graphite focus:outline-none focus:border-graphite"
-                    placeholder="e.g. Anand Mehra"
+                    className="w-full min-h-11 px-3.5 py-2.5 rounded-md bg-platinum-soft border border-platinum-border text-graphite focus:outline-none focus:border-graphite"
+                    placeholder="Enter your name"
                   />
                 </div>
 
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-slate-dark font-medium mb-1">Phone Number *</label>
+                    <label className="block text-slate-dark font-medium mb-1">Mobile number *</label>
                     <input
                       type="tel"
                       required
+                      autoComplete="tel"
+                      inputMode="tel"
                       value={quoteForm.phone}
                       onChange={(e) => setQuoteForm({ ...quoteForm, phone: e.target.value })}
-                      className="w-full px-3.5 py-2.5 rounded-md bg-platinum-soft border border-platinum-border text-graphite focus:outline-none focus:border-graphite"
-                      placeholder="+91 98970 00000"
+                      className="w-full min-h-11 px-3.5 py-2.5 rounded-md bg-platinum-soft border border-platinum-border text-graphite focus:outline-none focus:border-graphite"
+                      placeholder="Your 10-digit mobile number"
                     />
+                    <p className="mt-1 text-[11px] text-slate-muted">We’ll call you on this number.</p>
                   </div>
                   <div>
-                    <label className="block text-slate-dark font-medium mb-1">Delivery City</label>
+                    <label className="block text-slate-dark font-medium mb-1">Your city (optional)</label>
                     <input
                       type="text"
+                      autoComplete="address-level2"
                       value={quoteForm.city}
                       onChange={(e) => setQuoteForm({ ...quoteForm, city: e.target.value })}
-                      className="w-full px-3.5 py-2.5 rounded-md bg-platinum-soft border border-platinum-border text-graphite focus:outline-none focus:border-graphite"
+                      className="w-full min-h-11 px-3.5 py-2.5 rounded-md bg-platinum-soft border border-platinum-border text-graphite focus:outline-none focus:border-graphite"
+                      placeholder="e.g. Agra"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-slate-dark font-medium mb-1">Special Instructions</label>
+                  <label className="block text-slate-dark font-medium mb-1">Email address *</label>
+                  <input
+                    type="email"
+                    required
+                    autoComplete="email"
+                    value={quoteForm.email}
+                    onChange={(e) => setQuoteForm({ ...quoteForm, email: e.target.value })}
+                    className="w-full min-h-11 px-3.5 py-2.5 rounded-md bg-platinum-soft border border-platinum-border text-graphite focus:outline-none focus:border-graphite"
+                    placeholder="name@example.com"
+                  />
+                  <p className="mt-1 text-[11px] text-slate-muted">We’ll send a 6-digit code here to confirm your enquiry and share updates.</p>
+                </div>
+
+                <div>
+                  <label className="block text-slate-dark font-medium mb-1">Anything else? (Optional)</label>
                   <textarea
                     rows={2}
                     value={quoteForm.notes}
                     onChange={(e) => setQuoteForm({ ...quoteForm, notes: e.target.value })}
                     className="w-full px-3.5 py-2 rounded-md bg-platinum-soft border border-platinum-border text-graphite focus:outline-none focus:border-graphite"
-                    placeholder="Floor details, specific door clearances, or foam preferences..."
+                    placeholder="Tell us anything else you need. No technical details required."
                   />
                 </div>
 
-                <div className="pt-3 border-t border-platinum-border">
+                <div className="pt-3 border-t border-platinum-border space-y-3">
+                  <label className="flex items-start gap-2.5 cursor-pointer select-none">
+                    <input
+                      type="checkbox"
+                      required
+                      defaultChecked
+                      className="mt-0.5 w-4 h-4 rounded border-slate-300 text-graphite focus:ring-graphite"
+                    />
+                    <span className="text-[11px] text-slate-dark leading-tight">
+                      I agree to the{' '}
+                      <Link
+                        href="/terms"
+                        target="_blank"
+                        className="text-graphite font-bold underline hover:text-black"
+                      >
+                        Terms &amp; Conditions
+                      </Link>{' '}
+                      (Offline payments, 3–5 week lead time, &amp; 10-year structural warranty).
+                    </span>
+                  </label>
+
                   <button
                     type="submit"
                     disabled={submittingQuote}
-                    className="w-full py-3.5 bg-graphite hover:bg-graphite-hover text-white font-medium rounded-md text-xs uppercase tracking-widest transition-colors flex items-center justify-center space-x-2"
+                    className="w-full py-3.5 bg-graphite hover:bg-graphite-hover text-white font-medium rounded-md text-xs uppercase tracking-widest transition-colors flex items-center justify-center space-x-2 shadow-sm"
                   >
                     <Send className="w-3.5 h-3.5 text-slate-silver" />
-                    <span>{submittingQuote ? 'Transmitting to Atelier...' : 'Submit Studio Configuration'}</span>
+                    <span>{submittingQuote ? 'Sending enquiry…' : 'Send my enquiry'}</span>
                   </button>
-                  <p className="text-[11px] text-slate-muted text-center mt-2">
-                    Commercial transactions are finalized strictly offline through atelier bank agreement.
+                  <p className="text-[11px] text-slate-muted text-center mt-1">
+                    No payment is needed now. We’ll contact you about the price.
                   </p>
                 </div>
               </form>
@@ -592,6 +672,17 @@ export default function SmartStudioClient({
           </div>
         </div>
       )}
+
+      {/* OTP Verification Modal */}
+      <OtpVerificationModal
+        isOpen={showOtpModal}
+        email={quoteForm.email}
+        customerName={quoteForm.name}
+        purpose={`bespoke studio design configuration for ${currentProduct?.name || 'custom furniture'}`}
+        onClose={() => setShowOtpModal(false)}
+        onVerified={handleOtpVerified}
+        onEmailChange={(newEmail) => setQuoteForm((prev) => ({ ...prev, email: newEmail }))}
+      />
     </div>
   );
 }

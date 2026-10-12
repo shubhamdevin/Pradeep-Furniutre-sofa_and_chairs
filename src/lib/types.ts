@@ -47,26 +47,6 @@ export interface ProductItem {
     label: string;
     value: string;
   }[];
-  threeDAsset?: ThreeDAssetItem | null;
-}
-
-export interface ThreeDAssetItem {
-  id: string;
-  name: string;
-  provider: 'POLY_HAVEN' | 'SKETCHFAB' | 'SELF_HOSTED' | string;
-  embedMode: 'HOSTED_GLB' | 'SKETCHFAB_EMBED' | string;
-  modelUrl: string;
-  sketchfabUid?: string | null;
-  author: string;
-  licence: string;
-  attributionUrl: string;
-  posterImageUrl?: string | null;
-  fileFormat: string;
-  loadingStatus: string;
-  isAccurateRep: boolean;
-  disclaimer?: string | null;
-  initialCameraPos?: string | null;
-  isEnabled: boolean;
 }
 
 export interface CategoryItem {

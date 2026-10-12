@@ -23,7 +23,16 @@ yarn-debug.log*
 yarn-error.log*
 
 # local env files
+.env
 .env*.local
+.env.production
+.env.development
+
+# sqlite database
+*.db
+*.db-journal
+*.db-shm
+*.db-wal
 
 # vercel
 .vercel
@@ -31,3 +40,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Archived local Next.js cache
+/.next-stale-*/

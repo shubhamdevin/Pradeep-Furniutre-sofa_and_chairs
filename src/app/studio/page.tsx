@@ -11,13 +11,12 @@ export default async function StudioPage({
 }) {
   const baseProductId = typeof searchParams.baseProduct === 'string' ? searchParams.baseProduct : undefined;
 
-  const [products, swatches, assets] = await Promise.all([
+  const [products, swatches] = await Promise.all([
     prisma.product.findMany({
       where: { isAvailable: true },
       include: {
         images: true,
         category: true,
-        threeDAsset: true,
       },
       orderBy: { isFeatured: 'desc' },
     }),
@@ -26,9 +25,6 @@ export default async function StudioPage({
         material: true,
       },
     }),
-    prisma.threeDAsset.findMany({
-      where: { isEnabled: true },
-    }),
   ]);
 
   return (
@@ -36,7 +32,7 @@ export default async function StudioPage({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-10 space-y-3">
           <span className="text-xs uppercase font-bold tracking-widest text-slate-muted">
-            Guided 3D Studio Configurator
+            Personal Furniture Design Studio
           </span>
           <h1 className="font-serif text-3xl sm:text-5xl font-medium text-graphite">
             Smart Customization Studio
