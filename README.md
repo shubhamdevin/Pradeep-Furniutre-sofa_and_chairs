@@ -1,4 +1,8 @@
 # Pradeep Furniture Atelier
+
+> 🌐 **Live Website URL:** [https://pradeepfurniture-git-main-shubhammm.vercel.app](https://pradeepfurniture-git-main-shubhammm.vercel.app)  
+> 🛋️ **Admin Dashboard:** [https://pradeepfurniture-git-main-shubhammm.vercel.app/admin/leads](https://pradeepfurniture-git-main-shubhammm.vercel.app/admin/leads)
+
 ## Premium Luxury Sofa & Fancy Chairs Manufacturing Website + Factory Management ERP
 ### Bespoke Digital Showroom • Custom Furniture Studio • CRM • Production ERP
 
