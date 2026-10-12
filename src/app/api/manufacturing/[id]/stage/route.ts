@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { sendCustomerStatusUpdateEmail } from '@/lib/email';
 
+export const dynamic = 'force-dynamic';
+
 const stages = ['JOB_RELEASED','MATERIAL_PLANNING','WOOD_CUTTING','FRAME_ASSEMBLY','SPRING_WEBBING','FOAM_CUTTING','CUSHIONING','FABRIC_CUTTING','STITCHING','UPHOLSTERY','FINAL_FINISHING','QUALITY_INSPECTION','PACKAGING','DISPATCH_READY','CLOSED_INTERNALLY'];
 
 export async function POST(req: NextRequest, { params }: { params: { id: string } }) {

@@ -2,7 +2,8 @@ import React from 'react';
 import { prisma } from '@/lib/prisma';
 import ProductCatalogueClient from '@/components/furniture/ProductCatalogueClient';
 
-export const revalidate = 30;
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 export default async function ProductsPage({
   searchParams,

@@ -2,7 +2,8 @@ import React from 'react';
 import { prisma } from '@/lib/prisma';
 import SmartStudioClient from '@/components/furniture/SmartStudioClient';
 
-export const revalidate = 60;
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 export default async function StudioPage({
   searchParams,

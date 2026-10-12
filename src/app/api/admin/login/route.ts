@@ -2,6 +2,9 @@ import { ADMIN_AUTH_REQUIRED } from '@/lib/admin-access';
 import {NextRequest,NextResponse} from 'next/server';
 import {timingSafeEqual} from 'crypto';
 import {signature} from '@/lib/admin-session';
+
+export const dynamic = 'force-dynamic';
+
 const attempts=new Map<string,{count:number;until:number}>();
 export async function POST(req:NextRequest){
  try{

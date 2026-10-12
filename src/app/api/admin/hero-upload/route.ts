@@ -4,6 +4,7 @@ import { mkdir, writeFile } from 'fs/promises';
 import path from 'path';
 import { randomUUID } from 'crypto';
 export const runtime='nodejs';
+export const dynamic = 'force-dynamic';
 export async function POST(req:NextRequest){
  try{
   if(!await validSession(req.cookies.get('atelier_admin')?.value))return NextResponse.json({error:'Please sign in.'},{status:401});
