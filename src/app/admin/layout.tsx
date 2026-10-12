@@ -4,6 +4,7 @@ import { ADMIN_AUTH_REQUIRED } from '@/lib/admin-access';
 import type { ReactNode } from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import { GalleryHorizontalEnd, LayoutDashboard, UsersRound, PencilRuler, FileCheck2, Factory, PackageSearch, CalendarClock, Armchair, ArrowUpRight, LogOut, ShieldCheck, PanelLeftClose, PanelLeftOpen, ChevronRight, X, LoaderCircle } from 'lucide-react';
 
 const groups = [
@@ -38,7 +39,7 @@ export default function AdminLayout({children}:{children:ReactNode}) {
     <a href="#admin-content" className="admin-skip-link">Skip to content</a>
     {mobileOpen&&<button className="admin-sidebar-scrim" aria-label="Close navigation" onClick={()=>setMobileOpen(false)}/>}
     <aside id="admin-sidebar" className={`admin-sidebar ${mobileOpen?'is-open':''}`} aria-label="Administration">
-      <Link href="/admin" className="admin-brand"><span className="admin-brand-symbol"><Armchair size={23} strokeWidth={1.7}/></span><span className="admin-sidebar-label"><strong>Pradeep<span className="admin-brand-dot">.</span></strong><small>FURNITURE ADMIN</small></span></Link>
+      <Link href="/admin" className="admin-brand"><span className="admin-brand-symbol flex items-center justify-center overflow-hidden"><Image src="/logo.png" alt="Logo" width={28} height={28} className="w-7 h-7 object-contain rounded" priority /></span><span className="admin-sidebar-label"><strong>Pradeep<span className="admin-brand-dot">.</span></strong><small>FURNITURE ADMIN</small></span></Link>
       <button className="admin-mobile-close" onClick={()=>setMobileOpen(false)} aria-label="Close navigation"><X size={20}/></button>
       <div className="admin-workspace-label admin-sidebar-label"><span className="admin-workspace-dot"/>Management workspace</div>
       <nav aria-label="Admin navigation" className="admin-navigation">{groups.map(group=><div className="admin-nav-group" key={group.label}><p className="admin-sidebar-label">{group.label}</p>{group.items.map(item=>{const Icon=item.icon;const active=pathname===item.href;return <Link key={item.href} href={item.href} title={collapsed?item.label:undefined} aria-label={item.label} aria-current={active?'page':undefined} className={`admin-nav-link ${active?'is-active':''}`}><Icon size={19} strokeWidth={1.75} aria-hidden="true"/><span className="admin-sidebar-label">{item.label}</span>{active&&<span className="admin-nav-indicator admin-sidebar-label"/>}</Link>})}</div>)}</nav>

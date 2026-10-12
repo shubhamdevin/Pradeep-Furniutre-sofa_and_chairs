@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { 
   Menu, 
@@ -127,7 +128,15 @@ export default function Header() {
         <div className="max-w-site mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
 
           {/* Brand Logo matching Velora style in mockup */}
-          <Link href="/" className="group flex items-center space-x-2.5">
+          <Link href="/" className="group flex items-center space-x-3">
+            <Image
+              src="/logo.png"
+              alt="Pradeep Furniture Logo"
+              width={42}
+              height={42}
+              className="w-9 h-9 sm:w-10 sm:h-10 object-contain rounded-md shadow-sm border border-stone-200/60"
+              priority
+            />
             <div>
               <span className="block font-serif text-xl sm:text-2xl font-extrabold tracking-tight text-[#111417] leading-none">
                 PRADEEP

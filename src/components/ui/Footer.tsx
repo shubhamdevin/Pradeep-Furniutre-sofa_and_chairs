@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { 
   Phone, 
   Mail, 
@@ -70,9 +71,13 @@ export default function Footer() {
           {/* Brand Info & Highlighted Contact Card */}
           <div className="lg:col-span-2 space-y-4">
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 rounded-lg bg-[#19221b] flex items-center justify-center border border-[#a7864e]/50 text-[#e2cfb0] font-serif font-bold text-xl shadow-inner">
-                P
-              </div>
+              <Image
+                src="/logo.png"
+                alt="Pradeep Furniture Logo"
+                width={44}
+                height={44}
+                className="w-11 h-11 rounded-lg object-contain border border-[#a7864e]/50 shadow-md bg-[#19221b]"
+              />
               <div>
                 <span className="block font-serif text-2xl font-bold tracking-tight text-white leading-none">
                   PRADEEP
